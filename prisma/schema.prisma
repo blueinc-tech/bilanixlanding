@@ -1,0 +1,413 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// ─── Landing Page Models ───────────────────────────────────────────
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  phone     String?
+  message   String?
+  formType  String   @default("demo")
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([email])
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// ─── Admin Authentication & RBAC ───────────────────────────────────
+
+model Admin {
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  passwordHash   String    @map("password_hash")
+  roleId         String?   @map("role_id")
+  role           String    @default("admin")
+  status         String    @default("active")
+  avatar         String?
+  lastLoginAt    DateTime? @map("last_login_at")
+  lastLoginIp    String?   @map("last_login_ip")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  deletedAt DateTime? @map("deleted_at")
+
+  roleRel       Role?              @relation(fields: [roleId], references: [id])
+  activities    ActivityLog[]
+  auditLogs     AuditLog[]
+  notifications Notification[]
+  emailLogs     EmailLog[]
+  resetTokens   PasswordResetToken[]
+  impersonationLogs ImpersonationLog[]
+
+  @@index([email])
+  @@index([roleId])
+  @@index([role])
+  @@index([status])
+  @@map("admins")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  adminId   String   @map("admin_id")
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([adminId])
+  @@map("password_reset_tokens")
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  displayName String   @map("display_name")
+  description String?
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  permissions RolePermission[]
+  admins      Admin[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  module      String
+  action      String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  roles RolePermission[]
+
+  @@index([module])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// ─── Activity & Audit Logging ──────────────────────────────────────
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  adminId     String?  @map("admin_id")
+  action      String
+  entityType  String?  @map("entity_type")
+  entityId    String?  @map("entity_id")
+  description String?
+  metadata    Json?
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  adminId     String?  @map("admin_id")
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  oldValues   Json?    @map("old_values")
+  newValues   Json?    @map("new_values")
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ─── Notifications ─────────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  adminId   String?  @map("admin_id")
+  title     String
+  message   String
+  type      String   @default("info")
+  readAt    DateTime? @map("read_at")
+  actionUrl String?  @map("action_url")
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([readAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// ─── Email Infrastructure ──────────────────────────────────────────
+
+model EmailLog {
+  id            String    @id @default(cuid())
+  adminId       String?   @map("admin_id")
+  recipientEmail String  @map("recipient_email")
+  recipientName String?   @map("recipient_name")
+  subject       String
+  templateId    String?   @map("template_id")
+  body          String?
+  status        String    @default("queued")
+  sentAt        DateTime? @map("sent_at")
+  deliveredAt   DateTime? @map("delivered_at")
+  failedAt      DateTime? @map("failed_at")
+  failureReason String?   @map("failure_reason")
+  metadata      Json?
+  retryCount    Int       @default(0) @map("retry_count")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([recipientEmail])
+  @@index([status])
+  @@index([createdAt])
+  @@map("email_logs")
+}
+
+// ─── Client / User Management ──────────────────────────────────────
+
+model User {
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  passwordHash   String?   @map("password_hash")
+  phone          String?
+  company        String?
+  avatar         String?
+  status         String    @default("active")
+  emailVerified  DateTime? @map("email_verified")
+  lastLoginAt    DateTime? @map("last_login_at")
+  lastLoginIp    String?   @map("last_login_ip")
+  metadata       Json?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  subscriptions  Subscription[]
+  impersonationLogs ImpersonationLog[]
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Subscription {
+  id               String    @id @default(cuid())
+  userId           String    @map("user_id")
+  planName         String    @map("plan_name")
+  status           String    @default("active")
+  startDate        DateTime  @default(now()) @map("start_date")
+  endDate          DateTime? @map("end_date")
+  cancelledAt      DateTime? @map("cancelled_at")
+  paymentMethod    String?   @map("payment_method")
+  paymentReference String?   @map("payment_reference")
+  amount           Float     @default(0)
+  currency         String    @default("NGN")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([planName])
+  @@index([createdAt])
+  @@map("subscriptions")
+}
+
+model ImpersonationLog {
+  id          String    @id @default(cuid())
+  adminId     String    @map("admin_id")
+  userId      String    @map("user_id")
+  reason      String?
+  startedAt   DateTime  @default(now()) @map("started_at")
+  endedAt     DateTime? @map("ended_at")
+  ipAddress   String?   @map("ip_address")
+  userAgent   String?   @map("user_agent")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([userId])
+  @@index([startedAt])
+  @@map("impersonation_logs")
+}
+
+// ─── Subscriptions & Payments ─────────────────────────────────────
+
+model SubscriptionPlan {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  amount      Float
+  currency    String   @default("NGN")
+  interval    String   @default("monthly")
+  features    Json?
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  paymentLogs PaymentLog[]
+
+  @@index([isActive])
+  @@index([sortOrder])
+  @@map("subscription_plans")
+}
+
+model PaymentLog {
+  id                String    @id @default(cuid())
+  userId            String?   @map("user_id")
+  subscriptionId    String?   @map("subscription_id")
+  planSlug          String?   @map("plan_slug")
+  gateway           String?
+  gatewayRef        String?   @map("gateway_ref")
+  amount            Float
+  currency          String    @default("NGN")
+  status            String    @default("pending")
+  type              String    @default("subscription")
+  description       String?
+  metadata          Json?
+  paidAt            DateTime? @map("paid_at")
+  failedAt          DateTime? @map("failed_at")
+  refundedAt        DateTime? @map("refunded_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  plan SubscriptionPlan? @relation(fields: [planSlug], references: [slug])
+
+  @@index([userId])
+  @@index([gateway])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@map("payment_logs")
+}
+
+// ─── Marketing & Campaigns ────────────────────────────────────────
+
+model Campaign {
+  id              String    @id @default(cuid())
+  name            String
+  subject         String
+  body            String
+  type            String    @default("email")
+  status          String    @default("draft")
+  targetFilter    Json?     @map("target_filter")
+  scheduledAt     DateTime? @map("scheduled_at")
+  sentAt          DateTime? @map("sent_at")
+  failedAt        DateTime? @map("failed_at")
+  totalRecipients Int       @default(0) @map("total_recipients")
+  totalSent       Int       @default(0) @map("total_sent")
+  totalDelivered  Int       @default(0) @map("total_delivered")
+  totalOpened     Int       @default(0) @map("total_opened")
+  totalClicked    Int       @default(0) @map("total_clicked")
+  totalBounced    Int       @default(0) @map("total_bounced")
+  totalFailed     Int       @default(0) @map("total_failed")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  recipients CampaignRecipient[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("campaigns")
+}
+
+model CampaignRecipient {
+  id          String    @id @default(cuid())
+  campaignId  String    @map("campaign_id")
+  userId      String?   @map("user_id")
+  email       String
+  name        String?
+  status      String    @default("queued")
+  sentAt      DateTime? @map("sent_at")
+  deliveredAt DateTime? @map("delivered_at")
+  openedAt    DateTime? @map("opened_at")
+  clickedAt   DateTime? @map("clicked_at")
+  bouncedAt   DateTime? @map("bounced_at")
+  failedAt    DateTime? @map("failed_at")
+  failureReason String? @map("failure_reason")
+  metadata    Json?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId])
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("campaign_recipients")
+}
+
+// ─── System Settings ───────────────────────────────────────────────
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  group     String
+  key       String
+  value     Json
+  type      String   @default("string")
+  label     String?
+  helpText  String?  @map("help_text")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([group, key])
+  @@index([group])
+  @@map("system_settings")
+}
