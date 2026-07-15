@@ -83,6 +83,7 @@ export function DemoModal() {
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        className="scrollbar-none"
         style={{
           background: '#111111',
           border: '1px solid rgba(255,255,255,0.1)',
@@ -96,7 +97,6 @@ export function DemoModal() {
       >
         <div className="flex items-start justify-between" style={{ marginBottom: 20 }}>
           <div>
-            <div className="section-label" style={{ marginBottom: 8 }}>Book a demo</div>
             <h3 className="font-heading" style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em', color: '#fff' }}>
               See Bilanix in action
             </h3>
@@ -138,8 +138,19 @@ export function DemoModal() {
                 onChange={(e) => update('message', e.target.value)}
                 rows={3}
                 placeholder="Tell us about your business..."
-                className="newsletter-input"
-                style={{ width: '100%', resize: 'vertical' }}
+                style={{
+                  width: '100%',
+                  resize: 'none',
+                  fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 12,
+                  padding: '12px 18px',
+                  fontSize: '0.9375rem',
+                  color: '#fff',
+                  outline: 'none',
+                  transition: 'border-color 0.2s',
+                }}
               />
             </div>
             {error ? (
@@ -149,9 +160,6 @@ export function DemoModal() {
               {loading ? <Loader2 size={16} className="animate-spin" /> : null}
               {loading ? 'Sending...' : 'Request demo'}
             </button>
-            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.5 }}>
-              Your information is stored securely and used only to contact you about Bilanix.
-            </p>
           </form>
         )}
       </div>

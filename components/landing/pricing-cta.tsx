@@ -42,7 +42,7 @@ export function PricingCTA() {
             }}
           >
             <button className="btn-primary" onClick={openDemo}>
-              Request Early Access <ArrowRight size={15} />
+              Start Now <ArrowRight size={15} />
             </button>
             <a href="#pricing" className="btn-ghost">
               View Pricing

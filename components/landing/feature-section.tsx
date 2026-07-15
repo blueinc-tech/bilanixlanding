@@ -3,6 +3,7 @@
 import { Reveal } from './reveal'
 
 interface FeatureSectionProps {
+  id?: string
   label: string
   title: React.ReactNode
   description: string
@@ -13,12 +14,12 @@ interface FeatureSectionProps {
   cta?: React.ReactNode
 }
 
-export function FeatureSection({ label, title, description, bullets, reverse = false, dark = false, children, cta }: FeatureSectionProps) {
+export function FeatureSection({ id, label, title, description, bullets, reverse = false, dark = false, children, cta }: FeatureSectionProps) {
   const textColor = dark ? '#fff' : '#0F0F0F'
   const mutedColor = dark ? 'rgba(255,255,255,0.5)' : '#737373'
 
   return (
-    <section className={dark ? 'spotlight-dark' : 'spotlight-light'} style={{ padding: '120px 0' }}>
+    <section id={id} className={dark ? 'spotlight-dark' : 'spotlight-light'} style={{ padding: '120px 0' }}>
       <div className="max-w-page">
         <div
           className="grid grid-cols-1 lg:grid-cols-2"

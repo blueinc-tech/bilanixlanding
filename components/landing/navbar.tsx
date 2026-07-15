@@ -33,7 +33,6 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* Lock body scroll when menu is open */
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden'
@@ -60,12 +59,10 @@ export function Navbar() {
       <nav className={`nav-wrap ${scrolled ? 'scrolled' : ''}`}>
         <div className="max-w-page">
           <div className="flex items-center justify-between" style={{ height: 72 }}>
-            {/* Logo */}
             <Link href="/" className="flex items-center" aria-label="Bilanix home">
               <Image src="/bilanix-logo-dark.png" alt="Bilanix" width={140} height={36} style={{ height: 28, width: 'auto' }} priority />
             </Link>
 
-            {/* Desktop nav links */}
             <div className="hidden md:flex items-center gap-8">
               {LINKS.map((l) => (
                 <button key={l.label} className="nav-link" onClick={() => handleNav(l)}>
@@ -74,13 +71,11 @@ export function Navbar() {
               ))}
             </div>
 
-            {/* Desktop buttons */}
             <div className="hidden md:flex items-center gap-4">
               <button className="nav-signin" onClick={openDemo}>Sign in</button>
               <button className="nav-cta-primary" onClick={openDemo}>Start free</button>
             </div>
 
-            {/* Mobile: CTA + hamburger */}
             <div className="flex md:hidden items-center gap-3">
               <button className="nav-cta-primary" onClick={openDemo}>Start free</button>
               <button
@@ -96,11 +91,9 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile slide-over menu */}
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -113,7 +106,6 @@ export function Navbar() {
               }}
             />
 
-            {/* Panel */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -121,7 +113,6 @@ export function Navbar() {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="mobile-menu-panel"
             >
-              {/* Panel header */}
               <div className="flex items-center justify-between" style={{ padding: '20px 24px', borderBottom: '1px solid #F1F5F9' }}>
                 <Image src="/bilanix-logo-dark.png" alt="Bilanix" width={120} height={32} style={{ height: 24, width: 'auto' }} />
                 <button
@@ -136,7 +127,6 @@ export function Navbar() {
                 </button>
               </div>
 
-              {/* Nav links */}
               <div style={{ padding: '32px 24px', flex: 1 }}>
                 <div className="flex flex-col" style={{ gap: 8 }}>
                   {LINKS.map((l) => (
@@ -151,7 +141,6 @@ export function Navbar() {
                 </div>
               </div>
 
-              {/* Bottom buttons */}
               <div style={{ padding: '0 24px 32px' }}>
                 <div className="flex flex-col" style={{ gap: 12 }}>
                   <button
@@ -168,7 +157,6 @@ export function Navbar() {
                   </button>
                 </div>
 
-                {/* Menu footer */}
                 <div className="flex items-center justify-center gap-6" style={{ marginTop: 24 }}>
                   {['Privacy', 'Terms', 'Contact'].map((t) => (
                     <a key={t} href="#" style={{ fontSize: '0.75rem', color: '#9CA3AF', textDecoration: 'none' }}>{t}</a>

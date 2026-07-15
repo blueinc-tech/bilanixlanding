@@ -22,32 +22,25 @@ export default function SolutionPage() {
     <div className="bilanix">
       <Navbar />
       <main>
-        {/* Hero — Green gradient, full viewport */}
-        <section className="relative w-full min-h-screen flex items-center overflow-hidden" style={{ background: 'linear-gradient(to bottom right, #0a1c08, #112a0e, #1c3f19)' }}>
+        {/* Hero — Green gradient */}
+        <section className="relative w-full flex items-center overflow-hidden" style={{ background: 'linear-gradient(to bottom right, #0a1c08, #112a0e, #1c3f19)' }}>
           {/* Grid overlay */}
           <div className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
           {/* Glow blob */}
           <div className="absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full blur-[100px]" style={{ background: 'rgba(96,183,70,0.1)' }} />
           {/* Content */}
-          <div className="relative z-10 mx-auto w-full max-w-page px-6 py-32 text-center sm:px-10 sm:py-36 lg:py-40">
+          <div className="relative z-10 mx-auto w-full max-w-page px-6 py-24 text-center sm:px-10 sm:py-32">
             <Reveal>
-              <nav className="mb-6 flex items-center justify-center gap-2 text-[12px] text-white/40">
-                <a href="/" className="transition-colors hover:text-white/70">Home</a>
-                <span>/</span>
-                <span className="text-white/70">Solutions</span>
-              </nav>
-            </Reveal>
-            <Reveal delay={1}>
               <h1 className="font-display text-[48px] font-semibold leading-[1.05] tracking-[-0.02em] text-white sm:text-[64px] lg:text-[72px]">
                 Every feature your firm <span className="text-[#60B746]">needs to grow</span>
               </h1>
             </Reveal>
-            <Reveal delay={2}>
+            <Reveal delay={1}>
               <p className="mx-auto mt-5 max-w-lg text-[16px] leading-[1.7] text-white/55">
                 Bilanix combines AI-powered automation, true double-entry accounting, and Nigerian tax compliance into one platform — purpose-built for firms managing multiple clients.
               </p>
             </Reveal>
-            <Reveal delay={3}>
+            <Reveal delay={2}>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <button className="btn-primary" onClick={openDemo}>
                   Start Now <ArrowRight size={15} />
@@ -62,6 +55,7 @@ export default function SolutionPage() {
 
         {/* Core Accounting Engine */}
         <FeatureSection
+          id="core-accounting"
           label="Core accounting engine"
           title={<>True double-entry accounting, <span style={{ color: '#60B746' }}>built for precision</span></>}
           description="Every transaction is validated against a true double-entry core — debit always equals credit. Bilanix eliminates manual errors with automated balancing, journal batching, and immutable audit logs."
@@ -79,6 +73,7 @@ export default function SolutionPage() {
 
         {/* AI-Powered Automation */}
         <FeatureSection
+          id="ai-automation"
           label="AI-powered automation"
           title={<>Process invoices <span style={{ color: '#60B746' }}>10x faster with AI</span></>}
           description="Upload an invoice and Bilanix AI extracts supplier details, dates, and amounts, calculates VAT, suggests the correct ledger account, and drafts the journal entry — ready for your one-click review."
@@ -97,6 +92,7 @@ export default function SolutionPage() {
 
         {/* Tax & VAT Compliance */}
         <FeatureSection
+          id="tax-vat"
           label="Tax & VAT compliance"
           title={<>Nigerian VAT compliance, <span style={{ color: '#60B746' }}>fully automated</span></>}
           description="A configurable VAT engine handles detection, separation, and automated calculation across every client engagement — with period tracking and FIRS-ready reporting built into every workflow."
@@ -114,6 +110,7 @@ export default function SolutionPage() {
 
         {/* Multi-Client Management */}
         <FeatureSection
+          id="multi-client"
           label="Multi-client management"
           title={<>Manage your entire <span style={{ color: '#60B746' }}>client portfolio in one place</span></>}
           description="Onboard clients with unique client codes, segment companies by industry or size, and manage your entire practice from one centralized workspace — purpose-built for firms running many clients simultaneously."
@@ -132,6 +129,7 @@ export default function SolutionPage() {
 
         {/* Reports & Analytics */}
         <FeatureSection
+          id="reports-analytics"
           label="Reports & analytics"
           title={<>Financial intelligence <span style={{ color: '#60B746' }}>at your fingertips</span></>}
           description="Profit & loss, balance sheet, trial balance, and cash flow statements — available instantly for any client, any period. Export in multiple formats for board presentations or statutory filings."
@@ -149,6 +147,7 @@ export default function SolutionPage() {
 
         {/* Security & Access Control */}
         <FeatureSection
+          id="security-access"
           label="Security & access control"
           title={<>Role-based access <span style={{ color: '#60B746' }}>that protects every client</span></>}
           description="Admin, Accountant, Viewer, and Auditor roles control exactly who sees what — across every client in your portfolio. Secure authentication, system monitoring, and regular audits protect your entire practice."

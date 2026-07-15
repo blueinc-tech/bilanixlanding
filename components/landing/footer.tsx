@@ -2,8 +2,15 @@ import Image from 'next/image'
 import { NewsletterForm } from './newsletter-form'
 
 const COLUMNS = [
-  { title: 'Product', links: ['General Ledger', 'AI Invoicing', 'Financial Reports', 'VAT & Tax', 'Asset Register', 'Bank Reconciliation'] },
-  { title: 'Solutions', links: ['Freelance Accountants', 'Small Firms', 'Mid-Size Firms', 'Enterprise Firms', 'Tax Consultants', 'Audit Firms'] },
+  { title: 'Solutions', links: [
+    { label: 'Core Accounting', href: '/solution#core-accounting' },
+    { label: 'AI Automation', href: '/solution#ai-automation' },
+    { label: 'Tax & VAT', href: '/solution#tax-vat' },
+    { label: 'Multi-Client', href: '/solution#multi-client' },
+    { label: 'Reports & Analytics', href: '/solution#reports-analytics' },
+    { label: 'Security & Access', href: '/solution#security-access' },
+  ]},
+  { title: 'Quick Link', links: [{ label: 'Home', href: '/' }, { label: 'Solution', href: '/solution' }, { label: 'Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/#contact' }] },
 ]
 
 const SOCIALS = ['fa-x-twitter', 'fa-linkedin', 'fa-instagram', 'fa-youtube', 'fa-whatsapp']
@@ -33,13 +40,13 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Right Column — Product & Solutions */}
+          {/* Right Column — Solutions & Quick Link */}
           <div className="grid grid-cols-2" style={{ gap: 40 }}>
             {COLUMNS?.map?.((col) => (
               <div key={col.title}>
                 <div className="footer-col-title">{col.title}</div>
                 {col.links?.map?.((l) => (
-                  <a key={l} href="#" className="footer-link">{l}</a>
+                  <a key={l.label} href={l.href} className="footer-link">{l.label}</a>
                 ))}
               </div>
             ))}
