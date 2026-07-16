@@ -9,7 +9,7 @@ import { openDemo } from './demo-modal'
 const LINKS = [
   { label: 'Solutions', href: '/solution' },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'Contact', target: 'contact' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 function HamburgerIcon({ open }: { open: boolean }) {

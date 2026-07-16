@@ -158,7 +158,7 @@ export function DemoModal() {
             ) : null}
             <button type="submit" className="btn-primary" style={{ justifyContent: 'center', marginTop: 4 }} disabled={loading}>
               {loading ? <Loader2 size={16} className="animate-spin" /> : null}
-              {loading ? 'Sending...' : 'Request demo'}
+              {loading ? 'Sending...' : 'Submit'}
             </button>
           </form>
         )}

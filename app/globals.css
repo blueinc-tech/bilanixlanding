@@ -120,8 +120,8 @@
   }
 
   ::selection {
-    background-color: hsl(var(--primary) / 0.2);
-    color: hsl(var(--primary));
+    background-color: #DFF1DA;
+    color: #0B0B0B;
   }
 
   ::-webkit-scrollbar { width: 6px; height: 6px; }

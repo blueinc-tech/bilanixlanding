@@ -27,8 +27,7 @@ export function PricingCTA() {
               margin: '20px auto 0',
             }}
           >
-            Join the waitlist and be among the first accounting professionals to experience
-            Bilanix — AI-powered, compliance-ready, built for Nigeria.
+            Join accounting firms across Nigeria using Bilanix to manage multi-client portfolios with AI-powered automation.
           </p>
         </Reveal>
         <Reveal delay={3}>

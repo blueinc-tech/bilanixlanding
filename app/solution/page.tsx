@@ -199,7 +199,7 @@ export default function SolutionPage() {
             </Reveal>
             <Reveal delay={2}>
               <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '20px auto 0' }}>
-                Join the waitlist and be among the first accounting professionals to experience Bilanix — AI-powered, compliance-ready, built for Nigeria.
+                Join accounting firms across Nigeria using Bilanix to manage multi-client portfolios with AI-powered automation.
               </p>
             </Reveal>
             <Reveal delay={3}>

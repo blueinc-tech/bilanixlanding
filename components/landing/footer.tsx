@@ -10,7 +10,7 @@ const COLUMNS = [
     { label: 'Reports & Analytics', href: '/solution#reports-analytics' },
     { label: 'Security & Access', href: '/solution#security-access' },
   ]},
-  { title: 'Quick Link', links: [{ label: 'Home', href: '/' }, { label: 'Solution', href: '/solution' }, { label: 'Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/#contact' }] },
+  { title: 'Quick Link', links: [{ label: 'Home', href: '/' }, { label: 'Solution', href: '/solution' }, { label: 'Pricing', href: '/pricing' }, { label: 'Contact Us', href: '/contact' }] },
 ]
 
 const SOCIALS = ['fa-x-twitter', 'fa-linkedin', 'fa-instagram', 'fa-youtube', 'fa-whatsapp']
