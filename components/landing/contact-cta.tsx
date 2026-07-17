@@ -1,7 +1,7 @@
 'use client'
 
 import { Reveal } from './reveal'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 import { ArrowRight } from 'lucide-react'
 
 export function ContactCta() {
@@ -29,7 +29,7 @@ export function ContactCta() {
         </Reveal>
         <Reveal>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 12, marginTop: 32 }}>
-            <button className="btn-primary" onClick={openDemo} style={{ fontSize: '0.9375rem', padding: '0 24px', minHeight: 48 }}>
+            <button className="btn-primary" onClick={openRegistration} style={{ fontSize: '0.9375rem', padding: '0 24px', minHeight: 48 }}>
               Start Now
               <ArrowRight size={15} />
             </button>

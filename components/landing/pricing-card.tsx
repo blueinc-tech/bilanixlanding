@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Check, ChevronDown } from 'lucide-react'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 
 type Billing = 'monthly' | 'yearly'
 
@@ -87,7 +87,7 @@ export function PricingCard({
       </div>
 
       <button
-        onClick={openDemo}
+        onClick={openRegistration}
         style={{
           marginTop: 20,
           cursor: 'pointer',

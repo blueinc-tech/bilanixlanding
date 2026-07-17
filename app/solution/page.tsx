@@ -12,10 +12,10 @@ import {
   AccessControlMockup,
   MobileDashboardMockup,
 } from '@/components/landing/solution-mockups'
-import { openDemo } from '@/components/landing/demo-modal'
+import { openRegistration } from '@/components/landing/registration-modal'
 import { Navbar } from '@/components/landing/navbar'
 import { Footer } from '@/components/landing/footer'
-import { DemoModal } from '@/components/landing/demo-modal'
+import { RegistrationModal } from '@/components/landing/registration-modal'
 
 export default function SolutionPage() {
   return (
@@ -42,7 +42,7 @@ export default function SolutionPage() {
             </Reveal>
             <Reveal delay={2}>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <button className="btn-primary" onClick={openDemo}>
+                <button className="btn-primary" onClick={openRegistration}>
                   Start Now <ArrowRight size={15} />
                 </button>
                 <a href="/pricing" className="btn-ghost">
@@ -178,7 +178,7 @@ export default function SolutionPage() {
           ]}
           dark={false}
           cta={
-            <button className="btn-primary" onClick={openDemo}>
+            <button className="btn-primary" onClick={openRegistration}>
               Start Now <ArrowRight size={15} />
             </button>
           }
@@ -204,7 +204,7 @@ export default function SolutionPage() {
             </Reveal>
             <Reveal delay={3}>
               <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginTop: 32 }}>
-                <button className="btn-primary" onClick={openDemo}>
+                <button className="btn-primary" onClick={openRegistration}>
                   Start Now <ArrowRight size={15} />
                 </button>
                 <a href="/pricing" className="btn-ghost">
@@ -216,7 +216,7 @@ export default function SolutionPage() {
         </section>
       </main>
       <Footer />
-      <DemoModal />
+      <RegistrationModal />
     </div>
   )
 }

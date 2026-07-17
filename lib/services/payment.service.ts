@@ -51,7 +51,22 @@ export const PaymentService = {
       prisma.paymentLog.count({ where }),
     ])
 
-    return { payments, total, page, limit, totalPages: Math.ceil(total / limit) }
+    // Fetch user names for payments that have userId
+    const userIds = [...new Set(payments.filter(p => p.userId).map(p => p.userId!))]
+    const users = userIds.length > 0
+      ? await prisma.user.findMany({
+          where: { id: { in: userIds } },
+          select: { id: true, name: true, email: true },
+        })
+      : []
+    const userMap = new Map(users.map(u => [u.id, { name: u.name, email: u.email }]))
+
+    const paymentsWithUser = payments.map(p => ({
+      ...p,
+      user: p.userId ? userMap.get(p.userId) || null : null,
+    }))
+
+    return { payments: paymentsWithUser, total, page, limit, totalPages: Math.ceil(total / limit) }
   },
 
   async getById(id: string) {

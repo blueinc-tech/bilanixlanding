@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -11,6 +12,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs'
+import { useAdminAuth } from '@/components/admin/auth-provider'
 
 interface SettingDefinition {
   key: string
@@ -37,12 +39,22 @@ const GROUP_LABELS: Record<string, string> = {
 }
 
 export default function SettingsPage() {
+  const { admin } = useAdminAuth()
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState('general')
   const [groups, setGroups] = useState<Record<string, SettingsGroupData>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+
+  const isSuperAdmin = admin?.role === 'super_admin'
+
+  // Redirect non-super-admins to profile
+  if (admin && !isSuperAdmin) {
+    router.push('/admin/profile')
+    return null
+  }
 
   const fetchGroup = useCallback(async (group: string) => {
     try {

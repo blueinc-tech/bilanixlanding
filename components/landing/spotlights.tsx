@@ -2,7 +2,7 @@
 
 import { ArrowRight, Check } from 'lucide-react'
 import { Reveal } from './reveal'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 
 function CheckItem({ children, dark }: { children: React.ReactNode; dark?: boolean }) {
   return (
@@ -29,7 +29,7 @@ export function SpotlightAI() {
               <CheckItem dark>Auto-suggested general ledger account mappings</CheckItem>
               <CheckItem dark>Human review and approval workflow before posting</CheckItem>
             </ul>
-            <button className="btn-primary" onClick={openDemo}>See how it works <ArrowRight size={15} /></button>
+            <button className="btn-primary" onClick={openRegistration}>See how it works <ArrowRight size={15} /></button>
           </Reveal>
 
           <Reveal delay={2}>
@@ -125,7 +125,7 @@ export function SpotlightExpense() {
               <CheckItem>Client-specific P&L and balance sheet reports</CheckItem>
               <CheckItem>Export in PDF and CSV for auditors and clients</CheckItem>
             </ul>
-            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openDemo}>See reporting features <ArrowRight size={15} /></button>
+            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openRegistration}>See reporting features <ArrowRight size={15} /></button>
           </Reveal>
         </div>
       </div>
@@ -170,7 +170,7 @@ export function SpotlightPayroll() {
                 <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>Audit trail on every entry</div>
               </div>
             </div>
-            <button className="btn-primary" onClick={openDemo}>Explore the ledger <ArrowRight size={15} /></button>
+            <button className="btn-primary" onClick={openRegistration}>Explore the ledger <ArrowRight size={15} /></button>
           </Reveal>
 
           <Reveal delay={2}>
@@ -265,7 +265,7 @@ export function SpotlightCashflow() {
               <CheckItem>Fixed asset depreciation with auto journal postings</CheckItem>
               <CheckItem>FIRS-ready compliance workflows for every client</CheckItem>
             </ul>
-            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openDemo}>Explore compliance tools <ArrowRight size={15} /></button>
+            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openRegistration}>Explore compliance tools <ArrowRight size={15} /></button>
           </Reveal>
         </div>
       </div>

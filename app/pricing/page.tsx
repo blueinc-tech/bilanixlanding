@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Navbar } from '@/components/landing/navbar'
 import { Footer } from '@/components/landing/footer'
-import { DemoModal } from '@/components/landing/demo-modal'
+import { RegistrationModal } from '@/components/landing/registration-modal'
 import { PricingHero } from '@/components/landing/pricing-hero'
 import { PricingCard } from '@/components/landing/pricing-card'
 import { ComparisonTable } from '@/components/landing/comparison-table'
@@ -24,87 +24,49 @@ type Plan = {
   badge?: string
 }
 
-const PLANS: Plan[] = [
-  {
-    name: 'Basic',
-    audience: 'Freelancers & Small Accounting Firms',
-    price: { yearly: '₦200,000', monthly: '₦25,000' },
-    period: { yearly: '/yr/user', monthly: '/mo/user' },
-    cta: 'Get started',
-    features: [
-      'Up to 20 clients',
-      'Bookkeeping & bank reconciliation',
-      'Asset register',
-      'Accounting & financial statement presentation',
-      'Invoice attachment',
-    ],
-  },
-  {
-    name: 'Professional',
-    audience: 'Medium Sized Accounting Firms',
-    price: { yearly: '₦500,000', monthly: '₦60,000' },
-    period: { yearly: '/yr/2 users', monthly: '/mo/2 users' },
-    cta: 'Get started',
-    featured: true,
-    badge: 'Most Popular',
-    features: [
-      'Up to 50 clients',
-      'Bookkeeping & bank reconciliation',
-      'Asset register',
-      'Accounting & financial statement presentation',
-      'AI invoicing entries',
-      'Invoice attachments & lettering',
-      'Accountant validation feature',
-      'Supervisor role',
-    ],
-  },
-  {
-    name: 'Enterprise',
-    audience: 'Big Accounting Firms',
-    price: { yearly: '₦750,000', monthly: '₦90,000' },
-    period: { yearly: '/yr/5 users', monthly: '/mo/5 users' },
-    cta: 'Get started',
-    features: [
-      'Up to 100 clients',
-      'Bookkeeping & bank reconciliation',
-      'Asset register',
-      'Accounting & financial statement presentation',
-      'AI invoicing entries',
-      'Invoice attachments & lettering',
-      'Accountant validation & supervisor role',
-      'Bank connection for statement integration',
-      'Accounting Entry File (FEC) integration',
-      'VAT remittance, tax filing & CAC Annual Returns',
-    ],
-  },
-  {
-    name: 'Premium',
-    audience: 'Large Accounting Firms',
-    price: { yearly: '₦1,200,000', monthly: '₦150,000' },
-    period: { yearly: '/yr/10 users', monthly: '/mo/10 users' },
-    cta: 'Talk to sales',
-    features: [
-      'Up to 100 clients',
-      'Bookkeeping & bank reconciliation',
-      'Asset register',
-      'Accounting & financial statement presentation',
-      'AI invoicing entries',
-      'Invoice attachments & lettering',
-      'Accountant validation & supervisor role',
-      'Bank connection for statement integration',
-      'Accounting Entry File (FEC) integration',
-      'VAT remittance, tax filing & CAC Annual Returns',
-      'Integration with banks, payment gateways & ERP systems',
-      'Client access for electronic invoicing & document uploads',
-    ],
-  },
-]
+const formatNaira = (amount: number) =>
+  new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)
 
 export default function PricingPage() {
   const [billing, setBilling] = useState<Billing>('yearly')
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({})
   const [lockedHeight, setLockedHeight] = useState<number | null>(null)
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [loading, setLoading] = useState(true)
   const gridRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    fetch('/api/plans')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch plans')
+        return res.json()
+      })
+      .then((json: any) => {
+        const list = Array.isArray(json) ? json : json?.data
+        if (!Array.isArray(list)) throw new Error('Invalid data')
+        const transformed: Plan[] = list.map((p: any) => ({
+          name: p.name,
+          audience: p.audience,
+          price: {
+            monthly: formatNaira(p.monthlyAmount),
+            yearly: formatNaira(p.yearlyAmount),
+          },
+          period: {
+            monthly: '/mo/user',
+            yearly: '/yr/user',
+          },
+          cta: p.ctaText,
+          features: p.features,
+          featured: !!p.badge,
+          badge: p.badge,
+        }))
+        setPlans(transformed)
+      })
+      .catch(() => {})
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
 
   const toggleExpand = (name: string) => {
     setExpandedCards((prev) => ({ ...prev, [name]: !prev[name] }))
@@ -121,7 +83,7 @@ export default function PricingPage() {
       if (max > 0) setLockedHeight(max)
     })
     return () => cancelAnimationFrame(frame)
-  }, [billing])
+  }, [billing, plans])
 
   return (
     <div className="bilanix">
@@ -139,18 +101,32 @@ export default function PricingPage() {
               margin: '0 auto',
               alignItems: 'start',
             }}>
-              {PLANS.map((plan, i) => (
-                <div key={plan.name}>
-                  <PricingCard
-                    {...plan}
-                    index={i}
-                    billing={billing}
-                    expanded={expandedCards[plan.name] ?? false}
-                    onToggleExpand={() => toggleExpand(plan.name)}
-                    cardHeight={lockedHeight}
-                  />
-                </div>
-              ))}
+              {loading
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} style={{ background: '#f9fafb', borderRadius: 12, padding: 32 }}>
+                      <div style={{ height: 14, width: 80, background: '#e5e7eb', borderRadius: 4, marginBottom: 12 }} />
+                      <div style={{ height: 12, width: 160, background: '#e5e7eb', borderRadius: 4, marginBottom: 24 }} />
+                      <div style={{ height: 28, width: 110, background: '#e5e7eb', borderRadius: 4, marginBottom: 8 }} />
+                      <div style={{ height: 12, width: 60, background: '#e5e7eb', borderRadius: 4, marginBottom: 24 }} />
+                      <div style={{ height: 44, width: '100%', background: '#e5e7eb', borderRadius: 22, marginBottom: 24 }} />
+                      {[1, 2, 3].map((j) => (
+                        <div key={j} style={{ height: 12, width: '90%', background: '#e5e7eb', borderRadius: 4, marginBottom: 10 }} />
+                      ))}
+                    </div>
+                  ))
+                : plans.map((plan, i) => (
+                    <div key={plan.name}>
+                      <PricingCard
+                        {...plan}
+                        index={i}
+                        billing={billing}
+                        expanded={expandedCards[plan.name] ?? false}
+                        onToggleExpand={() => toggleExpand(plan.name)}
+                        cardHeight={lockedHeight}
+                      />
+                    </div>
+                  ))
+              }
             </div>
 
             <Reveal>
@@ -166,7 +142,7 @@ export default function PricingPage() {
         <PricingCTA />
       </main>
       <Footer />
-      <DemoModal />
+      <RegistrationModal />
     </div>
   )
 }

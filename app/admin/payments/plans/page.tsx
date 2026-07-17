@@ -33,6 +33,11 @@ interface Plan {
   features: string[] | null
   isActive: boolean
   sortOrder: number
+  audience: string | null
+  badge: string | null
+  ctaText: string | null
+  monthlyAmount: number | null
+  yearlyAmount: number | null
   _count: { paymentLogs: number }
 }
 
@@ -107,9 +112,9 @@ export default function PlansPage() {
       <div className="rounded-lg border border-border bg-card">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Plan</TableHead>
-              <TableHead>Price</TableHead>
+                <TableRow>
+               <TableHead>Plan</TableHead>
+               <TableHead>Pricing</TableHead>
               <TableHead>Interval</TableHead>
               <TableHead>Payments</TableHead>
               <TableHead>Status</TableHead>
@@ -134,13 +139,24 @@ export default function PlansPage() {
                   <TableCell>
                     <div>
                       <p className="font-medium text-foreground">{plan.name}</p>
+                      {plan.audience && (
+                        <p className="text-xs text-muted-foreground">{plan.audience}</p>
+                      )}
                       {plan.description && (
                         <p className="text-xs text-muted-foreground line-clamp-1">{plan.description}</p>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm font-medium text-foreground">
-                    {plan.currency} {plan.amount.toLocaleString()}
+                  <TableCell className="text-sm text-muted-foreground">
+                    {plan.monthlyAmount != null && (
+                      <div>{plan.currency} {plan.monthlyAmount.toLocaleString()}/mo</div>
+                    )}
+                    {plan.yearlyAmount != null && (
+                      <div>{plan.currency} {plan.yearlyAmount.toLocaleString()}/yr</div>
+                    )}
+                    {plan.monthlyAmount == null && plan.yearlyAmount == null && (
+                      <div>{plan.currency} {plan.amount.toLocaleString()}</div>
+                    )}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground capitalize">{plan.interval}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{plan._count.paymentLogs}</TableCell>
@@ -238,6 +254,11 @@ function PlanFormDialog({
     amount: plan?.amount || 0,
     interval: plan?.interval || 'monthly',
     features: plan?.features?.join('\n') || '',
+    audience: plan?.audience || '',
+    badge: plan?.badge || '',
+    ctaText: plan?.ctaText || 'Get started',
+    monthlyAmount: plan?.monthlyAmount ?? '',
+    yearlyAmount: plan?.yearlyAmount ?? '',
   })
 
   useEffect(() => {
@@ -249,9 +270,14 @@ function PlanFormDialog({
         amount: plan.amount,
         interval: plan.interval,
         features: plan.features?.join('\n') || '',
+        audience: plan.audience || '',
+        badge: plan.badge || '',
+        ctaText: plan.ctaText || 'Get started',
+        monthlyAmount: plan.monthlyAmount ?? '',
+        yearlyAmount: plan.yearlyAmount ?? '',
       })
     } else {
-      setForm({ name: '', slug: '', description: '', amount: 0, interval: 'monthly', features: '' })
+      setForm({ name: '', slug: '', description: '', amount: 0, interval: 'monthly', features: '', audience: '', badge: '', ctaText: 'Get started', monthlyAmount: '', yearlyAmount: '' })
     }
   }, [plan])
 
@@ -268,6 +294,11 @@ function PlanFormDialog({
         amount: Number(form.amount),
         interval: form.interval,
         features: form.features ? form.features.split('\n').filter(Boolean) : [],
+        audience: form.audience || undefined,
+        badge: form.badge || undefined,
+        ctaText: form.ctaText || undefined,
+        monthlyAmount: form.monthlyAmount !== '' ? Number(form.monthlyAmount) : undefined,
+        yearlyAmount: form.yearlyAmount !== '' ? Number(form.yearlyAmount) : undefined,
       }
 
       const url = isEdit ? `/api/admin/plans/${plan!.slug}` : '/api/admin/plans'
@@ -317,23 +348,50 @@ function PlanFormDialog({
             <label className="text-sm font-medium text-foreground">Description</label>
             <Input placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Audience</label>
+            <Input placeholder="e.g., Freelancers & Small Firms" value={form.audience} onChange={(e) => setForm({ ...form, audience: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Badge</label>
+            <Input placeholder="e.g., Most Popular" value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">CTA Text</label>
+            <select
+              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              value={form.ctaText}
+              onChange={(e) => setForm({ ...form, ctaText: e.target.value })}
+            >
+              <option value="Get started">Get started</option>
+              <option value="Talk to sales">Talk to sales</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Amount *</label>
               <Input type="number" min="0" step="100" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} required />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Interval</label>
-              <select
-                className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                value={form.interval}
-                onChange={(e) => setForm({ ...form, interval: e.target.value })}
-              >
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-                <option value="one_time">One-time</option>
-              </select>
+              <label className="text-sm font-medium text-foreground">Monthly Amount</label>
+              <Input type="number" min="0" step="100" value={form.monthlyAmount} onChange={(e) => setForm({ ...form, monthlyAmount: e.target.value })} />
             </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Yearly Amount</label>
+              <Input type="number" min="0" step="100" value={form.yearlyAmount} onChange={(e) => setForm({ ...form, yearlyAmount: e.target.value })} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Interval</label>
+            <select
+              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              value={form.interval}
+              onChange={(e) => setForm({ ...form, interval: e.target.value })}
+            >
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="one_time">One-time</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Features (one per line)</label>

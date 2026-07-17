@@ -44,6 +44,8 @@ export interface UserListItem {
   email: string
   phone: string | null
   company: string | null
+  country: string | null
+  industry: string | null
   avatar: string | null
   status: string
   createdAt: string
@@ -51,6 +53,7 @@ export interface UserListItem {
   subscription: {
     planName: string
     status: string
+    amount: number
   } | null
 }
 
@@ -60,6 +63,8 @@ export interface UserDetail {
   email: string
   phone: string | null
   company: string | null
+  country: string | null
+  industry: string | null
   avatar: string | null
   status: string
   emailVerified: string | null

@@ -171,6 +171,61 @@ function renderTemplate(templateId: EmailTemplateId, data: TemplateData): { subj
         ${data.loginUrl ? `<a href="${data.loginUrl}" class="btn">Renew Now</a>` : ''}
       `),
     },
+    admin_welcome: {
+      subject: `Welcome to Bilanix Admin, ${data.name}!`,
+      html: baseLayout(`
+        <h1>Welcome to Bilanix Admin</h1>
+        <p>Hi ${data.name},</p>
+        <p>An administrator account has been created for you on the Bilanix Admin Portal.</p>
+        ${data.temporaryPassword ? `
+          <div class="credentials">
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Temporary Password:</strong> ${data.temporaryPassword}</p>
+          </div>
+          <div class="warning">
+            <p>Please log in and change your password immediately for security.</p>
+          </div>
+        ` : ''}
+        ${data.role ? `<p><strong>Your Role:</strong> ${data.role === 'super_admin' ? 'Super Admin' : 'Admin'}</p>` : ''}
+        ${data.loginUrl ? `<a href="${data.loginUrl}" class="btn">Log In to Admin Portal</a>` : ''}
+        <p style="margin-top: 24px;">If you have any questions, don't hesitate to reach out to the team.</p>
+      `),
+    },
+    payment_receipt: {
+      subject: `Payment Receipt - Bilanix ${data.planName}`,
+      html: baseLayout(`
+        <h1>Payment Received</h1>
+        <p>Hi ${data.name},</p>
+        <p>Your payment has been received successfully.</p>
+        <div class="credentials">
+          <p><strong>Plan:</strong> ${data.planName}</p>
+          <p><strong>Amount:</strong> ${data.amount}</p>
+          <p><strong>Billing:</strong> ${data.billingCycle}</p>
+          <p><strong>Transaction ID:</strong> ${data.transactionId}</p>
+          <p><strong>Payment Date:</strong> ${data.paymentDate}</p>
+          <p><strong>Next Billing:</strong> ${data.nextBillingDate}</p>
+        </div>
+        ${data.loginUrl ? `<a href="${data.loginUrl}" class="btn">Go to Dashboard</a>` : ''}
+      `),
+    },
+    registration_welcome: {
+      subject: `Welcome to Bilanix, ${data.name}!`,
+      html: baseLayout(`
+        <h1>Welcome to Bilanix!</h1>
+        <p>Hi ${data.name},</p>
+        <p>Thank you for registering. Your subscription is now active.</p>
+        ${data.temporaryPassword ? `
+          <div class="credentials">
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Temporary Password:</strong> ${data.temporaryPassword}</p>
+          </div>
+          <div class="warning">
+            <p>Please log in and change your password immediately for security.</p>
+          </div>
+        ` : ''}
+        ${data.loginUrl ? `<a href="${data.loginUrl}" class="btn">Go to Dashboard</a>` : ''}
+      `),
+    },
   }
 
   return templates[templateId]

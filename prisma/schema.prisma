@@ -11,18 +11,28 @@ datasource db {
 // ─── Landing Page Models ───────────────────────────────────────────
 
 model ContactSubmission {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  company   String?
-  phone     String?
-  message   String?
-  formType  String   @default("demo")
-  status    String   @default("new")
-  createdAt DateTime @default(now())
+  id            String    @id @default(cuid())
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  email         String
+  company       String?
+  phone         String?
+  message       String?
+  inquiryType   String    @default("demo") @map("inquiry_type")
+  isRead        Boolean   @default(false) @map("is_read")
+  status        String    @default("new")
+  viewedAt      DateTime? @map("viewed_at")
+  respondedAt   DateTime? @map("responded_at")
+  deletedAt     DateTime? @map("deleted_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
   @@index([createdAt])
   @@index([email])
+  @@index([isRead])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("contact_submissions")
 }
 
 model NewsletterSubscription {
@@ -43,6 +53,7 @@ model Admin {
   passwordHash   String    @map("password_hash")
   roleId         String?   @map("role_id")
   role           String    @default("admin")
+  phone          String?
   status         String    @default("active")
   avatar         String?
   lastLoginAt    DateTime? @map("last_login_at")
@@ -215,6 +226,23 @@ model EmailLog {
   @@map("email_logs")
 }
 
+// ─── Registration Tokens ────────────────────────────────────────
+
+model RegistrationToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String    @map("user_id")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@map("registration_tokens")
+}
+
 // ─── Client / User Management ──────────────────────────────────────
 
 model User {
@@ -224,6 +252,8 @@ model User {
   passwordHash   String?   @map("password_hash")
   phone          String?
   company        String?
+  country        String?
+  industry       String?
   avatar         String?
   status         String    @default("active")
   emailVerified  DateTime? @map("email_verified")
@@ -234,8 +264,9 @@ model User {
   updatedAt      DateTime  @updatedAt @map("updated_at")
   deletedAt      DateTime? @map("deleted_at")
 
-  subscriptions  Subscription[]
-  impersonationLogs ImpersonationLog[]
+  subscriptions      Subscription[]
+  impersonationLogs  ImpersonationLog[]
+  registrationTokens RegistrationToken[]
 
   @@index([email])
   @@index([status])
@@ -246,6 +277,7 @@ model User {
 model Subscription {
   id               String    @id @default(cuid())
   userId           String    @map("user_id")
+  planId           String?   @map("plan_id")
   planName         String    @map("plan_name")
   status           String    @default("active")
   startDate        DateTime  @default(now()) @map("start_date")
@@ -258,9 +290,11 @@ model Subscription {
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan SubscriptionPlan?           @relation(fields: [planId], references: [id])
 
   @@index([userId])
+  @@index([planId])
   @@index([status])
   @@index([planName])
   @@index([createdAt])
@@ -290,20 +324,26 @@ model ImpersonationLog {
 // ─── Subscriptions & Payments ─────────────────────────────────────
 
 model SubscriptionPlan {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  amount      Float
-  currency    String   @default("NGN")
-  interval    String   @default("monthly")
-  features    Json?
-  isActive    Boolean  @default(true) @map("is_active")
-  sortOrder   Int      @default(0) @map("sort_order")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String?
+  amount        Float
+  currency      String   @default("NGN")
+  interval      String   @default("monthly")
+  monthlyAmount Float?   @map("monthly_amount")
+  yearlyAmount  Float?   @map("yearly_amount")
+  features      Json?
+  audience      String?
+  badge         String?
+  ctaText       String?  @default("Get started") @map("cta_text")
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   paymentLogs PaymentLog[]
+  subscriptions Subscription[]
 
   @@index([isActive])
   @@index([sortOrder])

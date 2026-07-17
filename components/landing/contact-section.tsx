@@ -39,6 +39,48 @@ const INFO_CARDS = [
 
 export function ContactSection() {
   const [inquiryType, setInquiryType] = useState('Request a Demo')
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setSubmitting(true)
+    setError('')
+
+    const form = e.currentTarget
+    const fd = new FormData(form)
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: fd.get('first-name'),
+          lastName: fd.get('last-name'),
+          email: fd.get('email'),
+          company: fd.get('company'),
+          phone: fd.get('phone'),
+          message: fd.get('message'),
+          inquiryType,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong. Please try again.')
+        return
+      }
+
+      setSubmitted(true)
+      form.reset()
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <section className="features-section" style={{ padding: '80px 0' }}>
@@ -154,25 +196,25 @@ export function ContactSection() {
               </div>
 
               {/* Form Fields */}
-              <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <InputField id="first-name" label="First Name" required placeholder="e.g. Jane" />
                   <InputField id="last-name" label="Last Name" required placeholder="e.g. Adeyemi" />
                 </div>
                 <InputField id="email" label="Work Email" type="email" required placeholder="you@yourfirm.com" />
                 <InputField id="company" label="Firm / Company Name" required placeholder="e.g. Adeyemi & Associates" />
-                <InputField id="phone" label="Phone Number" type="tel" placeholder="+234 800 000 0000" />
+                <InputField id="phone" label="Phone Number" type="tel" required placeholder="+234 800 000 0000" />
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <label htmlFor="message" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(15,15,15,0.7)' }}>
-                    Tell us about your practice<span style={{ marginLeft: 2, color: '#60B746' }}>*</span>
+                    Tell us more<span style={{ marginLeft: 2, color: '#60B746' }}>*</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     required
                     rows={5}
-                    placeholder="How many clients does your firm currently manage? What accounting challenges are you looking to solve?"
+                    placeholder="How many clients does your firm currently manage? What accounting challenges are you looking to solve? What issue are you facing with our platform?"
                     style={{
                       width: '100%',
                       borderRadius: 12,
@@ -193,6 +235,7 @@ export function ContactSection() {
 
                 <button
                   type="submit"
+                  disabled={submitting}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -201,19 +244,30 @@ export function ContactSection() {
                     width: '100%',
                     padding: '14px 0',
                     borderRadius: 12,
-                    background: '#60B746',
+                    background: submitted ? '#16a34a' : '#60B746',
                     color: '#fff',
                     fontSize: 14.5,
                     fontWeight: 600,
                     border: 'none',
-                    cursor: 'pointer',
-                    transition: 'background 0.2s',
+                    cursor: submitting ? 'not-allowed' : 'pointer',
+                    opacity: submitting ? 0.7 : 1,
+                    transition: 'all 0.2s',
                     marginTop: 4,
                   }}
                 >
                   <Send size={15} />
-                  Send Message
+                  {submitted ? 'Sent Successfully!' : submitting ? 'Sending...' : 'Send Message'}
                 </button>
+
+                {error && (
+                  <p style={{ textAlign: 'center', fontSize: 13, color: '#dc2626' }}>{error}</p>
+                )}
+
+                {submitted && (
+                  <p style={{ textAlign: 'center', fontSize: 13, color: '#16a34a' }}>
+                    Thank you! Our team will reach out shortly.
+                  </p>
+                )}
 
                 <p style={{ textAlign: 'center', fontSize: 12, color: '#a0a0a0' }}>
                   We respect your privacy and will never share your information.

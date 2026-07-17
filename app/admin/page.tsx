@@ -139,50 +139,54 @@ export default function AdminPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ChartPlaceholder
-          title="User Growth"
-          subtitle="New signups over the last 12 months"
-          type="line"
-        />
-        <ChartPlaceholder
-          title="Revenue"
-          subtitle="Monthly recurring revenue"
-          type="bar"
-        />
-      </div>
+      {admin?.role === 'super_admin' && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          <ChartPlaceholder
+            title="User Growth"
+            subtitle="New signups over the last 12 months"
+            type="line"
+          />
+          <ChartPlaceholder
+            title="Revenue"
+            subtitle="Monthly recurring revenue"
+            type="bar"
+          />
+        </div>
+      )}
 
       {/* Recent Users + Activity */}
       <div className="grid gap-4 lg:grid-cols-2">
         <RecentUsersTable users={data?.recentUsers || []} />
-        <ActivityFeed activities={[]} />
+        {admin?.role === 'super_admin' && <ActivityFeed activities={[]} />}
       </div>
 
-      {/* Subscription Breakdown */}
-      <div className="rounded-lg border border-border bg-card p-5">
-        <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">
-          Subscription Overview
-        </h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <div className="text-center">
-            <p className="text-2xl font-semibold text-foreground">{stats.totalSubscriptions.toLocaleString()}</p>
-            <p className="mt-1 text-sm text-muted-foreground">Total Subscriptions</p>
+      {/* Subscription Breakdown - Super Admin only */}
+      {admin?.role === 'super_admin' && (
+        <div className="rounded-lg border border-border bg-card p-5">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">
+            Subscription Overview
+          </h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            <div className="text-center">
+              <p className="text-2xl font-semibold text-foreground">{stats.totalSubscriptions.toLocaleString()}</p>
+              <p className="mt-1 text-sm text-muted-foreground">Total Subscriptions</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-semibold text-emerald-600">{stats.activeSubscriptions.toLocaleString()}</p>
+              <p className="mt-1 text-sm text-muted-foreground">Active</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-semibold text-foreground">₦{stats.monthlyRevenue.toLocaleString()}</p>
+              <p className="mt-1 text-sm text-muted-foreground">Monthly Revenue</p>
+            </div>
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-semibold text-emerald-600">{stats.activeSubscriptions.toLocaleString()}</p>
-            <p className="mt-1 text-sm text-muted-foreground">Active</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-semibold text-foreground">₦{stats.monthlyRevenue.toLocaleString()}</p>
-            <p className="mt-1 text-sm text-muted-foreground">Monthly Revenue</p>
-          </div>
+          {(!data?.topPlans || data.topPlans.length === 0) && (
+            <p className="mt-4 text-center text-sm text-muted-foreground">
+              Plan breakdown will appear when subscriptions are active.
+            </p>
+          )}
         </div>
-        {(!data?.topPlans || data.topPlans.length === 0) && (
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            Plan breakdown will appear when subscriptions are active.
-          </p>
-        )}
-      </div>
+      )}
     </div>
   )
 }

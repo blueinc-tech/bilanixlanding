@@ -2,7 +2,7 @@
 
 import { ArrowRight } from 'lucide-react'
 import { Reveal } from './reveal'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 
 export function PricingBar() {
   return (
@@ -24,7 +24,7 @@ export function PricingBar() {
               <div className="font-heading" style={{ fontSize: '2.5rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em' }}>₦9,900<span style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.4)' }}>/mo</span></div>
               <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>Pro plan, all features</div>
             </div>
-            <button className="btn-primary" style={{ marginLeft: 8 }} onClick={openDemo}>View pricing <ArrowRight size={15} /></button>
+            <button className="btn-primary" style={{ marginLeft: 8 }} onClick={openRegistration}>View pricing <ArrowRight size={15} /></button>
           </Reveal>
         </div>
       </div>

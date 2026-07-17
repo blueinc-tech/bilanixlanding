@@ -1,7 +1,7 @@
 'use client'
 
 import { Reveal } from './reveal'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 import { Lock, ShieldCheck, History, Headset } from 'lucide-react'
 
 const PROOF = [
@@ -28,7 +28,7 @@ export function FinalCta() {
             Join accounting firms across Nigeria using Bilanix to manage multi-client portfolios with AI-powered automation.
           </p>
           <div className="flex items-center justify-center flex-wrap" style={{ gap: 16 }}>
-            <button className="btn-primary" style={{ fontSize: '1rem', padding: '0 20px', minHeight: 48 }} onClick={openDemo}>Start free today</button>
+            <button className="btn-primary" style={{ fontSize: '1rem', padding: '0 20px', minHeight: 48 }} onClick={openRegistration}>Start free today</button>
             <button className="btn-ghost" style={{ fontSize: '1rem', padding: '0 20px', minHeight: 48 }} onClick={() => window.location.href = '/contact'}>Talk to sales</button>
           </div>
           <div className="proof-grid">

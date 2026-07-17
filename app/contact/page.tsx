@@ -3,7 +3,7 @@ import { ContactHero } from '@/components/landing/contact-hero'
 import { ContactSection } from '@/components/landing/contact-section'
 import { ContactCta } from '@/components/landing/contact-cta'
 import { Footer } from '@/components/landing/footer'
-import { DemoModal } from '@/components/landing/demo-modal'
+import { RegistrationModal } from '@/components/landing/registration-modal'
 
 export default function ContactPage() {
   return (
@@ -13,7 +13,7 @@ export default function ContactPage() {
       <ContactSection />
       <ContactCta />
       <Footer />
-      <DemoModal />
+      <RegistrationModal />
     </div>
   )
 }

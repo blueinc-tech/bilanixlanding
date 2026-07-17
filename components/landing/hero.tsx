@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { ArrowRight, Calendar } from 'lucide-react'
 import { Reveal } from './reveal'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 
 export function Hero() {
   return (
@@ -23,14 +23,14 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={3} className="flex items-center justify-center gap-4 flex-wrap">
-            <button className="btn-primary" style={{ padding: '0 22px' }} onClick={openDemo}>
+            <button className="btn-primary" style={{ padding: '0 22px' }} onClick={openRegistration}>
               Start for free
               <ArrowRight size={15} />
             </button>
-            <button className="btn-ghost" style={{ padding: '0 22px' }} onClick={openDemo}>
+            <a href="/contact" className="btn-ghost" style={{ padding: '0 22px', textDecoration: 'none' }}>
               <Calendar size={15} />
               Book a demo
-            </button>
+            </a>
           </Reveal>
 
           <Reveal delay={4} className="trust-badge justify-center" style={{ marginTop: 24 }}>

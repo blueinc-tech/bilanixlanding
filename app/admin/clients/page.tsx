@@ -42,6 +42,16 @@ export default function ClientsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [bulkLoading, setBulkLoading] = useState(false)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [planOptions, setPlanOptions] = useState<{ name: string }[]>([])
+
+  useEffect(() => {
+    fetch('/api/admin/plans')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) setPlanOptions(json.data)
+      })
+      .catch(() => {})
+  }, [])
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
@@ -170,9 +180,9 @@ export default function ClientsPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Plans</SelectItem>
-            <SelectItem value="Basic">Basic</SelectItem>
-            <SelectItem value="Premium">Premium</SelectItem>
-            <SelectItem value="Enterprise">Enterprise</SelectItem>
+            {planOptions.map((p) => (
+              <SelectItem key={p.name} value={p.name}>{p.name}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -213,8 +223,11 @@ export default function ClientsPage() {
               </TableHead>
               <TableHead>Client</TableHead>
               <TableHead>Company</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Billing</TableHead>
+              <TableHead>Payment</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
@@ -226,8 +239,11 @@ export default function ClientsPage() {
                   <TableCell><div className="h-4 w-4 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-40 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
+                  <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
                   <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
+                  <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
+                  <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
@@ -257,6 +273,9 @@ export default function ClientsPage() {
                   <TableCell className="text-muted-foreground">
                     {user.company || '—'}
                   </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {user.phone || '—'}
+                  </TableCell>
                   <TableCell>
                     {user.subscription ? (
                       <Badge variant={planColor(user.subscription.planName)}>
@@ -270,6 +289,12 @@ export default function ClientsPage() {
                     <Badge variant={statusColor(user.status)}>
                       {user.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {user.subscription?.amount ? `₦${user.subscription.amount.toLocaleString()}` : '—'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground capitalize">
+                    {user.subscription?.status || '—'}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(user.createdAt).toLocaleDateString()}
@@ -287,7 +312,7 @@ export default function ClientsPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="py-12 text-center">
+                <TableCell colSpan={10} className="py-12 text-center">
                   <p className="text-muted-foreground">No clients found</p>
                 </TableCell>
               </TableRow>

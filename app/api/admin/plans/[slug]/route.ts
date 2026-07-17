@@ -13,6 +13,11 @@ const updateSchema = z.object({
   features: z.array(z.string()).optional(),
   isActive: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
+  audience: z.string().optional(),
+  badge: z.string().optional(),
+  ctaText: z.string().optional(),
+  monthlyAmount: z.number().optional(),
+  yearlyAmount: z.number().optional(),
 })
 
 export const GET = withErrorHandling(async (req: NextRequest, context?: { params: Record<string, string> }) => {

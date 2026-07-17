@@ -43,18 +43,28 @@ export const UserService = {
           status: true,
           createdAt: true,
           lastLoginAt: true,
+          country: true,
+          industry: true,
           subscriptions: {
             where: { status: 'active' },
             take: 1,
-            select: { planName: true, status: true },
+            select: { planName: true, status: true, amount: true },
           },
         },
       }),
       prisma.user.count({ where }),
     ])
 
-    const formatted: UserListItem[] = users.map((u) => ({
-      ...u,
+    const formatted: UserListItem[] = (users as (typeof users[number] & { subscriptions: { planName: string; status: string; amount: number }[] })[]).map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      phone: u.phone,
+      company: u.company,
+      country: u.country,
+      industry: u.industry,
+      avatar: u.avatar,
+      status: u.status,
       createdAt: u.createdAt.toISOString(),
       lastLoginAt: u.lastLoginAt?.toISOString() || null,
       subscription: u.subscriptions[0] || null,
@@ -87,6 +97,8 @@ export const UserService = {
       emailVerified: user.emailVerified?.toISOString() || null,
       lastLoginAt: user.lastLoginAt?.toISOString() || null,
       lastLoginIp: user.lastLoginIp,
+      country: user.country,
+      industry: user.industry,
       metadata: user.metadata as Record<string, unknown> | null,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
@@ -104,7 +116,7 @@ export const UserService = {
     }
   },
 
-  async create(data: { name: string; email: string; password?: string; phone?: string; company?: string }) {
+  async create(data: { name: string; email: string; password?: string; phone?: string; company?: string; country?: string; industry?: string }) {
     const existing = await prisma.user.findUnique({
       where: { email: data.email.toLowerCase().trim() },
     })
@@ -119,6 +131,8 @@ export const UserService = {
         passwordHash,
         phone: data.phone || null,
         company: data.company || null,
+        country: data.country || null,
+        industry: data.industry || null,
       },
       select: {
         id: true,
@@ -126,6 +140,8 @@ export const UserService = {
         email: true,
         phone: true,
         company: true,
+        country: true,
+        industry: true,
         status: true,
         createdAt: true,
       },
@@ -134,7 +150,7 @@ export const UserService = {
     return { ...user, createdAt: user.createdAt.toISOString() }
   },
 
-  async update(id: string, data: { name?: string; email?: string; phone?: string; company?: string; status?: string }) {
+  async update(id: string, data: { name?: string; email?: string; phone?: string; company?: string; status?: string; country?: string; industry?: string }) {
     const user = await prisma.user.findUnique({ where: { id, deletedAt: null } })
     if (!user) throw new NotFoundError('User')
 
@@ -153,6 +169,8 @@ export const UserService = {
         ...(data.phone !== undefined && { phone: data.phone || null }),
         ...(data.company !== undefined && { company: data.company || null }),
         ...(data.status && { status: data.status }),
+        ...(data.country !== undefined && { country: data.country || null }),
+        ...(data.industry !== undefined && { industry: data.industry || null }),
       },
       select: {
         id: true,
@@ -160,6 +178,8 @@ export const UserService = {
         email: true,
         phone: true,
         company: true,
+        country: true,
+        industry: true,
         status: true,
         createdAt: true,
         updatedAt: true,

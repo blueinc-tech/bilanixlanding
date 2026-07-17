@@ -24,6 +24,11 @@ const createSchema = z.object({
   interval: z.enum(['monthly', 'yearly', 'one_time']).optional(),
   features: z.array(z.string()).optional(),
   sortOrder: z.number().int().optional(),
+  audience: z.string().optional(),
+  badge: z.string().optional(),
+  ctaText: z.string().optional(),
+  monthlyAmount: z.number().optional(),
+  yearlyAmount: z.number().optional(),
 })
 
 export const POST = withErrorHandling(async (req: NextRequest) => {

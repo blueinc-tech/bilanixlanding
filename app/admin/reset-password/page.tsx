@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Suspense } from 'react'
 
 function ResetPasswordForm() {
@@ -180,9 +181,7 @@ export default function ResetPasswordPage() {
       <div className="relative z-10 w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <span className="font-display text-2xl font-bold text-white">
-              <span className="text-[#60B746]">Bilan</span>ix
-            </span>
+            <Image src="/admin-logo.png" alt="Bilanix" width={140} height={36} style={{ height: 36, width: 'auto' }} priority />
           </Link>
         </div>
         <Suspense fallback={

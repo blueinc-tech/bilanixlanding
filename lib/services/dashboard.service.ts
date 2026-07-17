@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import { ROLES, type RoleName } from '@/types/admin'
 
 // ─── Dashboard Service ─────────────────────────────────────────────
 
@@ -63,8 +64,8 @@ export const DashboardService = {
       }),
       prisma.subscription.count({ where: { user: { deletedAt: null } } }),
       prisma.subscription.count({ where: { status: 'active' } }),
-      prisma.subscription.aggregate({
-        where: { status: 'active' },
+      prisma.paymentLog.aggregate({
+        where: { status: 'paid' },
         _sum: { amount: true },
       }),
       prisma.user.count({ where: { createdAt: { gte: thirtyDaysAgo }, deletedAt: null } }),
@@ -142,8 +143,8 @@ export const DashboardService = {
       const start = new Date(now.getFullYear(), now.getMonth() - i, 1)
       const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59)
 
-      const result = await prisma.subscription.aggregate({
-        where: { createdAt: { gte: start, lte: end }, status: 'active' },
+      const result = await prisma.paymentLog.aggregate({
+        where: { status: 'paid', paidAt: { gte: start, lte: end } },
         _sum: { amount: true },
       })
 
@@ -174,15 +175,46 @@ export const DashboardService = {
     }))
   },
 
-  async getDashboardData(): Promise<DashboardData> {
-    const [stats, recentUsers, userGrowth, revenueByMonth, topPlans] = await Promise.all([
+  async getDashboardData(role: RoleName = ROLES.SUPER_ADMIN): Promise<DashboardData> {
+    const isSuperAdmin = role === ROLES.SUPER_ADMIN
+
+    const baseData = await Promise.all([
       this.getStats(),
       this.getRecentUsers(),
       this.getUserGrowth(),
-      this.getRevenueByMonth(),
-      this.getTopPlans(),
     ])
 
-    return { stats, recentUsers, userGrowth, revenueByMonth, topPlans }
+    if (isSuperAdmin) {
+      const [revenueByMonth, topPlans] = await Promise.all([
+        this.getRevenueByMonth(),
+        this.getTopPlans(),
+      ])
+
+      return {
+        stats: baseData[0],
+        recentUsers: baseData[1],
+        userGrowth: baseData[2],
+        revenueByMonth,
+        topPlans,
+      }
+    }
+
+    // Admin: limited dashboard
+    return {
+      stats: {
+        totalUsers: baseData[0].totalUsers,
+        activeUsers: baseData[0].activeUsers,
+        expiringSoon: baseData[0].expiringSoon,
+        inactiveUsers: baseData[0].inactiveUsers,
+        totalSubscriptions: 0,
+        activeSubscriptions: 0,
+        monthlyRevenue: 0,
+        newUsersThisMonth: 0,
+      },
+      recentUsers: baseData[1],
+      userGrowth: baseData[2],
+      revenueByMonth: [],
+      topPlans: [],
+    }
   },
 }

@@ -66,6 +66,7 @@ export interface AuthenticatedAdmin {
   id: string
   name: string
   email: string
+  phone: string | null
   role: RoleName
   status: string
   permissions: string[]
@@ -134,6 +135,7 @@ export async function authenticate(req: NextRequest): Promise<
       id: admin.id,
       name: admin.name,
       email: admin.email,
+      phone: admin.phone,
       role: admin.role as RoleName,
       status: admin.status,
       permissions,

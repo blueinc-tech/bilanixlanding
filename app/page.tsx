@@ -9,7 +9,7 @@ import { Testimonials } from '@/components/landing/testimonials'
 import { PricingSection } from '@/components/landing/pricing-section'
 import { FinalCta } from '@/components/landing/final-cta'
 import { Footer } from '@/components/landing/footer'
-import { DemoModal } from '@/components/landing/demo-modal'
+import { RegistrationModal } from '@/components/landing/registration-modal'
 
 export default function Home() {
   return (
@@ -30,7 +30,7 @@ export default function Home() {
         <FinalCta />
       </main>
       <Footer />
-      <DemoModal />
+      <RegistrationModal />
     </div>
   )
 }

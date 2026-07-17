@@ -34,6 +34,10 @@ interface PaymentItem {
   description: string | null
   paidAt: string | null
   createdAt: string
+  user: {
+    name: string
+    email: string
+  } | null
 }
 
 interface PaymentStats {
@@ -209,9 +213,9 @@ export default function PaymentsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Customer</TableHead>
               <TableHead>Transaction</TableHead>
               <TableHead>Gateway</TableHead>
-              <TableHead>Type</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
@@ -221,9 +225,9 @@ export default function PaymentsPage() {
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
+                  <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-32 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-16 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
@@ -234,6 +238,12 @@ export default function PaymentsPage() {
                 <TableRow key={p.id}>
                   <TableCell>
                     <div>
+                      <p className="font-medium text-foreground text-sm">{p.user?.name || '—'}</p>
+                      <p className="text-xs text-muted-foreground">{p.user?.email || '—'}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
                       <p className="font-medium text-foreground text-sm">{p.description || p.id.slice(0, 12)}</p>
                       {p.gatewayRef && (
                         <p className="text-xs text-muted-foreground">Ref: {p.gatewayRef}</p>
@@ -241,7 +251,6 @@ export default function PaymentsPage() {
                     </div>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{gatewayLabel(p.gateway)}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground capitalize">{p.type}</TableCell>
                   <TableCell className="text-sm font-medium text-foreground">
                     {p.currency} {p.amount.toLocaleString()}
                   </TableCell>

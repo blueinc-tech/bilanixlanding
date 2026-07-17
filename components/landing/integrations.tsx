@@ -2,7 +2,7 @@
 
 import { ArrowRight, Zap } from 'lucide-react'
 import { Reveal } from './reveal'
-import { openDemo } from './demo-modal'
+import { openRegistration } from './registration-modal'
 
 const PILLS = ['Paystack', 'Flutterwave', 'Moniepoint', 'GTBank', 'Access Bank', 'Shopify', 'Slack', 'Google Workspace']
 
@@ -34,7 +34,7 @@ export function Integrations() {
               ))}
               <span style={{ fontSize: '0.8125rem', fontWeight: 500, background: '#fff', border: '1px solid rgba(0,0,0,0.08)', padding: '7px 14px', borderRadius: 100, color: '#333' }}>+40 more</span>
             </div>
-            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openDemo}>Browse all integrations <ArrowRight size={15} /></button>
+            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openRegistration}>Browse all integrations <ArrowRight size={15} /></button>
           </Reveal>
 
           <Reveal delay={2} className="hidden md:block">
