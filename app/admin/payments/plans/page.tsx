@@ -115,7 +115,6 @@ export default function PlansPage() {
                 <TableRow>
                <TableHead>Plan</TableHead>
                <TableHead>Pricing</TableHead>
-              <TableHead>Interval</TableHead>
               <TableHead>Payments</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -127,7 +126,6 @@ export default function PlansPage() {
                 <TableRow key={i}>
                   <TableCell><div className="h-4 w-32 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-16 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-12 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
                   <TableCell></TableCell>
@@ -158,7 +156,6 @@ export default function PlansPage() {
                       <div>{plan.currency} {plan.amount.toLocaleString()}</div>
                     )}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground capitalize">{plan.interval}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{plan._count.paymentLogs}</TableCell>
                   <TableCell>
                     <Badge variant={plan.isActive ? 'default' : 'secondary'}>
@@ -195,7 +192,7 @@ export default function PlansPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="py-12 text-center">
+                <TableCell colSpan={5} className="py-12 text-center">
                   <p className="text-muted-foreground">No plans configured</p>
                 </TableCell>
               </TableRow>
