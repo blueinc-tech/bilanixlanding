@@ -296,7 +296,7 @@ function PlanFormDialog({
         features: form.features ? form.features.split('\n').filter(Boolean) : [],
         audience: form.audience || undefined,
         badge: form.badge || undefined,
-        ctaText: form.ctaText || undefined,
+        ctaText: 'Get started',
         monthlyAmount: form.monthlyAmount !== '' ? Number(form.monthlyAmount) : undefined,
         yearlyAmount: form.yearlyAmount !== '' ? Number(form.yearlyAmount) : undefined,
       }
@@ -358,14 +358,7 @@ function PlanFormDialog({
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">CTA Text</label>
-            <select
-              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-              value={form.ctaText}
-              onChange={(e) => setForm({ ...form, ctaText: e.target.value })}
-            >
-              <option value="Get started">Get started</option>
-              <option value="Talk to sales">Talk to sales</option>
-            </select>
+            <Input value="Get started" disabled />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">

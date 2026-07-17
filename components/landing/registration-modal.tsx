@@ -74,7 +74,12 @@ export function RegistrationModal() {
         .then((r) => r.json())
         .then((json) => {
           const list = Array.isArray(json) ? json : json.data
-          if (Array.isArray(list)) setPlans(list)
+          if (Array.isArray(list)) {
+            setPlans(list.map((p: any) => ({
+              ...p,
+              price: { monthly: p.monthlyAmount ?? 0, yearly: p.yearlyAmount ?? 0 },
+            })))
+          }
         })
         .catch(() => {})
     }
