@@ -322,12 +322,12 @@ function PlanFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-md max-h-[90vh] flex flex-col p-0">
+        <DialogHeader className="px-6 pt-6 pb-0">
           <DialogTitle>{isEdit ? 'Edit Plan' : 'Create Plan'}</DialogTitle>
           <DialogDescription>{isEdit ? 'Update plan details.' : 'Add a new subscription plan.'}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form id="plan-form" onSubmit={handleSubmit} className="space-y-4 overflow-y-auto px-6 pb-4 pt-2 flex-1 min-h-0">
           {errors.submit && (
             <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{errors.submit}</div>
           )}
@@ -392,11 +392,13 @@ function PlanFormDialog({
               placeholder="Feature 1&#10;Feature 2&#10;Feature 3"
             />
           </div>
+        </form>
+        <div className="px-6 pb-6 pt-2 border-t shrink-0">
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit" loading={loading}>{isEdit ? 'Save Changes' : 'Create Plan'}</Button>
+            <Button type="submit" form="plan-form" loading={loading}>{isEdit ? 'Save Changes' : 'Create Plan'}</Button>
           </DialogFooter>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   )
