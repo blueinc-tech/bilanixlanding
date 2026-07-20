@@ -8,31 +8,19 @@ function run(cmd: string) {
   }
 }
 
-// 1. Try migrate deploy
-console.log('→ Running prisma migrate deploy...')
-let output = run('npx prisma migrate deploy')
+// Force-sync schema (handles failed migrations, fresh databases)
+console.log('→ Syncing database schema...')
+let output = run('npx prisma db push --force-reset --accept-data-loss')
 console.log(output)
 
-if (output.includes('P3009') || output.includes('failed migrations')) {
-  console.log('→ Failed migrations detected, resolving...')
+// Generate client
+console.log('→ Generating Prisma client...')
+output = run('npx prisma generate')
+console.log(output)
 
-  // Find failed migration names from output
-  const matches = output.match(/The `(\w+)` migration started at/)
-  if (matches && matches[1]) {
-    const migrationName = matches[1]
-    console.log(`→ Rolling back: ${migrationName}`)
-    run(`npx prisma migrate resolve --rolled-back "${migrationName}"`)
-
-    // Retry deploy
-    console.log('→ Retrying prisma migrate deploy...')
-    output = run('npx prisma migrate deploy')
-    console.log(output)
-  }
-}
-
-// 2. Seed admin (idempotent — skips if admin already exists)
+// Seed admin (idempotent)
 console.log('→ Seeding admin...')
-const seedOutput = run('npx tsx scripts/seed-admin.ts')
-console.log(seedOutput)
+output = run('npx tsx scripts/seed-admin.ts')
+console.log(output)
 
-console.log('✅ Done')
+console.log('✅ Deploy prep done')
