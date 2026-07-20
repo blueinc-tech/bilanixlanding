@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { AdminAuthProvider, useAdminAuth } from '@/components/admin/auth-provider'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { AdminHeader } from '@/components/admin/admin-header'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 
 const PUBLIC_ADMIN_ROUTES = ['/admin/login', '/admin/forgot-password', '/admin/reset-password']
 
@@ -12,6 +13,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAdminAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const isPublicRoute = PUBLIC_ADMIN_ROUTES.some((r) => pathname.startsWith(r))
 
   useEffect(() => {
@@ -20,12 +22,14 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     }
   }, [loading, isAuthenticated, isPublicRoute, router, pathname])
 
-  // Public auth pages (login, forgot-password, reset-password) — no shell
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [pathname])
+
   if (isPublicRoute) {
     return <>{children}</>
   }
 
-  // Loading state
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -40,7 +44,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     )
   }
 
-  // Not authenticated — will redirect via useEffect
   if (!isAuthenticated) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -49,14 +52,21 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     )
   }
 
-  // Authenticated — show admin shell
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <div className="hidden lg:flex">
         <AdminSidebar />
       </div>
+
+      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <SheetContent side="left" className="w-64 p-0">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <AdminSidebar />
+        </SheetContent>
+      </Sheet>
+
       <div className="flex flex-1 flex-col overflow-hidden">
-        <AdminHeader />
+        <AdminHeader onMenuToggle={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {children}
         </main>

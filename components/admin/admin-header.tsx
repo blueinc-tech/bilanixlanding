@@ -7,9 +7,10 @@ import { useAdminAuth } from './auth-provider'
 
 interface AdminHeaderProps {
   className?: string
+  onMenuToggle?: () => void
 }
 
-export function AdminHeader({ className }: AdminHeaderProps) {
+export function AdminHeader({ className, onMenuToggle }: AdminHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { admin, logout } = useAdminAuth()
@@ -38,6 +39,16 @@ export function AdminHeader({ className }: AdminHeaderProps) {
 
   return (
     <header className={cn('flex h-16 items-center border-b border-border bg-card px-4 sm:px-6', className)}>
+      <button
+        className="mr-3 rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
+        onClick={onMenuToggle}
+        aria-label="Toggle menu"
+      >
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
         <span className="font-medium text-foreground">Admin</span>
         {breadcrumb.map((item, i) => (
