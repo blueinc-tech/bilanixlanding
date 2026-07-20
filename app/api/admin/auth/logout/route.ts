@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest } from 'next/server'
 import { withErrorHandling, apiSuccess } from '@/lib/api-response'
 import { authenticate, removeAuthCookie } from '@/lib/auth-middleware'
