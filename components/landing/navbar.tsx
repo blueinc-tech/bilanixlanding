@@ -72,7 +72,7 @@ export function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              <a href="/admin/login" className="nav-signin" style={{ textDecoration: 'none' }}>Sign in</a>
+              <a href="/login" className="nav-signin" style={{ textDecoration: 'none' }}>Sign in</a>
               <button className="nav-cta-primary" onClick={openRegistration}>Start free</button>
             </div>
 
@@ -145,7 +145,7 @@ export function Navbar() {
                 <div className="flex flex-col" style={{ gap: 12 }}>
                   <button
                     className="mobile-menu-btn-secondary"
-                    onClick={() => { setMenuOpen(false); window.location.href = '/admin/login' }}
+                    onClick={() => { setMenuOpen(false); window.location.href = '/login' }}
                   >
                     Sign in
                   </button>

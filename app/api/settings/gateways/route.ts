@@ -6,14 +6,17 @@ export const GET = withErrorHandling(async (_req: NextRequest) => {
   const stripeEnabled = await SettingsService.isGatewayEnabled('stripe')
   const paystackEnabled = await SettingsService.isGatewayEnabled('paystack')
 
+  const stripePublishable = await SettingsService.get('stripe', 'publishable_key') as string
+  const paystackPublic = await SettingsService.get('paystack', 'public_key') as string
+
   return apiSuccess({
     stripe: {
       enabled: stripeEnabled,
-      publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
+      publishableKey: stripePublishable || process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
     },
     paystack: {
       enabled: paystackEnabled,
-      publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '',
+      publicKey: paystackPublic || process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '',
     },
   })
 })

@@ -35,8 +35,10 @@ interface Campaign {
   subject: string
   status: string
   type: string
+  recipientType: string
   totalRecipients: number
   totalSent: number
+  totalFailed: number
   totalOpened: number
   totalClicked: number
   sentAt: string | null
@@ -52,6 +54,13 @@ interface CampaignStats {
   failed: number
 }
 
+const RECIPIENT_TYPE_LABELS: Record<string, string> = {
+  single: 'Single',
+  multiple: 'Multi',
+  subscription_group: 'Group',
+  csv: 'CSV',
+}
+
 export default function MarketingPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [stats, setStats] = useState<CampaignStats | null>(null)
@@ -64,6 +73,7 @@ export default function MarketingPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [sendConfirm, setSendConfirm] = useState<string | null>(null)
   const [sendLoading, setSendLoading] = useState(false)
+  const [retryLoading, setRetryLoading] = useState<string | null>(null)
 
   const fetchCampaigns = useCallback(async () => {
     setLoading(true)
@@ -114,6 +124,21 @@ export default function MarketingPage() {
       }
     } finally {
       setSendLoading(false)
+    }
+  }
+
+  const handleRetry = async (id: string) => {
+    setRetryLoading(id)
+    try {
+      await fetch('/api/admin/campaigns/retry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+      fetchCampaigns()
+      fetchStats()
+    } finally {
+      setRetryLoading(null)
     }
   }
 
@@ -205,9 +230,10 @@ export default function MarketingPage() {
             <TableRow>
               <TableHead>Campaign</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Recipients</TableHead>
-              <TableHead>Opened</TableHead>
-              <TableHead>Clicked</TableHead>
+              <TableHead>Sent</TableHead>
+              <TableHead>Failed</TableHead>
               <TableHead>Date</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -218,6 +244,7 @@ export default function MarketingPage() {
                 <TableRow key={i}>
                   <TableCell><div className="h-4 w-40 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
+                  <TableCell><div className="h-5 w-12 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-12 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-12 animate-pulse rounded bg-muted" /></TableCell>
                   <TableCell><div className="h-4 w-12 animate-pulse rounded bg-muted" /></TableCell>
@@ -235,12 +262,17 @@ export default function MarketingPage() {
                     </div>
                   </TableCell>
                   <TableCell><Badge variant={statusColor(c.status)}>{c.status}</Badge></TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{c.totalRecipients || '—'}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {c.totalSent > 0 ? `${Math.round((c.totalOpened / c.totalSent) * 100)}%` : '—'}
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px] font-mono">
+                      {RECIPIENT_TYPE_LABELS[c.recipientType] || c.recipientType}
+                    </Badge>
                   </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{c.totalRecipients || '—'}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{c.totalSent || '—'}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {c.totalSent > 0 ? `${Math.round((c.totalClicked / c.totalSent) * 100)}%` : '—'}
+                    {c.totalFailed > 0 ? (
+                      <span className="text-destructive font-medium">{c.totalFailed}</span>
+                    ) : '—'}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(c.createdAt).toLocaleDateString()}
@@ -257,13 +289,27 @@ export default function MarketingPage() {
                           </Button>
                         </>
                       )}
+                      {c.status === 'failed' && c.totalFailed > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRetry(c.id)}
+                          disabled={retryLoading === c.id}
+                        >
+                          {retryLoading === c.id ? (
+                            <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                          ) : (
+                            'Retry'
+                          )}
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="py-12 text-center">
+                <TableCell colSpan={8} className="py-12 text-center">
                   <p className="text-muted-foreground">No campaigns found</p>
                 </TableCell>
               </TableRow>
@@ -295,7 +341,7 @@ export default function MarketingPage() {
           <DialogHeader>
             <DialogTitle>Send Campaign</DialogTitle>
             <DialogDescription>
-              This will prepare recipients and queue the campaign for sending. Continue?
+              This will prepare recipients and send the campaign via email. Continue?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

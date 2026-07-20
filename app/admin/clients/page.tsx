@@ -116,20 +116,33 @@ export default function ClientsPage() {
 
   const statusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'default'
-      case 'inactive': return 'secondary'
-      case 'suspended': return 'destructive'
-      default: return 'outline'
+      case 'active': return 'default' as const
+      case 'inactive': return 'secondary' as const
+      case 'pending_payment': return 'outline' as const
+      case 'suspended': return 'destructive' as const
+      default: return 'outline' as const
+    }
+  }
+
+  const paymentStatusColor = (status: string) => {
+    switch (status) {
+      case 'paid': return 'default' as const
+      case 'pending': return 'outline' as const
+      case 'failed': return 'destructive' as const
+      case 'refunded': return 'secondary' as const
+      default: return 'outline' as const
     }
   }
 
   const planColor = (plan: string) => {
     switch (plan) {
-      case 'Enterprise': return 'default'
-      case 'Premium': return 'secondary'
-      default: return 'outline'
+      case 'Enterprise': return 'default' as const
+      case 'Premium': return 'secondary' as const
+      default: return 'outline' as const
     }
   }
+
+  const skeletonCols = 12
 
   return (
     <div className="space-y-6">
@@ -139,7 +152,7 @@ export default function ClientsPage() {
             Clients
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Manage your SaaS clients and their subscriptions.
+            Manage your SaaS clients, registrations, and subscriptions.
           </p>
         </div>
         <Button onClick={() => setShowCreateDialog(true)}>
@@ -157,7 +170,7 @@ export default function ClientsPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
           <Input
-            placeholder="Search clients..."
+            placeholder="Search by name, email, company, phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -171,6 +184,7 @@ export default function ClientsPage() {
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="pending_payment">Pending Payment</SelectItem>
             <SelectItem value="suspended">Suspended</SelectItem>
           </SelectContent>
         </Select>
@@ -211,8 +225,8 @@ export default function ClientsPage() {
       )}
 
       {/* Table */}
-      <div className="rounded-lg border border-border bg-card">
-        <Table>
+      <div className="rounded-lg border border-border bg-card overflow-x-auto">
+        <Table className="min-w-[1100px]">
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">
@@ -222,12 +236,15 @@ export default function ClientsPage() {
                 />
               </TableHead>
               <TableHead>Client</TableHead>
-              <TableHead>Company</TableHead>
               <TableHead>Phone</TableHead>
+              <TableHead>Company</TableHead>
+              <TableHead>Country</TableHead>
+              <TableHead>Industry</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Billing</TableHead>
               <TableHead>Payment</TableHead>
+              <TableHead>Gateway</TableHead>
+              <TableHead>Amount</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
@@ -236,16 +253,11 @@ export default function ClientsPage() {
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell><div className="h-4 w-4 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-40 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
-                  <TableCell><div className="h-5 w-16 animate-pulse rounded-full bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell><div className="h-4 w-20 animate-pulse rounded bg-muted" /></TableCell>
-                  <TableCell></TableCell>
+                  {Array.from({ length: skeletonCols }).map((_, j) => (
+                    <TableCell key={j}>
+                      <div className="h-4 w-full max-w-[120px] animate-pulse rounded bg-muted" />
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : data && data.users.length > 0 ? (
@@ -270,11 +282,17 @@ export default function ClientsPage() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-sm text-muted-foreground">
+                    {user.phone || '—'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
                     {user.company || '—'}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {user.phone || '—'}
+                    {user.country || '—'}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {user.industry || '—'}
                   </TableCell>
                   <TableCell>
                     {user.subscription ? (
@@ -287,14 +305,23 @@ export default function ClientsPage() {
                   </TableCell>
                   <TableCell>
                     <Badge variant={statusColor(user.status)}>
-                      {user.status}
+                      {user.status === 'pending_payment' ? 'Pending' : user.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {user.lastPayment ? (
+                      <Badge variant={paymentStatusColor(user.lastPayment.status)}>
+                        {user.lastPayment.status}
+                      </Badge>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">No payment</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground capitalize">
+                    {user.lastPayment?.gateway || '—'}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {user.subscription?.amount ? `₦${user.subscription.amount.toLocaleString()}` : '—'}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground capitalize">
-                    {user.subscription?.status || '—'}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {new Date(user.createdAt).toLocaleDateString()}
@@ -312,7 +339,7 @@ export default function ClientsPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={10} className="py-12 text-center">
+                <TableCell colSpan={skeletonCols} className="py-12 text-center">
                   <p className="text-muted-foreground">No clients found</p>
                 </TableCell>
               </TableRow>

@@ -6,12 +6,13 @@ import { parseBody } from '@/lib/validation'
 import { prisma } from '@/lib/db'
 import { StripeService } from '@/lib/services/stripe.service'
 import { PaystackService } from '@/lib/services/paystack.service'
+import { NotificationService } from '@/lib/services/notification.service'
 
 const checkoutSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   email: z.string().email('Invalid email').toLowerCase().trim(),
-  phone: z.string().optional(),
-  company: z.string().optional(),
+  phone: z.string().min(1, 'Phone number is required'),
+  company: z.string().min(1, 'Company name is required'),
   country: z.string().optional(),
   industry: z.string().optional(),
   planSlug: z.string().min(1, 'Plan is required'),
@@ -56,14 +57,22 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
       data: {
         name: name.trim(),
         email,
-        phone: phone || null,
-        company: company || null,
+        phone,
+        company,
         country: country || null,
         industry: industry || null,
         status: 'pending_payment',
       },
     })
     userId = user.id
+
+    // Notify admins of new registration
+    await NotificationService.create({
+      title: 'New Registration',
+      message: `${name} (${email}) started registration for ${plan.name} Plan via ${gateway}.`,
+      type: 'info',
+      actionUrl: `/admin/clients`,
+    })
   }
 
   // Create pending payment log
@@ -128,11 +137,12 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
       return apiSuccess({ url: authorizationUrl, paymentLogId: paymentLog.id })
     }
   } catch (error) {
-    // Mark payment as failed if gateway init fails
+    const errMsg = error instanceof Error ? error.message : 'Unknown error'
+    console.error('[Checkout] Gateway init failed:', errMsg)
     await prisma.paymentLog.update({
       where: { id: paymentLog.id },
       data: { status: 'failed', failedAt: new Date() },
     })
-    throw error
+    return apiBadRequest(`Payment gateway error: ${errMsg}`)
   }
 })

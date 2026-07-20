@@ -47,7 +47,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <Image src="/admin-logo.png" alt="Bilanix" width={140} height={36} style={{ height: 36, width: 'auto' }} priority />
+            <Image src="/bilanix-logo-white.png" alt="Bilanix" width={140} height={36} style={{ height: 36, width: 'auto' }} priority />
           </Link>
         </div>
 

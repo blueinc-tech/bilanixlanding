@@ -113,8 +113,16 @@ export function RegistrationModal() {
       setError('Please enter a valid email address.')
       return false
     }
+    if (!form.phone.trim()) {
+      setError('Phone number is required.')
+      return false
+    }
+    if (!form.company.trim()) {
+      setError('Company name is required.')
+      return false
+    }
     return true
-  }, [form.name, form.email])
+  }, [form.name, form.email, form.phone, form.company])
 
   const goNext = () => {
     setError('')
@@ -148,13 +156,20 @@ export function RegistrationModal() {
           gateway: provider,
         }),
       })
-      const data = await res.json()
-      if (!res.ok || !data?.url) {
-        setError(data?.error || 'Checkout failed. Please try again.')
+      const text = await res.text()
+      let raw: any
+      try { raw = JSON.parse(text) } catch { raw = null }
+      const payload = raw?.data || raw
+      if (!res.ok || !payload?.url) {
+        const msg = raw?.error?.message
+          || (typeof raw?.error === 'string' ? raw.error : null)
+          || text
+          || 'Checkout failed. Please try again.'
+        setError(msg)
         setStep(3)
         return
       }
-      window.location.href = data.url
+      window.location.href = payload.url
     } catch {
       setError('Something went wrong. Please try again.')
       setStep(3)
@@ -246,8 +261,8 @@ export function RegistrationModal() {
           <div className="flex flex-col" style={{ gap: 14 }}>
             <Field label="Full Name *" value={form.name} onChange={(v) => update('name', v)} placeholder="Jane Adeyemi" />
             <Field label="Email *" type="email" value={form.email} onChange={(v) => update('email', v)} placeholder="jane@company.com" />
-            <Field label="Phone" value={form.phone} onChange={(v) => update('phone', v)} placeholder="+234 ..." />
-            <Field label="Company" value={form.company} onChange={(v) => update('company', v)} placeholder="Your business name" />
+            <Field label="Phone *" value={form.phone} onChange={(v) => update('phone', v)} placeholder="+234 ..." />
+            <Field label="Company *" value={form.company} onChange={(v) => update('company', v)} placeholder="Your business name" />
             <Field label="Country" value={form.country} onChange={(v) => update('country', v)} placeholder="Nigeria" />
             <Field label="Industry" value={form.industry} onChange={(v) => update('industry', v)} placeholder="Accounting, Finance..." />
             {error && <p style={{ fontSize: '0.8125rem', color: '#EF4444' }}>{error}</p>}

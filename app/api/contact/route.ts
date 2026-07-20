@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses'
+import { NotificationService } from '@/lib/services/notification.service'
 
 const ses = new SESClient({
   region: process.env.AWS_SES_REGION || 'us-east-1',
@@ -85,6 +86,14 @@ export async function POST(req: Request) {
       },
     })).catch((err) => {
       console.error('[Contact] Failed to send admin notification:', err)
+    })
+
+    // In-app notification for admins
+    await NotificationService.create({
+      title: 'New Contact Submission',
+      message: `New ${inquiryType} submission from ${fullName} (${email}) at ${company}.`,
+      type: 'info',
+      actionUrl: `/admin/submissions`,
     })
 
     return NextResponse.json({ ok: true, message: 'Thank you. Our team will reach out shortly.' })

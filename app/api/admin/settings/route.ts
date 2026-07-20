@@ -6,6 +6,7 @@ import { SettingsService } from '@/lib/services/settings.service'
 import { parseBody } from '@/lib/validation'
 import { getClientInfo } from '@/lib/validation'
 import { ActivityService } from '@/lib/services/activity.service'
+import { AuditService } from '@/lib/services/audit.service'
 
 const GROUPS = ['general', 'email', 'stripe', 'paystack', 'maintenance', 'branding', 'features'] as const
 
@@ -38,12 +39,15 @@ export const PUT = withErrorHandling(async (req: NextRequest) => {
   const auth = await authenticate(req)
   if (!auth.success) return auth.response
 
+  const oldSettings = await SettingsService.getGroup('general')
+
   const parsed = await parseBody(req, updateSchema)
   if (!parsed.success) return parsed.response
 
   await SettingsService.setGroup(parsed.data.group as Parameters<typeof SettingsService.setGroup>[0], parsed.data.values)
 
   const { ipAddress, userAgent } = getClientInfo(req)
+
   await ActivityService.log({
     adminId: auth.admin.id,
     action: 'settings.update',
@@ -51,6 +55,17 @@ export const PUT = withErrorHandling(async (req: NextRequest) => {
     entityId: parsed.data.group,
     description: `Updated ${parsed.data.group} settings`,
     metadata: { keys: Object.keys(parsed.data.values) },
+    ipAddress,
+    userAgent,
+  })
+
+  await AuditService.log({
+    adminId: auth.admin.id,
+    action: 'update',
+    entityType: 'setting',
+    entityId: parsed.data.group,
+    oldValues: oldSettings as Record<string, unknown>,
+    newValues: parsed.data.values as Record<string, unknown>,
     ipAddress,
     userAgent,
   })

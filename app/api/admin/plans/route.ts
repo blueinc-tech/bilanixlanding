@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { withErrorHandling, apiSuccess, apiCreated } from '@/lib/api-response'
 import { authenticate } from '@/lib/auth-middleware'
 import { PlanService } from '@/lib/services/plan.service'
+import { AuditService } from '@/lib/services/audit.service'
+import { NotificationService } from '@/lib/services/notification.service'
 import { parseBody } from '@/lib/validation'
 
 export const GET = withErrorHandling(async (req: NextRequest) => {
@@ -38,6 +40,27 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
   const parsed = await parseBody(req, createSchema)
   if (!parsed.success) return parsed.response
 
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+  const userAgent = req.headers.get('user-agent') || 'Unknown'
+
   const plan = await PlanService.create(parsed.data)
+
+  await AuditService.log({
+    adminId: auth.admin.id,
+    action: 'create',
+    entityType: 'plan',
+    entityId: plan.id,
+    newValues: { name: plan.name, slug: plan.slug, amount: plan.amount, interval: plan.interval },
+    ipAddress: ip,
+    userAgent,
+  })
+
+  await NotificationService.create({
+    title: 'Plan Created',
+    message: `New plan "${plan.name}" was created by ${auth.admin.email}.`,
+    type: 'success',
+    actionUrl: `/admin/payments/plans`,
+  })
+
   return apiCreated(plan)
 })

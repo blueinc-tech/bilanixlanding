@@ -4,6 +4,8 @@ import { withErrorHandling, apiSuccess, apiNotFound, apiForbidden } from '@/lib/
 import { authenticate } from '@/lib/auth-middleware'
 import { AdminManagementService } from '@/lib/services/admin-management.service'
 import { ActivityService } from '@/lib/services/activity.service'
+import { AuditService } from '@/lib/services/audit.service'
+import { NotificationService } from '@/lib/services/notification.service'
 import { ROLES, type ModuleName } from '@/types/admin'
 
 export const GET = withErrorHandling(async (req: NextRequest, context?: { params: Record<string, string> }) => {
@@ -47,10 +49,15 @@ export const PUT = withErrorHandling(async (req: NextRequest, context?: { params
     return apiSuccess({ updated: false, errors: parsed.error.flatten().fieldErrors })
   }
 
+  const oldAdmin = await AdminManagementService.getById(id)
+
   const admin = await AdminManagementService.update(id, {
     ...parsed.data,
     assignedModules: parsed.data.assignedModules as ModuleName[] | undefined,
   })
+
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+  const userAgent = req.headers.get('user-agent') || 'Unknown'
 
   await ActivityService.log({
     adminId: auth.admin.id,
@@ -58,8 +65,19 @@ export const PUT = withErrorHandling(async (req: NextRequest, context?: { params
     entityType: 'admin',
     entityId: id,
     description: `Updated admin ${admin.email}`,
-    ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1',
-    userAgent: req.headers.get('user-agent') || 'Unknown',
+    ipAddress: ip,
+    userAgent,
+  })
+
+  await AuditService.log({
+    adminId: auth.admin.id,
+    action: 'update',
+    entityType: 'admin',
+    entityId: id,
+    oldValues: { name: oldAdmin.name, email: oldAdmin.email, role: oldAdmin.role, status: oldAdmin.status },
+    newValues: { name: admin.name, email: admin.email, role: admin.role, status: admin.status },
+    ipAddress: ip,
+    userAgent,
   })
 
   return apiSuccess(admin)
@@ -76,12 +94,13 @@ export const DELETE = withErrorHandling(async (req: NextRequest, context?: { par
   const id = context?.params?.id
   if (!id) return apiNotFound('Admin')
 
-  // Cannot delete self
   if (id === auth.admin.id) {
     return apiSuccess({ deleted: false, error: 'Cannot delete your own account' })
   }
 
   const admin = await AdminManagementService.getById(id)
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+  const userAgent = req.headers.get('user-agent') || 'Unknown'
 
   await AdminManagementService.softDelete(id)
 
@@ -91,8 +110,25 @@ export const DELETE = withErrorHandling(async (req: NextRequest, context?: { par
     entityType: 'admin',
     entityId: id,
     description: `Deleted admin ${admin.email}`,
-    ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1',
-    userAgent: req.headers.get('user-agent') || 'Unknown',
+    ipAddress: ip,
+    userAgent,
+  })
+
+  await AuditService.log({
+    adminId: auth.admin.id,
+    action: 'delete',
+    entityType: 'admin',
+    entityId: id,
+    oldValues: { name: admin.name, email: admin.email, role: admin.role, status: admin.status },
+    ipAddress: ip,
+    userAgent,
+  })
+
+  await NotificationService.create({
+    title: 'Admin Account Deleted',
+    message: `Admin account "${admin.email}" was deleted by ${auth.admin.email}.`,
+    type: 'warning',
+    actionUrl: `/admin/admins`,
   })
 
   return apiSuccess({ deleted: true })

@@ -52,7 +52,7 @@ export const StripeService = {
         },
       ],
       success_url: `${siteUrl}/register/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/register?canceled=true`,
+      cancel_url: `${siteUrl}/register/success?canceled=true`,
       metadata: params.metadata,
       subscription_data: {
         metadata: params.metadata,

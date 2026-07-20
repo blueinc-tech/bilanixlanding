@@ -50,12 +50,17 @@ export const UserService = {
             take: 1,
             select: { planName: true, status: true, amount: true },
           },
+          paymentLogs: {
+            orderBy: { createdAt: 'desc' },
+            take: 1,
+            select: { status: true, gateway: true, amount: true, createdAt: true },
+          },
         },
       }),
       prisma.user.count({ where }),
     ])
 
-    const formatted: UserListItem[] = (users as (typeof users[number] & { subscriptions: { planName: string; status: string; amount: number }[] })[]).map((u) => ({
+    const formatted: UserListItem[] = (users as (typeof users[number] & { subscriptions: { planName: string; status: string; amount: number }[]; paymentLogs: { status: string; gateway: string | null; amount: number; createdAt: Date }[] })[]).map((u) => ({
       id: u.id,
       name: u.name,
       email: u.email,
@@ -68,6 +73,14 @@ export const UserService = {
       createdAt: u.createdAt.toISOString(),
       lastLoginAt: u.lastLoginAt?.toISOString() || null,
       subscription: u.subscriptions[0] || null,
+      lastPayment: u.paymentLogs[0]
+        ? {
+            status: u.paymentLogs[0].status,
+            gateway: u.paymentLogs[0].gateway,
+            amount: u.paymentLogs[0].amount,
+            createdAt: u.paymentLogs[0].createdAt.toISOString(),
+          }
+        : null,
     }))
 
     return { users: formatted, total, page, limit, totalPages: Math.ceil(total / limit) }

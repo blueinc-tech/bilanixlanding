@@ -55,6 +55,12 @@ export interface UserListItem {
     status: string
     amount: number
   } | null
+  lastPayment: {
+    status: string
+    gateway: string | null
+    amount: number
+    createdAt: string
+  } | null
 }
 
 export interface UserDetail {

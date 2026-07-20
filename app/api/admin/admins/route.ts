@@ -1,9 +1,11 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
-import { withErrorHandling, apiSuccess, apiForbidden } from '@/lib/api-response'
+import { withErrorHandling, apiSuccess, apiCreated, apiForbidden } from '@/lib/api-response'
 import { authenticate } from '@/lib/auth-middleware'
 import { AdminManagementService } from '@/lib/services/admin-management.service'
 import { ActivityService } from '@/lib/services/activity.service'
+import { AuditService } from '@/lib/services/audit.service'
+import { NotificationService } from '@/lib/services/notification.service'
 import { parseQuery } from '@/lib/validation'
 import { paginationSchema } from '@/lib/validation'
 import { ROLES, MODULES, type ModuleName } from '@/types/admin'
@@ -68,10 +70,12 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
 
   const data = parsed.data
 
-  // Only super_admin can create super_admin
   if (data.role === ROLES.SUPER_ADMIN && auth.admin.role !== ROLES.SUPER_ADMIN) {
     return apiForbidden('Only super admins can create super admin accounts')
   }
+
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
+  const userAgent = req.headers.get('user-agent') || 'Unknown'
 
   const admin = await AdminManagementService.create({
     name: data.name,
@@ -83,15 +87,31 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
     assignedModules: data.assignedModules as ModuleName[] | undefined,
   })
 
-  // Audit log
   await ActivityService.log({
     adminId: auth.admin.id,
     action: 'admins.create',
     entityType: 'admin',
     entityId: admin.id,
     description: `Created admin ${admin.email} with role ${admin.role}`,
-    ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1',
-    userAgent: req.headers.get('user-agent') || 'Unknown',
+    ipAddress: ip,
+    userAgent,
+  })
+
+  await AuditService.log({
+    adminId: auth.admin.id,
+    action: 'create',
+    entityType: 'admin',
+    entityId: admin.id,
+    newValues: { name: admin.name, email: admin.email, role: admin.role, status: admin.status },
+    ipAddress: ip,
+    userAgent,
+  })
+
+  await NotificationService.create({
+    title: 'Admin Account Created',
+    message: `New admin account "${admin.email}" was created with role "${admin.role}".`,
+    type: 'info',
+    actionUrl: `/admin/admins`,
   })
 
   return apiSuccess(admin, 201)

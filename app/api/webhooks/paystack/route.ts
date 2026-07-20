@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { PaystackService } from '@/lib/services/paystack.service'
 import { EmailService } from '@/lib/services/email.service'
+import { NotificationService } from '@/lib/services/notification.service'
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -197,6 +198,14 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
   }
 
   console.log(`[Paystack Webhook] Payment processed for user ${userId}, plan ${planSlug}`)
+
+  // System-wide notification for admins
+  await NotificationService.create({
+    title: 'New Payment Received',
+    message: `New ${plan.name} subscription payment of ${plan.currency} ${verification.amount.toLocaleString()} via Paystack from ${user?.email || userId}.`,
+    type: 'success',
+    actionUrl: `/admin/payments`,
+  })
 }
 
 async function handleChargeFailed(data: Record<string, unknown>) {
@@ -221,6 +230,13 @@ async function handleChargeFailed(data: Record<string, unknown>) {
         entityId: paymentLog.id,
         description: `Payment failed via Paystack (ref: ${reference})`,
       },
+    })
+
+    await NotificationService.create({
+      title: 'Payment Failed',
+      message: `A payment via Paystack failed (ref: ${reference}). Amount: ${paymentLog.currency} ${paymentLog.amount.toLocaleString()}.`,
+      type: 'error',
+      actionUrl: `/admin/payments`,
     })
   }
 }

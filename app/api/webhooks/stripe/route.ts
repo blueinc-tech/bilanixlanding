@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { StripeService } from '@/lib/services/stripe.service'
 import { EmailService } from '@/lib/services/email.service'
+import { NotificationService } from '@/lib/services/notification.service'
 import Stripe from 'stripe'
 
 export async function POST(req: NextRequest) {
@@ -199,6 +200,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   console.log(`[Stripe Webhook] Payment processed for user ${userId}, plan ${planSlug}`)
+
+  // System-wide notification for admins
+  await NotificationService.create({
+    title: 'New Payment Received',
+    message: `New ${plan.name} subscription payment of ${plan.currency} ${amount.toLocaleString()} via Stripe from ${user?.email || userId}.`,
+    type: 'success',
+    actionUrl: `/admin/payments`,
+  })
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
@@ -226,5 +235,12 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       templateId: 'subscription_cancelled',
       data: { name: user.name, planName },
     }).catch(() => {})
+
+    await NotificationService.create({
+      title: 'Subscription Cancelled',
+      message: `Subscription cancelled for "${user.name}" (${user.email}) — Plan: ${planName}.`,
+      type: 'warning',
+      actionUrl: `/admin/clients/${user.id}`,
+    })
   }
 }
