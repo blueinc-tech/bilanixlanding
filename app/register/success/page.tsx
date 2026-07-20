@@ -15,7 +15,6 @@ export default function RegisterSuccessPage() {
 
   const [state, setState] = useState<VerifyState>(canceled ? 'canceled' : 'loading')
   const [message, setMessage] = useState('')
-  const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
     if (canceled || (!reference && !sessionId)) return
@@ -34,10 +33,9 @@ export default function RegisterSuccessPage() {
 
         if (json.data?.status === 'paid' || json.data?.alreadyProcessed) {
           setState('success')
-          if (json.data?.email) setUserEmail(json.data.email)
           setMessage(json.data?.alreadyProcessed
-            ? 'Your subscription is already active.'
-            : 'Your subscription is now active.')
+            ? 'Your subscription is already active. Welcome back!'
+            : 'Your payment was successful and your subscription is now active. We are setting up your interface.')
         } else if (json.data?.status === 'failed') {
           setState('failed')
           setMessage('We could not confirm your payment. Please contact support with your reference.')
@@ -70,14 +68,6 @@ export default function RegisterSuccessPage() {
     verify()
   }, [canceled, reference, sessionId])
 
-  useEffect(() => {
-    if (state === 'success' && userEmail) {
-      const timer = setTimeout(() => {
-        window.location.href = `/register/set-password?email=${encodeURIComponent(userEmail)}`
-      }, 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [state, userEmail])
 
   const isCanceled = state === 'canceled'
   const isSuccess = state === 'success'
@@ -87,7 +77,7 @@ export default function RegisterSuccessPage() {
   const title = isCanceled
     ? 'Payment Canceled'
     : isSuccess
-      ? 'Welcome to Bilanix!'
+      ? 'Thank You!'
       : isFailed
         ? 'Payment Verification Failed'
         : 'Verifying Payment...'
@@ -149,19 +139,6 @@ export default function RegisterSuccessPage() {
           {displayMessage}
         </p>
 
-        {!isCanceled && !isLoading && isSuccess && (
-          <p
-            style={{
-              fontSize: '0.875rem',
-              color: 'rgba(255,255,255,0.35)',
-              marginBottom: 32,
-              fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
-            }}
-          >
-            Redirecting you shortly...
-          </p>
-        )}
-
         {isFailed && (
           <p
             style={{
@@ -201,7 +178,7 @@ export default function RegisterSuccessPage() {
 
         {isSuccess && (
           <Link
-            href={userEmail ? `/register/set-password?email=${encodeURIComponent(userEmail)}` : '/login'}
+            href="/login"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -218,7 +195,7 @@ export default function RegisterSuccessPage() {
               transition: 'background 0.25s, transform 0.25s',
             }}
           >
-            Set Your Password
+            Sign In
           </Link>
         )}
       </div>
