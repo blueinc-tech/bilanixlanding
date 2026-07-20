@@ -8,19 +8,16 @@ function run(cmd: string) {
   }
 }
 
-// Force-sync schema (handles failed migrations, fresh databases)
+// Sync schema (adds/updates tables without deleting data)
 console.log('→ Syncing database schema...')
-let output = run('npx prisma db push --force-reset --accept-data-loss')
-console.log(output)
+console.log(run('npx prisma db push'))
 
 // Generate client
 console.log('→ Generating Prisma client...')
-output = run('npx prisma generate')
-console.log(output)
+console.log(run('npx prisma generate'))
 
-// Seed admin (idempotent)
+// Seed admin (idempotent — skips if already exists)
 console.log('→ Seeding admin...')
-output = run('npx tsx scripts/seed-admin.ts')
-console.log(output)
+console.log(run('npx tsx scripts/seed-admin.ts'))
 
 console.log('✅ Deploy prep done')
