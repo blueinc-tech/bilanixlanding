@@ -19,7 +19,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
   title: 'Bilanix — AI-Powered Finance for Nigerian Businesses',
   description:
     'AI-powered accounting, payroll, invoices, and cash flow management—built for how Nigerian businesses actually work. Control every naira and run your business with confidence.',

@@ -38,7 +38,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
       const token = await AuthService.createResetToken(admin.id)
 
       // Send reset email (non-blocking)
-      const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+      const baseUrl = process.env.SITE_URL || 'http://localhost:3000'
       EmailService.send({
         to: admin.email,
         toName: admin.name,
