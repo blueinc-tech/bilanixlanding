@@ -27,6 +27,7 @@ interface Plan {
   name: string
   slug: string
   description: string | null
+  planType: string
   amount: number
   currency: string
   interval: string
@@ -137,8 +138,14 @@ export default function PlansPage() {
                   <TableCell>
                     <div>
                       <p className="font-medium text-foreground">{plan.name}</p>
+                      <Badge
+                        variant={plan.planType === 'accounting' ? 'default' : 'secondary'}
+                        className="mt-1 text-[10px] font-mono"
+                      >
+                        {plan.planType === 'accounting' ? 'Accounting' : 'Invoicing'}
+                      </Badge>
                       {plan.audience && (
-                        <p className="text-xs text-muted-foreground">{plan.audience}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{plan.audience}</p>
                       )}
                       {plan.description && (
                         <p className="text-xs text-muted-foreground line-clamp-1">{plan.description}</p>
@@ -248,6 +255,7 @@ function PlanFormDialog({
     name: plan?.name || '',
     slug: plan?.slug || '',
     description: plan?.description || '',
+    planType: plan?.planType || 'accounting',
     amount: plan?.amount || 0,
     interval: plan?.interval || 'monthly',
     features: plan?.features?.join('\n') || '',
@@ -264,6 +272,7 @@ function PlanFormDialog({
         name: plan.name,
         slug: plan.slug,
         description: plan.description || '',
+        planType: plan.planType || 'accounting',
         amount: plan.amount,
         interval: plan.interval,
         features: plan.features?.join('\n') || '',
@@ -274,7 +283,7 @@ function PlanFormDialog({
         yearlyAmount: plan.yearlyAmount ?? '',
       })
     } else {
-      setForm({ name: '', slug: '', description: '', amount: 0, interval: 'monthly', features: '', audience: '', badge: '', ctaText: 'Get started', monthlyAmount: '', yearlyAmount: '' })
+      setForm({ name: '', slug: '', description: '', planType: 'accounting', amount: 0, interval: 'monthly', features: '', audience: '', badge: '', ctaText: 'Get started', monthlyAmount: '', yearlyAmount: '' })
     }
   }, [plan])
 
@@ -288,6 +297,7 @@ function PlanFormDialog({
         name: form.name,
         slug: form.slug || form.name.toLowerCase().replace(/\s+/g, '-'),
         description: form.description || undefined,
+        planType: form.planType,
         amount: Number(form.amount),
         interval: form.interval,
         features: form.features ? form.features.split('\n').filter(Boolean) : [],
@@ -344,6 +354,17 @@ function PlanFormDialog({
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Description</label>
             <Input placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Plan Type *</label>
+            <select
+              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              value={form.planType}
+              onChange={(e) => setForm({ ...form, planType: e.target.value })}
+            >
+              <option value="accounting">Accounting Solution</option>
+              <option value="invoicing">Invoicing Plan</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Audience</label>

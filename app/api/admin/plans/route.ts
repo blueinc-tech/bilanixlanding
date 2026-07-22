@@ -23,6 +23,7 @@ const createSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
   slug: z.string().min(1, 'Slug is required').max(100).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
   description: z.string().optional(),
+  planType: z.enum(['accounting', 'invoicing']).default('accounting'),
   amount: z.number().min(0, 'Amount must be non-negative'),
   currency: z.string().optional(),
   interval: z.enum(['monthly', 'yearly', 'one_time']).optional(),

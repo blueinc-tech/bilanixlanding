@@ -25,6 +25,7 @@ export const PlanService = {
         name: true,
         slug: true,
         description: true,
+        planType: true,
         monthlyAmount: true,
         yearlyAmount: true,
         amount: true,
@@ -51,7 +52,7 @@ export const PlanService = {
     return plan
   },
 
-  async create(data: { name: string; slug: string; description?: string; amount: number; currency?: string; interval?: string; features?: string[]; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number }) {
+  async create(data: { name: string; slug: string; description?: string; planType?: string; amount: number; currency?: string; interval?: string; features?: string[]; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number }) {
     const existing = await prisma.subscriptionPlan.findUnique({ where: { slug: data.slug } })
     if (existing) throw new ConflictError('A plan with this slug already exists')
 
@@ -60,6 +61,7 @@ export const PlanService = {
         name: data.name.trim(),
         slug: data.slug.toLowerCase().trim(),
         description: data.description || null,
+        planType: data.planType || 'accounting',
         amount: data.amount,
         currency: data.currency || 'NGN',
         interval: data.interval || 'monthly',
@@ -74,7 +76,7 @@ export const PlanService = {
     })
   },
 
-  async update(slug: string, data: { name?: string; description?: string; amount?: number; interval?: string; features?: string[]; isActive?: boolean; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number }) {
+  async update(slug: string, data: { name?: string; description?: string; planType?: string; amount?: number; interval?: string; features?: string[]; isActive?: boolean; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number }) {
     const plan = await prisma.subscriptionPlan.findUnique({ where: { slug } })
     if (!plan) throw new NotFoundError('Plan')
 
@@ -83,6 +85,7 @@ export const PlanService = {
       data: {
         ...(data.name !== undefined && { name: data.name.trim() }),
         ...(data.description !== undefined && { description: data.description }),
+        ...(data.planType !== undefined && { planType: data.planType }),
         ...(data.amount !== undefined && { amount: data.amount }),
         ...(data.interval !== undefined && { interval: data.interval }),
         ...(data.features !== undefined && { features: data.features }),

@@ -15,6 +15,7 @@ type Billing = 'monthly' | 'yearly'
 
 type Plan = {
   name: string
+  planType: string
   audience: string
   price: Record<Billing, string>
   period: Record<Billing, string>
@@ -46,6 +47,7 @@ export default function PricingPage() {
         if (!Array.isArray(list)) throw new Error('Invalid data')
         const transformed: Plan[] = list.map((p: any) => ({
           name: p.name,
+          planType: p.planType || 'accounting',
           audience: p.audience,
           price: {
             monthly: formatNaira(p.monthlyAmount),
@@ -93,41 +95,87 @@ export default function PricingPage() {
 
         <section style={{ background: '#fff', padding: '64px 0 80px' }}>
           <div className="max-w-page" style={{ padding: '0 20px' }}>
-            <div ref={gridRef} style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: 20,
-              maxWidth: 1200,
-              margin: '0 auto',
-              alignItems: 'start',
-            }}>
-              {loading
-                ? Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} style={{ background: '#f9fafb', borderRadius: 12, padding: 32 }}>
-                      <div style={{ height: 14, width: 80, background: '#e5e7eb', borderRadius: 4, marginBottom: 12 }} />
-                      <div style={{ height: 12, width: 160, background: '#e5e7eb', borderRadius: 4, marginBottom: 24 }} />
-                      <div style={{ height: 28, width: 110, background: '#e5e7eb', borderRadius: 4, marginBottom: 8 }} />
-                      <div style={{ height: 12, width: 60, background: '#e5e7eb', borderRadius: 4, marginBottom: 24 }} />
-                      <div style={{ height: 44, width: '100%', background: '#e5e7eb', borderRadius: 22, marginBottom: 24 }} />
-                      {[1, 2, 3].map((j) => (
-                        <div key={j} style={{ height: 12, width: '90%', background: '#e5e7eb', borderRadius: 4, marginBottom: 10 }} />
+            {loading ? (
+              <div ref={gridRef} style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: 20,
+                maxWidth: 1200,
+                margin: '0 auto',
+                alignItems: 'start',
+              }}>
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} style={{ background: '#f9fafb', borderRadius: 12, padding: 32 }}>
+                    <div style={{ height: 14, width: 80, background: '#e5e7eb', borderRadius: 4, marginBottom: 12 }} />
+                    <div style={{ height: 12, width: 160, background: '#e5e7eb', borderRadius: 4, marginBottom: 24 }} />
+                    <div style={{ height: 28, width: 110, background: '#e5e7eb', borderRadius: 4, marginBottom: 8 }} />
+                    <div style={{ height: 12, width: 60, background: '#e5e7eb', borderRadius: 4, marginBottom: 24 }} />
+                    <div style={{ height: 44, width: '100%', background: '#e5e7eb', borderRadius: 22, marginBottom: 24 }} />
+                    {[1, 2, 3].map((j) => (
+                      <div key={j} style={{ height: 12, width: '90%', background: '#e5e7eb', borderRadius: 4, marginBottom: 10 }} />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Accounting Solutions Row */}
+                {plans.some(p => p.planType === 'accounting') && (
+                  <div style={{ marginBottom: 48 }}>
+                    <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Accounting Solution</h3>
+                    <div ref={gridRef} style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(4, 1fr)',
+                      gap: 20,
+                      maxWidth: 1200,
+                      margin: '0 auto',
+                      alignItems: 'start',
+                    }}>
+                      {plans.filter(p => p.planType === 'accounting').map((plan, i) => (
+                        <div key={plan.name}>
+                          <PricingCard
+                            {...plan}
+                            index={i}
+                            billing={billing}
+                            expanded={expandedCards[plan.name] ?? false}
+                            onToggleExpand={() => toggleExpand(plan.name)}
+                            cardHeight={lockedHeight}
+                          />
+                        </div>
                       ))}
                     </div>
-                  ))
-                : plans.map((plan, i) => (
-                    <div key={plan.name}>
-                      <PricingCard
-                        {...plan}
-                        index={i}
-                        billing={billing}
-                        expanded={expandedCards[plan.name] ?? false}
-                        onToggleExpand={() => toggleExpand(plan.name)}
-                        cardHeight={lockedHeight}
-                      />
+                  </div>
+                )}
+
+                {/* Invoicing Plans Row */}
+                {plans.some(p => p.planType === 'invoicing') && (
+                  <div>
+                    <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Invoicing Plan</h3>
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(4, 1fr)',
+                      gap: 20,
+                      maxWidth: 1200,
+                      margin: '0 auto',
+                      alignItems: 'start',
+                    }}>
+                      {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
+                        <div key={plan.name}>
+                          <PricingCard
+                            {...plan}
+                            index={i}
+                            billing={billing}
+                            expanded={expandedCards[plan.name] ?? false}
+                            onToggleExpand={() => toggleExpand(plan.name)}
+                            cardHeight={lockedHeight}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))
-              }
-            </div>
+                  </div>
+                )}
+              </>
+            )}
 
             <Reveal>
               <p style={{ marginTop: 40, textAlign: 'center', fontSize: 12, color: '#9CA3AF' }}>

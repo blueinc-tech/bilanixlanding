@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { RichTextEditor } from './rich-text-editor'
 
 // ─── Types ─────────────────────────────────────────────────────────
 
@@ -36,6 +37,14 @@ interface CampaignFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSaved: () => void
+  editCampaign?: {
+    id: string
+    name: string
+    subject: string
+    body: string
+    recipientType?: string
+    targetFilter?: Record<string, unknown> | null
+  } | null
 }
 
 // ─── Email Validation ──────────────────────────────────────────────
@@ -60,7 +69,8 @@ const SUBSCRIPTION_GROUPS = [
 
 // ─── Main Component ────────────────────────────────────────────────
 
-export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignFormDialogProps) {
+export function CampaignFormDialog({ open, onOpenChange, onSaved, editCampaign }: CampaignFormDialogProps) {
+  const isEdit = !!editCampaign
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [form, setForm] = useState({
@@ -96,7 +106,7 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
   const [csvLoading, setCsvLoading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // ─── Reset on close ───────────────────────────────────────────
+  // ─── Reset on close / populate on edit ────────────────────────
   useEffect(() => {
     if (!open) {
       setForm({ name: '', subject: '', body: '' })
@@ -113,8 +123,26 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
       setSubGroupCount(null)
       setCsvValidation(null)
       setErrors({})
+    } else if (editCampaign) {
+      setForm({
+        name: editCampaign.name,
+        subject: editCampaign.subject,
+        body: editCampaign.body,
+      })
+      if (editCampaign.recipientType) {
+        setRecipientType(editCampaign.recipientType as RecipientType)
+      }
+      if (editCampaign.targetFilter) {
+        const filter = editCampaign.targetFilter as Record<string, unknown>
+        if (filter.recipients && Array.isArray(filter.recipients)) {
+          setRecipients(filter.recipients as RecipientEntry[])
+        }
+        if (filter.group) {
+          setSubGroup(filter.group as string)
+        }
+      }
     }
-  }, [open])
+  }, [open, editCampaign])
 
   // ─── Client Search ────────────────────────────────────────────
 
@@ -346,8 +374,11 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
           break
       }
 
-      const res = await fetch('/api/admin/campaigns', {
-        method: 'POST',
+      const url = isEdit ? `/api/admin/campaigns/${editCampaign!.id}` : '/api/admin/campaigns'
+      const method = isEdit ? 'PUT' : 'POST'
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
@@ -678,8 +709,8 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>New Campaign</DialogTitle>
-          <DialogDescription>Create and send an email campaign.</DialogDescription>
+          <DialogTitle>{isEdit ? 'Edit Campaign' : 'New Campaign'}</DialogTitle>
+          <DialogDescription>{isEdit ? 'Update campaign details before sending.' : 'Create and send an email campaign.'}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -713,12 +744,11 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Email Body *</label>
-              <textarea
-                className="flex min-h-[180px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring font-mono"
-                placeholder="HTML or plain text email content..."
-                value={form.body}
-                onChange={(e) => setForm({ ...form, body: e.target.value })}
-                required
+              <RichTextEditor
+                content={form.body}
+                onChange={(html) => setForm({ ...form, body: html })}
+                placeholder="Write your email content..."
+                className="min-h-[180px]"
               />
             </div>
           </div>
@@ -794,7 +824,7 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit" loading={loading}>Create Campaign</Button>
+            <Button type="submit" loading={loading}>{isEdit ? 'Save Changes' : 'Create Campaign'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

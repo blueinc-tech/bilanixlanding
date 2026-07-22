@@ -342,6 +342,7 @@ model SubscriptionPlan {
   name          String
   slug          String   @unique
   description   String?
+  planType      String   @default("accounting") @map("plan_type")
   amount        Float
   currency      String   @default("NGN")
   interval      String   @default("monthly")
@@ -361,6 +362,7 @@ model SubscriptionPlan {
 
   @@index([isActive])
   @@index([sortOrder])
+  @@index([planType])
   @@map("subscription_plans")
 }
 

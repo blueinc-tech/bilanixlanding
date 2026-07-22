@@ -18,10 +18,10 @@ export default function Home() {
       <Hero />
       <LogoStrip />
       <main>
+        <BusinessTypes />
         <Features />
         <SpotlightAI />
         <PricingSection />
-        <BusinessTypes />
         <SpotlightExpense />
         <SpotlightPayroll />
         <SpotlightCashflow />

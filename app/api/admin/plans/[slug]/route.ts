@@ -11,6 +11,7 @@ import { parseBody } from '@/lib/validation'
 const updateSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   description: z.string().optional(),
+  planType: z.enum(['accounting', 'invoicing']).optional(),
   amount: z.number().min(0).optional(),
   interval: z.enum(['monthly', 'yearly', 'one_time']).optional(),
   features: z.array(z.string()).optional(),
