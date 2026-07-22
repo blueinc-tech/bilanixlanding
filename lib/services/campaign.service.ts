@@ -230,11 +230,15 @@ export const CampaignService = {
     switch (recipientType) {
       case 'single':
       case 'multiple':
-      case 'csv':
-        if (directRecipients) {
+      case 'csv': {
+        const storedRecipients = (targetFilter?.recipients as RecipientEntry[]) || []
+        if (directRecipients && directRecipients.length > 0) {
           for (const r of directRecipients) addUnique(r)
+        } else if (storedRecipients.length > 0) {
+          for (const r of storedRecipients) addUnique(r)
         }
         break
+      }
 
       case 'subscription_group': {
         const filter = targetFilter || {}

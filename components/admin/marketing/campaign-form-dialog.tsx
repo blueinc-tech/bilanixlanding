@@ -330,16 +330,19 @@ export function CampaignFormDialog({ open, onOpenChange, onSaved }: CampaignForm
           } else {
             body.recipients = [{ email: singleEmail }]
           }
+          body.targetFilter = { recipients: body.recipients }
           break
         }
         case 'multiple':
           body.recipients = recipients
+          body.targetFilter = { recipients }
           break
         case 'subscription_group':
           body.targetFilter = { group: subGroup }
           break
         case 'csv':
           body.recipients = recipients
+          body.targetFilter = { recipients }
           break
       }
 
