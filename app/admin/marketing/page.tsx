@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -119,9 +120,15 @@ export default function MarketingPage() {
       const json = await res.json()
       if (json.success) {
         setSendConfirm(null)
+        toast.success(`Campaign sent to ${json.data?.sent || 0} recipients`)
         fetchCampaigns()
         fetchStats()
+      } else {
+        toast.error(json.error?.message || 'Failed to send campaign')
       }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Network error'
+      toast.error(`Send failed: ${message}`)
     } finally {
       setSendLoading(false)
     }
@@ -130,13 +137,21 @@ export default function MarketingPage() {
   const handleRetry = async (id: string) => {
     setRetryLoading(id)
     try {
-      await fetch('/api/admin/campaigns/retry', {
+      const res = await fetch('/api/admin/campaigns/retry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       })
+      const json = await res.json()
+      if (json.success) {
+        toast.success(`Retried ${json.data?.retried || 0} failed sends`)
+      } else {
+        toast.error(json.error?.message || 'Retry failed')
+      }
       fetchCampaigns()
       fetchStats()
+    } catch {
+      toast.error('Retry failed')
     } finally {
       setRetryLoading(null)
     }
