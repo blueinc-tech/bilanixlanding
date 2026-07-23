@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -406,7 +407,7 @@ function AdminFormDialog({ admin, onClose, onSaved }: {
           {!isEdit && (
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Password *</label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="Minimum 8 characters" />
+              <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="Minimum 8 characters" />
             </div>
           )}
           <div className="space-y-2">

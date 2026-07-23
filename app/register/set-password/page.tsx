@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { CheckCircle2 } from 'lucide-react'
 
 function SetPasswordForm() {
@@ -209,8 +210,7 @@ function SetPasswordForm() {
             >
               Password
             </label>
-            <Input
-              type="password"
+            <PasswordInput
               placeholder="At least 8 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -236,8 +236,7 @@ function SetPasswordForm() {
             >
               Confirm Password
             </label>
-            <Input
-              type="password"
+            <PasswordInput
               placeholder="Re-enter your password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

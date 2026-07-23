@@ -65,6 +65,7 @@ const SUBSCRIPTION_GROUPS = [
   { value: 'inactive', label: 'Inactive Users' },
   { value: 'expiring_soon', label: 'Expiring Soon Users' },
   { value: 'all', label: 'All Users' },
+  { value: 'newsletter', label: 'Newsletter Subscribers' },
 ] as const
 
 // ─── Main Component ────────────────────────────────────────────────

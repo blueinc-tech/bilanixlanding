@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Badge } from '@/components/ui/badge'
 import { useAdminAuth } from '@/components/admin/auth-provider'
 
@@ -229,15 +230,15 @@ export default function ProfilePage() {
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Current Password</label>
-            <Input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+            <PasswordInput value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">New Password</label>
-            <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={8} />
+            <PasswordInput value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={8} />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Confirm New Password</label>
-            <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8} />
+            <PasswordInput value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={8} />
           </div>
 
           {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}

@@ -179,6 +179,14 @@ export const CampaignService = {
   // ─── Subscription Group Recipients (live client data) ──────────
 
   async getSubscriptionGroupRecipients(group: string) {
+    if (group === 'newsletter') {
+      const subscribers = await prisma.newsletterSubscription.findMany({
+        where: { status: 'active' },
+        select: { email: true },
+      })
+      return subscribers.map((s) => ({ email: s.email }))
+    }
+
     const userWhere: Prisma.UserWhereInput = { deletedAt: null }
     const now = new Date()
 

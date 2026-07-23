@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import {
   Select,
   SelectContent,
@@ -120,8 +121,7 @@ export function UserFormDialog({ open, onOpenChange, user, onSaved }: UserFormDi
           {!isEdit && (
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Password</label>
-              <Input
-                type="password"
+              <PasswordInput
                 placeholder="Min. 8 characters"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}

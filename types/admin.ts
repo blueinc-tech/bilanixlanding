@@ -151,6 +151,12 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     icon: 'marketing',
   },
   {
+    label: 'Newsletter',
+    href: '/admin/newsletter',
+    module: MODULES.MARKETING,
+    icon: 'newsletter',
+  },
+  {
     label: 'Payments',
     href: '/admin/payments',
     module: MODULES.PAYMENTS,

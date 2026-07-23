@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { PasswordInput } from '@/components/ui/password-input'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -89,9 +90,8 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium text-white/70">
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"

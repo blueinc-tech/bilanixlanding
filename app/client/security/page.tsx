@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Switch } from '@/components/ui/switch'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
@@ -132,8 +133,7 @@ export default function SecurityPage() {
             )}
             <div className="space-y-2">
               <label className="text-sm font-medium">Current Password</label>
-              <Input
-                type="password"
+              <PasswordInput
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
@@ -142,8 +142,7 @@ export default function SecurityPage() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">New Password</label>
-              <Input
-                type="password"
+              <PasswordInput
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password (min 8 characters)"
@@ -153,8 +152,7 @@ export default function SecurityPage() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Confirm New Password</label>
-              <Input
-                type="password"
+              <PasswordInput
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
