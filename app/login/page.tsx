@@ -162,6 +162,7 @@ export default function ClientLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              dark
               style={{
                 backgroundColor: '#1A1A1A',
                 border: '1px solid #2A2A2A',

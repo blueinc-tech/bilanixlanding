@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils'
 
 type PasswordInputProps = InputProps & {
   className?: string
+  dark?: boolean
 }
 
-export function PasswordInput({ className, ...props }: PasswordInputProps) {
+export function PasswordInput({ className, dark, ...props }: PasswordInputProps) {
   const [visible, setVisible] = useState(false)
 
   return (
@@ -22,7 +23,10 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
         type="button"
         tabIndex={-1}
         onClick={() => setVisible((v) => !v)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+        className={cn(
+          'absolute right-3 top-1/2 -translate-y-1/2 transition-colors',
+          dark ? 'text-white/40 hover:text-white/70' : 'text-muted-foreground hover:text-foreground'
+        )}
         aria-label={visible ? 'Hide password' : 'Show password'}
       >
         {visible ? (

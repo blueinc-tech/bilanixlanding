@@ -215,6 +215,7 @@ function SetPasswordForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              dark
               style={{
                 backgroundColor: '#1A1A1A',
                 border: '1px solid #2A2A2A',
@@ -241,6 +242,7 @@ function SetPasswordForm() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              dark
               style={{
                 backgroundColor: '#1A1A1A',
                 border: '1px solid #2A2A2A',

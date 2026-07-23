@@ -8,7 +8,7 @@ import { CampaignService } from '@/lib/services/campaign.service'
 import { parseQuery } from '@/lib/validation'
 
 const querySchema = z.object({
-  group: z.enum(['active', 'inactive', 'expiring_soon', 'all']).default('all'),
+  group: z.enum(['active', 'inactive', 'expiring_soon', 'all', 'newsletter']).default('all'),
 })
 
 export const GET = withErrorHandling(async (req: NextRequest) => {

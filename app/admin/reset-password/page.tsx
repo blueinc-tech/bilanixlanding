@@ -122,6 +122,7 @@ function ResetPasswordForm() {
                 placeholder="Minimum 8 characters"
                 required
                 autoComplete="new-password"
+                dark
                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-[#60B746]/50 focus:ring-1 focus:ring-[#60B746]/30"
               />
             </div>
@@ -137,6 +138,7 @@ function ResetPasswordForm() {
                 placeholder="Re-enter your password"
                 required
                 autoComplete="new-password"
+                dark
                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-[#60B746]/50 focus:ring-1 focus:ring-[#60B746]/30"
               />
             </div>
