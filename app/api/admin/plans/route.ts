@@ -42,8 +42,14 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
   const auth = await authenticate(req)
   if (!auth.success) return auth.response
 
+  const rawBody = await req.clone().json()
+  console.log('[Plans API] POST body:', JSON.stringify(rawBody, null, 2))
+
   const parsed = await parseBody(req, createSchema)
-  if (!parsed.success) return parsed.response
+  if (!parsed.success) {
+    console.error('[Plans API] Validation failed')
+    return parsed.response
+  }
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1'
   const userAgent = req.headers.get('user-agent') || 'Unknown'

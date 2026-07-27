@@ -299,7 +299,7 @@ function PlanFormDialog({
     try {
       const body = {
         name: form.name,
-        slug: form.slug || form.name.toLowerCase().replace(/\s+/g, '-'),
+        slug: form.slug || form.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
         description: form.description || undefined,
         planType: form.planType,
         amount: Number(form.amount),
@@ -326,7 +326,13 @@ function PlanFormDialog({
       if (json.success) {
         onSaved()
       } else {
-        setErrors({ submit: json.error?.message || 'Something went wrong' })
+        const details = json.error?.details
+        if (details && typeof details === 'object') {
+          const msgs = Object.entries(details).map(([field, errs]) => `${field}: ${(errs as string[]).join(', ')}`)
+          setErrors({ submit: msgs.join('\n') || json.error?.message || 'Something went wrong' })
+        } else {
+          setErrors({ submit: json.error?.message || 'Something went wrong' })
+        }
       }
     } catch {
       setErrors({ submit: 'Network error' })
