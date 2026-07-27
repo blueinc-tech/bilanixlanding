@@ -35,6 +35,8 @@ export const PlanService = {
         audience: true,
         badge: true,
         ctaText: true,
+        includedUsers: true,
+        activationFee: true,
       },
     })
   },
@@ -52,7 +54,7 @@ export const PlanService = {
     return plan
   },
 
-  async create(data: { name: string; slug: string; description?: string; planType?: string; amount: number; currency?: string; interval?: string; features?: string[]; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number }) {
+  async create(data: { name: string; slug: string; description?: string; planType?: string; amount: number; currency?: string; interval?: string; features?: string[]; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number; includedUsers?: number; activationFee?: number }) {
     const existing = await prisma.subscriptionPlan.findUnique({ where: { slug: data.slug } })
     if (existing) throw new ConflictError('A plan with this slug already exists')
 
@@ -70,13 +72,15 @@ export const PlanService = {
         audience: data.audience || null,
         badge: data.badge || null,
         ctaText: data.ctaText || 'Get started',
+        includedUsers: data.includedUsers ?? 1,
+        activationFee: data.activationFee ?? 0,
         monthlyAmount: data.monthlyAmount ?? null,
         yearlyAmount: data.yearlyAmount ?? null,
       },
     })
   },
 
-  async update(slug: string, data: { name?: string; description?: string; planType?: string; amount?: number; interval?: string; features?: string[]; isActive?: boolean; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number }) {
+  async update(slug: string, data: { name?: string; description?: string; planType?: string; amount?: number; interval?: string; features?: string[]; isActive?: boolean; sortOrder?: number; audience?: string; badge?: string; ctaText?: string; monthlyAmount?: number; yearlyAmount?: number; includedUsers?: number; activationFee?: number }) {
     const plan = await prisma.subscriptionPlan.findUnique({ where: { slug } })
     if (!plan) throw new NotFoundError('Plan')
 
@@ -94,6 +98,8 @@ export const PlanService = {
         ...(data.audience !== undefined && { audience: data.audience }),
         ...(data.badge !== undefined && { badge: data.badge }),
         ...(data.ctaText !== undefined && { ctaText: data.ctaText }),
+        ...(data.includedUsers !== undefined && { includedUsers: data.includedUsers }),
+        ...(data.activationFee !== undefined && { activationFee: data.activationFee }),
         ...(data.monthlyAmount !== undefined && { monthlyAmount: data.monthlyAmount }),
         ...(data.yearlyAmount !== undefined && { yearlyAmount: data.yearlyAmount }),
       },

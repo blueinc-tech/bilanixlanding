@@ -40,6 +40,8 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
     ? (plan.monthlyAmount ?? plan.amount)
     : (plan.yearlyAmount ?? plan.amount)
 
+  const totalAmount = amount + (plan.planType === 'invoicing' ? plan.activationFee : 0)
+
   if (amount <= 0) {
     return apiBadRequest('Invalid plan amount')
   }
@@ -82,12 +84,14 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
     data: {
       userId,
       planSlug,
-      amount,
+      amount: totalAmount,
       currency: plan.currency,
       status: 'pending',
       type: 'subscription',
       gateway,
-      description: `${plan.name} Plan (${billing})`,
+      description: plan.planType === 'invoicing' && plan.activationFee > 0
+        ? `${plan.name} Plan (${billing}) + ₦${plan.activationFee.toLocaleString()} activation fee`
+        : `${plan.name} Plan (${billing})`,
     },
   })
 
@@ -98,7 +102,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
         customerEmail: email,
         customerName: name,
         planName: plan.name,
-        amount,
+        amount: totalAmount,
         currency: plan.currency,
         billing,
         metadata: {
@@ -107,6 +111,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
           planSlug,
           billing,
           paymentLogId: paymentLog.id,
+          activationFee: plan.planType === 'invoicing' ? String(plan.activationFee) : '0',
         },
       })
 
@@ -117,7 +122,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
 
       const { authorizationUrl } = await PaystackService.initializeTransaction({
         email,
-        amount,
+        amount: totalAmount,
         currency: plan.currency,
         reference,
         metadata: {
@@ -126,11 +131,11 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
           planSlug,
           billing,
           paymentLogId: paymentLog.id,
+          activationFee: plan.planType === 'invoicing' ? String(plan.activationFee) : '0',
         },
         callbackUrl: `${siteUrl}/register/success?reference=${reference}`,
       })
 
-      // Update payment log with reference
       await prisma.paymentLog.update({
         where: { id: paymentLog.id },
         data: { gatewayRef: reference },

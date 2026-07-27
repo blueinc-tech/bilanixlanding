@@ -23,6 +23,8 @@ type Plan = {
   features: string[]
   featured?: boolean
   badge?: string
+  includedUsers: number
+  activationFee: number
 }
 
 const formatNaira = (amount: number) =>
@@ -35,6 +37,7 @@ export default function PricingPage() {
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(true)
   const gridRef = useRef<HTMLDivElement>(null)
+  const invoicingGridRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetch('/api/plans')
@@ -57,17 +60,17 @@ export default function PricingPage() {
             monthly: '/mo/user',
             yearly: '/yr/user',
           },
-          cta: p.ctaText,
-          features: p.features,
+          cta: p.ctaText || 'Get started',
+          features: p.features || [],
           featured: !!p.badge,
           badge: p.badge,
+          includedUsers: p.includedUsers || 1,
+          activationFee: p.activationFee || 0,
         }))
         setPlans(transformed)
       })
       .catch(() => {})
-      .finally(() => {
-        setLoading(false)
-      })
+      .finally(() => setLoading(false))
   }, [])
 
   const toggleExpand = (name: string) => {
@@ -75,12 +78,15 @@ export default function PricingPage() {
   }
 
   useEffect(() => {
-    if (!gridRef.current) return
+    const refs = [gridRef, invoicingGridRef]
     const frame = requestAnimationFrame(() => {
-      const cards = gridRef.current!.querySelectorAll<HTMLElement>('[data-card]')
       let max = 0
-      cards.forEach((card) => {
-        if (card.offsetHeight > max) max = card.offsetHeight
+      refs.forEach((ref) => {
+        if (!ref.current) return
+        const cards = ref.current.querySelectorAll<HTMLElement>('[data-card]')
+        cards.forEach((card) => {
+          if (card.offsetHeight > max) max = card.offsetHeight
+        })
       })
       if (max > 0) setLockedHeight(max)
     })
@@ -119,7 +125,6 @@ export default function PricingPage() {
               </div>
             ) : (
               <>
-                {/* Accounting Solutions Row */}
                 {plans.some(p => p.planType === 'accounting') && (
                   <div style={{ marginBottom: 48 }}>
                     <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Accounting Solution</h3>
@@ -140,6 +145,8 @@ export default function PricingPage() {
                             expanded={expandedCards[plan.name] ?? false}
                             onToggleExpand={() => toggleExpand(plan.name)}
                             cardHeight={lockedHeight}
+                            includedUsers={plan.includedUsers}
+                            activationFee={plan.activationFee}
                           />
                         </div>
                       ))}
@@ -147,30 +154,34 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                {/* Invoicing Plans Row */}
                 {plans.some(p => p.planType === 'invoicing') && (
                   <div>
                     <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Invoicing Plan</h3>
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(4, 1fr)',
-                      gap: 20,
-                      maxWidth: 1200,
-                      margin: '0 auto',
-                      alignItems: 'start',
+                    <div ref={invoicingGridRef} style={{
+                      display: 'flex',
+                      justifyContent: 'center',
                     }}>
-                      {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
-                        <div key={plan.name}>
-                          <PricingCard
-                            {...plan}
-                            index={i}
-                            billing={billing}
-                            expanded={expandedCards[plan.name] ?? false}
-                            onToggleExpand={() => toggleExpand(plan.name)}
-                            cardHeight={lockedHeight}
-                          />
-                        </div>
-                      ))}
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: 20,
+                        maxWidth: 1200,
+                      }}>
+                        {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
+                          <div key={plan.name}>
+                            <PricingCard
+                              {...plan}
+                              index={i}
+                              billing={billing}
+                              expanded={expandedCards[plan.name] ?? false}
+                              onToggleExpand={() => toggleExpand(plan.name)}
+                              cardHeight={lockedHeight}
+                              includedUsers={plan.includedUsers}
+                              activationFee={plan.activationFee}
+                            />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}

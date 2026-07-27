@@ -20,6 +20,8 @@ interface PricingCardProps {
   expanded?: boolean
   onToggleExpand?: () => void
   cardHeight?: number | null
+  includedUsers?: number
+  activationFee?: number
 }
 
 export function PricingCard({
@@ -36,6 +38,8 @@ export function PricingCard({
   expanded = false,
   onToggleExpand,
   cardHeight,
+  includedUsers = 1,
+  activationFee = 0,
 }: PricingCardProps) {
   const visibleFeatures = expanded ? features : features.slice(0, 5)
   const hasMore = features.length > 5
@@ -82,9 +86,17 @@ export function PricingCard({
           {price[billing]}
         </div>
         <p style={{ marginTop: 2, fontSize: 11, color: mutedColor }}>
-          {period[billing]}
+          {includedUsers > 1
+            ? `${period[billing].replace('/user', '')} (for ${includedUsers} users)`
+            : period[billing]}
         </p>
       </div>
+
+      {activationFee > 0 && (
+        <p style={{ marginTop: 6, fontSize: 11, color: mutedColor }}>
+          One-time activation fee: {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(activationFee)}
+        </p>
+      )}
 
       <button
         onClick={openRegistration}

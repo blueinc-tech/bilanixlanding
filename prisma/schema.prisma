@@ -352,6 +352,8 @@ model SubscriptionPlan {
   audience      String?
   badge         String?
   ctaText       String?  @default("Get started") @map("cta_text")
+  includedUsers Int      @default(1) @map("included_users")
+  activationFee Float    @default(0) @map("activation_fee")
   isActive      Boolean  @default(true) @map("is_active")
   sortOrder     Int      @default(0) @map("sort_order")
   createdAt     DateTime @default(now()) @map("created_at")

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { Check, ChevronDown } from 'lucide-react'
 import { openRegistration } from './registration-modal'
 
 type Billing = 'monthly' | 'yearly'
@@ -17,16 +17,119 @@ type Plan = {
   features: string[]
   featured?: boolean
   badge?: string
+  includedUsers: number
+  activationFee: number
 }
 
 const formatNaira = (amount: number) =>
   new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)
+
+function SectionPlanCard({ plan, billing, expanded, onToggle, cardHeight }: {
+  plan: Plan
+  billing: Billing
+  expanded: boolean
+  onToggle: () => void
+  cardHeight: number | null
+}) {
+  const visibleFeatures = expanded ? plan.features : plan.features.slice(0, 5)
+  const hasMore = plan.features.length > 5
+  const muted = plan.featured ? 'text-white/50' : 'text-[#6B7280]'
+  const featureText = plan.featured ? 'text-white/80' : 'text-[#374151]'
+
+  const periodText = plan.includedUsers > 1
+    ? `${plan.period[billing].replace('/user', '')} (for ${plan.includedUsers} users)`
+    : plan.period[billing]
+
+  return (
+    <motion.div
+      data-card
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className={`flex flex-col rounded-[20px] p-8 transition-shadow duration-300 ${
+        plan.featured
+          ? 'bg-[#0D0D0D] shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:shadow-[0_28px_60px_rgba(0,0,0,0.35)]'
+          : 'border border-[#E5E7EB] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_44px_rgba(0,0,0,0.1)]'
+      }`}
+      style={cardHeight ? { minHeight: expanded ? 'auto' : cardHeight } : undefined}
+    >
+      <div className="min-h-[22px] mb-5">
+        {plan.badge && (
+          <span className="font-inter inline-flex w-fit items-center rounded-full bg-[#60B746] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+            {plan.badge}
+          </span>
+        )}
+      </div>
+
+      <h3 className={`font-jakarta text-lg font-bold ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
+        {plan.name}
+      </h3>
+      <p className={`font-inter mt-1 text-sm ${muted}`}>{plan.audience}</p>
+
+      <div className="mt-6">
+        <div className={`font-jakarta text-3xl font-bold tracking-[-0.02em] ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
+          {plan.price[billing]}
+        </div>
+        <div className={`font-inter mt-1 text-sm ${muted}`}>{periodText}</div>
+      </div>
+
+      {plan.activationFee > 0 && (
+        <p className={`font-inter mt-1.5 text-xs ${muted}`}>
+          One-time activation fee: {formatNaira(plan.activationFee)}
+        </p>
+      )}
+
+      <motion.button
+        onClick={openRegistration}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.25 }}
+        className={`font-inter mt-6 flex h-12 w-full items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors ${
+          plan.featured
+            ? 'bg-[#60B746] text-white hover:bg-[#55a53e]'
+            : 'border border-[#E5E7EB] bg-white text-[#0F0F0F] hover:border-[#0F0F0F]'
+        }`}
+      >
+        {plan.cta}
+      </motion.button>
+
+      <ul className="mt-8 flex flex-col gap-4">
+        {visibleFeatures.map((feature) => (
+          <li key={feature} className="flex items-start gap-3">
+            <Check size={18} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#60B746]" />
+            <span className={`font-inter text-sm leading-snug ${featureText}`}>{feature}</span>
+          </li>
+        ))}
+      </ul>
+
+      {hasMore ? (
+        <button
+          onClick={onToggle}
+          className={`font-inter mt-4 flex items-center gap-1 text-xs font-medium transition-colors ${
+            plan.featured ? 'text-white/50 hover:text-white/70' : 'text-[#9CA3AF] hover:text-[#6B7280]'
+          }`}
+        >
+          {expanded ? 'Show less' : 'Read more'}
+          <ChevronDown size={13} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        </button>
+      ) : (
+        <div className="mt-4 h-[20px]" />
+      )}
+    </motion.div>
+  )
+}
 
 export function PricingSection() {
   const [billing, setBilling] = useState<Billing>('yearly')
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({})
+  const accountingRef = useRef<HTMLDivElement>(null)
+  const invoicingRef = useRef<HTMLDivElement>(null)
+  const [cardHeight, setCardHeight] = useState<number | null>(null)
 
   useEffect(() => {
     fetch('/api/plans')
@@ -49,20 +152,42 @@ export function PricingSection() {
             monthly: '/mo/user',
             yearly: '/yr/user',
           },
-          cta: p.ctaText,
-          features: p.features,
+          cta: p.ctaText || 'Get started',
+          features: p.features || [],
           featured: !!p.badge,
           badge: p.badge,
+          includedUsers: p.includedUsers || 1,
+          activationFee: p.activationFee || 0,
         }))
         setPlans(transformed)
       })
-      .catch(() => {
-        setError(true)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false))
   }, [])
+
+  const measureCards = useCallback(() => {
+    const refs = [accountingRef, invoicingRef]
+    let max = 0
+    refs.forEach((ref) => {
+      if (!ref.current) return
+      const cards = ref.current.querySelectorAll<HTMLElement>('[data-card]')
+      cards.forEach((card) => {
+        if (card.offsetHeight > max) max = card.offsetHeight
+      })
+    })
+    if (max > 0) setCardHeight(max)
+  }, [])
+
+  useEffect(() => {
+    if (!loading && plans.length > 0) {
+      const frame = requestAnimationFrame(measureCards)
+      return () => cancelAnimationFrame(frame)
+    }
+  }, [billing, loading, plans, measureCards])
+
+  const toggleExpand = (name: string) => {
+    setExpandedCards((prev) => ({ ...prev, [name]: !prev[name] }))
+  }
 
   return (
     <section id="pricing" className="bg-white py-24 sm:py-32">
@@ -106,11 +231,7 @@ export function PricingSection() {
                       className="absolute inset-0 rounded-full border border-[#60B746] bg-white shadow-sm"
                     />
                   )}
-                  <span
-                    className={`relative z-10 flex items-center gap-2 font-inter capitalize ${
-                      active ? 'text-[#0F0F0F]' : 'text-[#6B7280]'
-                    }`}
-                  >
+                  <span className={`relative z-10 flex items-center gap-2 font-inter capitalize ${active ? 'text-[#0F0F0F]' : 'text-[#6B7280]'}`}>
                     {option}
                     {option === 'yearly' && (
                       <span className="rounded-full bg-[#E7F5E1] px-2 py-0.5 text-[11px] font-semibold text-[#3F8F2E]">
@@ -128,10 +249,7 @@ export function PricingSection() {
           {loading ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col rounded-[20px] border border-[#E5E7EB] bg-white p-8"
-                >
+                <div key={i} className="flex flex-col rounded-[20px] border border-[#E5E7EB] bg-white p-8">
                   <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
                   <div className="mt-3 h-3 w-40 animate-pulse rounded bg-gray-200" />
                   <div className="mt-6 h-8 w-28 animate-pulse rounded bg-gray-200" />
@@ -151,144 +269,40 @@ export function PricingSection() {
             </div>
           ) : (
             <>
-              {/* Accounting Solutions Row */}
               {plans.some(p => p.planType === 'accounting') && (
                 <div className="mb-12">
                   <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Accounting Solution</h3>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  <div ref={accountingRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {plans.filter(p => p.planType === 'accounting').map((plan, i) => (
-                      <motion.div
+                      <SectionPlanCard
                         key={plan.name}
-                        initial={{ opacity: 0, y: 28 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{ y: -4 }}
-                        className={`flex flex-col rounded-[20px] p-8 transition-shadow duration-300 ${
-                          plan.featured
-                            ? 'bg-[#0D0D0D] shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:shadow-[0_28px_60px_rgba(0,0,0,0.35)]'
-                            : 'border border-[#E5E7EB] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_44px_rgba(0,0,0,0.1)]'
-                        }`}
-                      >
-                        {plan.badge && (
-                          <span className="font-inter mb-5 inline-flex w-fit items-center rounded-full bg-[#60B746] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
-                            {plan.badge}
-                          </span>
-                        )}
-
-                        <h3 className={`font-jakarta text-lg font-bold ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
-                          {plan.name}
-                        </h3>
-                        <p className={`font-inter mt-1 text-sm ${plan.featured ? 'text-white/50' : 'text-[#6B7280]'}`}>
-                          {plan.audience}
-                        </p>
-
-                        <div className="mt-6">
-                          <div className={`font-jakarta text-3xl font-bold tracking-[-0.02em] ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
-                            {plan.price[billing]}
-                          </div>
-                          <div className={`font-inter mt-1 text-sm ${plan.featured ? 'text-white/50' : 'text-[#6B7280]'}`}>
-                            {plan.period[billing]}
-                          </div>
-                        </div>
-
-                        <motion.button
-                          onClick={openRegistration}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          transition={{ duration: 0.25 }}
-                          className={`font-inter mt-6 flex h-12 w-full items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors ${
-                            plan.featured
-                              ? 'bg-[#60B746] text-white hover:bg-[#55a53e]'
-                              : 'border border-[#E5E7EB] bg-white text-[#0F0F0F] hover:border-[#0F0F0F]'
-                          }`}
-                        >
-                          {plan.cta}
-                        </motion.button>
-
-                        <ul className="mt-8 flex flex-col gap-4">
-                          {plan.features.map((feature) => (
-                            <li key={feature} className="flex items-start gap-3">
-                              <Check size={18} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#60B746]" />
-                              <span className={`font-inter text-sm leading-snug ${plan.featured ? 'text-white/80' : 'text-[#374151]'}`}>
-                                {feature}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </motion.div>
+                        plan={plan}
+                        billing={billing}
+                        expanded={expandedCards[plan.name] ?? false}
+                        onToggle={() => toggleExpand(plan.name)}
+                        cardHeight={cardHeight}
+                      />
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Invoicing Plans Row */}
               {plans.some(p => p.planType === 'invoicing') && (
                 <div>
                   <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Invoicing Plan</h3>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
-                      <motion.div
-                        key={plan.name}
-                        initial={{ opacity: 0, y: 28 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{ y: -4 }}
-                        className={`flex flex-col rounded-[20px] p-8 transition-shadow duration-300 ${
-                          plan.featured
-                            ? 'bg-[#0D0D0D] shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:shadow-[0_28px_60px_rgba(0,0,0,0.35)]'
-                            : 'border border-[#E5E7EB] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_44px_rgba(0,0,0,0.1)]'
-                        }`}
-                      >
-                        {plan.badge && (
-                          <span className="font-inter mb-5 inline-flex w-fit items-center rounded-full bg-[#60B746] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
-                            {plan.badge}
-                          </span>
-                        )}
-
-                        <h3 className={`font-jakarta text-lg font-bold ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
-                          {plan.name}
-                        </h3>
-                        <p className={`font-inter mt-1 text-sm ${plan.featured ? 'text-white/50' : 'text-[#6B7280]'}`}>
-                          {plan.audience}
-                        </p>
-
-                        <div className="mt-6">
-                          <div className={`font-jakarta text-3xl font-bold tracking-[-0.02em] ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
-                            {plan.price[billing]}
-                          </div>
-                          <div className={`font-inter mt-1 text-sm ${plan.featured ? 'text-white/50' : 'text-[#6B7280]'}`}>
-                            {plan.period[billing]}
-                          </div>
-                        </div>
-
-                        <motion.button
-                          onClick={openRegistration}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          transition={{ duration: 0.25 }}
-                          className={`font-inter mt-6 flex h-12 w-full items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors ${
-                            plan.featured
-                              ? 'bg-[#60B746] text-white hover:bg-[#55a53e]'
-                              : 'border border-[#E5E7EB] bg-white text-[#0F0F0F] hover:border-[#0F0F0F]'
-                          }`}
-                        >
-                          {plan.cta}
-                        </motion.button>
-
-                        <ul className="mt-8 flex flex-col gap-4">
-                          {plan.features.map((feature) => (
-                            <li key={feature} className="flex items-start gap-3">
-                              <Check size={18} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#60B746]" />
-                              <span className={`font-inter text-sm leading-snug ${plan.featured ? 'text-white/80' : 'text-[#374151]'}`}>
-                                {feature}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </motion.div>
-                    ))}
+                  <div ref={invoicingRef} className="flex justify-center">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                      {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
+                        <SectionPlanCard
+                          key={plan.name}
+                          plan={plan}
+                          billing={billing}
+                          expanded={expandedCards[plan.name] ?? false}
+                          onToggle={() => toggleExpand(plan.name)}
+                          cardHeight={cardHeight}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}

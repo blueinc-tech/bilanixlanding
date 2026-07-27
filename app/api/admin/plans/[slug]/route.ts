@@ -22,6 +22,8 @@ const updateSchema = z.object({
   ctaText: z.string().optional(),
   monthlyAmount: z.number().optional(),
   yearlyAmount: z.number().optional(),
+  includedUsers: z.number().int().min(1).optional(),
+  activationFee: z.number().min(0).optional(),
 })
 
 export const GET = withErrorHandling(async (req: NextRequest, context?: { params: Record<string, string> }) => {

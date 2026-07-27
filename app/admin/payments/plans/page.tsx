@@ -39,6 +39,8 @@ interface Plan {
   ctaText: string | null
   monthlyAmount: number | null
   yearlyAmount: number | null
+  includedUsers: number
+  activationFee: number
   _count: { paymentLogs: number }
 }
 
@@ -257,13 +259,14 @@ function PlanFormDialog({
     description: plan?.description || '',
     planType: plan?.planType || 'accounting',
     amount: plan?.amount || 0,
-    interval: plan?.interval || 'monthly',
     features: plan?.features?.join('\n') || '',
     audience: plan?.audience || '',
     badge: plan?.badge || '',
     ctaText: plan?.ctaText || 'Get started',
     monthlyAmount: plan?.monthlyAmount ?? '',
     yearlyAmount: plan?.yearlyAmount ?? '',
+    includedUsers: plan?.includedUsers ?? 1,
+    activationFee: plan?.activationFee ?? 0,
   })
 
   useEffect(() => {
@@ -274,16 +277,17 @@ function PlanFormDialog({
         description: plan.description || '',
         planType: plan.planType || 'accounting',
         amount: plan.amount,
-        interval: plan.interval,
         features: plan.features?.join('\n') || '',
         audience: plan.audience || '',
         badge: plan.badge || '',
         ctaText: plan.ctaText || 'Get started',
         monthlyAmount: plan.monthlyAmount ?? '',
         yearlyAmount: plan.yearlyAmount ?? '',
+        includedUsers: plan.includedUsers ?? 1,
+        activationFee: plan.activationFee ?? 0,
       })
     } else {
-      setForm({ name: '', slug: '', description: '', planType: 'accounting', amount: 0, interval: 'monthly', features: '', audience: '', badge: '', ctaText: 'Get started', monthlyAmount: '', yearlyAmount: '' })
+      setForm({ name: '', slug: '', description: '', planType: 'accounting', amount: 0, features: '', audience: '', badge: '', ctaText: 'Get started', monthlyAmount: '', yearlyAmount: '', includedUsers: 1, activationFee: 0 })
     }
   }, [plan])
 
@@ -299,13 +303,14 @@ function PlanFormDialog({
         description: form.description || undefined,
         planType: form.planType,
         amount: Number(form.amount),
-        interval: form.interval,
         features: form.features ? form.features.split('\n').filter(Boolean) : [],
         audience: form.audience || undefined,
         badge: form.badge || undefined,
-        ctaText: 'Get started',
+        ctaText: form.ctaText || 'Get started',
         monthlyAmount: form.monthlyAmount !== '' ? Number(form.monthlyAmount) : undefined,
         yearlyAmount: form.yearlyAmount !== '' ? Number(form.yearlyAmount) : undefined,
+        includedUsers: Number(form.includedUsers) || 1,
+        activationFee: form.planType === 'invoicing' ? Number(form.activationFee) || 0 : 0,
       }
 
       const url = isEdit ? `/api/admin/plans/${plan!.slug}` : '/api/admin/plans'
@@ -376,7 +381,7 @@ function PlanFormDialog({
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">CTA Text</label>
-            <Input value="Get started" disabled />
+            <Input placeholder="Get started" value={form.ctaText} onChange={(e) => setForm({ ...form, ctaText: e.target.value })} />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -392,17 +397,19 @@ function PlanFormDialog({
               <Input type="number" min="0" step="100" value={form.yearlyAmount} onChange={(e) => setForm({ ...form, yearlyAmount: e.target.value })} />
             </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Interval</label>
-            <select
-              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-              value={form.interval}
-              onChange={(e) => setForm({ ...form, interval: e.target.value })}
-            >
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-              <option value="one_time">One-time</option>
-            </select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Included Users</label>
+              <Input type="number" min="1" value={form.includedUsers} onChange={(e) => setForm({ ...form, includedUsers: Number(e.target.value) || 1 })} />
+              <p className="text-xs text-muted-foreground">Number of users included in the price</p>
+            </div>
+            {form.planType === 'invoicing' && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">Activation Fee</label>
+                <Input type="number" min="0" step="100" value={form.activationFee} onChange={(e) => setForm({ ...form, activationFee: Number(e.target.value) || 0 })} />
+                <p className="text-xs text-muted-foreground">One-time fee charged before subscription</p>
+              </div>
+            )}
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Features (one per line)</label>
