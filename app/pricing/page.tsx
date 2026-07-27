@@ -93,6 +93,23 @@ export default function PricingPage() {
     return () => cancelAnimationFrame(frame)
   }, [billing, plans])
 
+  const accountingPlans = plans.filter(p => p.planType === 'accounting')
+  const invoicingPlans = plans.filter(p => p.planType === 'invoicing')
+
+  function getGridCols(count: number): string {
+    if (count >= 4) return 'repeat(4, 1fr)'
+    if (count === 3) return 'repeat(3, 1fr)'
+    if (count === 2) return 'repeat(2, 1fr)'
+    return '1fr'
+  }
+
+  function getGridMaxWidth(count: number): number {
+    if (count >= 4) return 1200
+    if (count === 3) return 880
+    if (count === 2) return 580
+    return 280
+  }
+
   return (
     <div className="bilanix">
       <Navbar />
@@ -125,18 +142,18 @@ export default function PricingPage() {
               </div>
             ) : (
               <>
-                {plans.some(p => p.planType === 'accounting') && (
+                {accountingPlans.length > 0 && (
                   <div style={{ marginBottom: 48 }}>
                     <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Accounting Solution</h3>
                     <div ref={gridRef} style={{
                       display: 'grid',
-                      gridTemplateColumns: 'repeat(4, 1fr)',
+                      gridTemplateColumns: getGridCols(accountingPlans.length),
                       gap: 20,
-                      maxWidth: 1200,
+                      maxWidth: getGridMaxWidth(accountingPlans.length),
                       margin: '0 auto',
                       alignItems: 'start',
                     }}>
-                      {plans.filter(p => p.planType === 'accounting').map((plan, i) => (
+                      {accountingPlans.map((plan, i) => (
                         <div key={plan.name}>
                           <PricingCard
                             {...plan}
@@ -154,34 +171,31 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                {plans.some(p => p.planType === 'invoicing') && (
+                {invoicingPlans.length > 0 && (
                   <div>
                     <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Invoicing Plan</h3>
                     <div ref={invoicingGridRef} style={{
-                      display: 'flex',
-                      justifyContent: 'center',
+                      display: 'grid',
+                      gridTemplateColumns: getGridCols(invoicingPlans.length),
+                      gap: 20,
+                      maxWidth: getGridMaxWidth(invoicingPlans.length),
+                      margin: '0 auto',
+                      alignItems: 'start',
                     }}>
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
-                        gap: 20,
-                        maxWidth: 1200,
-                      }}>
-                        {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
-                          <div key={plan.name}>
-                            <PricingCard
-                              {...plan}
-                              index={i}
-                              billing={billing}
-                              expanded={expandedCards[plan.name] ?? false}
-                              onToggleExpand={() => toggleExpand(plan.name)}
-                              cardHeight={lockedHeight}
-                              includedUsers={plan.includedUsers}
-                              activationFee={plan.activationFee}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                      {invoicingPlans.map((plan, i) => (
+                        <div key={plan.name}>
+                          <PricingCard
+                            {...plan}
+                            index={i}
+                            billing={billing}
+                            expanded={expandedCards[plan.name] ?? false}
+                            onToggleExpand={() => toggleExpand(plan.name)}
+                            cardHeight={lockedHeight}
+                            includedUsers={plan.includedUsers}
+                            activationFee={plan.activationFee}
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

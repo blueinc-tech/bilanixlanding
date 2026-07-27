@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Check, ChevronDown } from 'lucide-react'
+import { PricingCard } from './pricing-card'
 import { openRegistration } from './registration-modal'
 
 type Billing = 'monthly' | 'yearly'
@@ -24,101 +24,18 @@ type Plan = {
 const formatNaira = (amount: number) =>
   new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)
 
-function SectionPlanCard({ plan, billing, expanded, onToggle, cardHeight }: {
-  plan: Plan
-  billing: Billing
-  expanded: boolean
-  onToggle: () => void
-  cardHeight: number | null
-}) {
-  const visibleFeatures = expanded ? plan.features : plan.features.slice(0, 5)
-  const hasMore = plan.features.length > 5
-  const muted = plan.featured ? 'text-white/50' : 'text-[#6B7280]'
-  const featureText = plan.featured ? 'text-white/80' : 'text-[#374151]'
+function getGridCols(count: number): string {
+  if (count >= 4) return 'repeat(4, 1fr)'
+  if (count === 3) return 'repeat(3, 1fr)'
+  if (count === 2) return 'repeat(2, 1fr)'
+  return '1fr'
+}
 
-  const periodText = plan.includedUsers > 1
-    ? `${plan.period[billing].replace('/user', '')} (for ${plan.includedUsers} users)`
-    : plan.period[billing]
-
-  return (
-    <motion.div
-      data-card
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4 }}
-      className={`flex flex-col rounded-[20px] p-8 transition-shadow duration-300 ${
-        plan.featured
-          ? 'bg-[#0D0D0D] shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:shadow-[0_28px_60px_rgba(0,0,0,0.35)]'
-          : 'border border-[#E5E7EB] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_44px_rgba(0,0,0,0.1)]'
-      }`}
-      style={cardHeight ? { minHeight: expanded ? 'auto' : cardHeight } : undefined}
-    >
-      <div className="min-h-[22px] mb-5">
-        {plan.badge && (
-          <span className="font-inter inline-flex w-fit items-center rounded-full bg-[#60B746] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
-            {plan.badge}
-          </span>
-        )}
-      </div>
-
-      <h3 className={`font-jakarta text-lg font-bold ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
-        {plan.name}
-      </h3>
-      <p className={`font-inter mt-1 text-sm ${muted}`}>{plan.audience}</p>
-
-      <div className="mt-6">
-        <div className={`font-jakarta text-3xl font-bold tracking-[-0.02em] ${plan.featured ? 'text-white' : 'text-[#0F0F0F]'}`}>
-          {plan.price[billing]}
-        </div>
-        <div className={`font-inter mt-1 text-sm ${muted}`}>{periodText}</div>
-      </div>
-
-      {plan.activationFee > 0 && (
-        <p className={`font-inter mt-1.5 text-xs ${muted}`}>
-          One-time activation fee: {formatNaira(plan.activationFee)}
-        </p>
-      )}
-
-      <motion.button
-        onClick={openRegistration}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.25 }}
-        className={`font-inter mt-6 flex h-12 w-full items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors ${
-          plan.featured
-            ? 'bg-[#60B746] text-white hover:bg-[#55a53e]'
-            : 'border border-[#E5E7EB] bg-white text-[#0F0F0F] hover:border-[#0F0F0F]'
-        }`}
-      >
-        {plan.cta}
-      </motion.button>
-
-      <ul className="mt-8 flex flex-col gap-4">
-        {visibleFeatures.map((feature) => (
-          <li key={feature} className="flex items-start gap-3">
-            <Check size={18} strokeWidth={2.5} className="mt-0.5 shrink-0 text-[#60B746]" />
-            <span className={`font-inter text-sm leading-snug ${featureText}`}>{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      {hasMore ? (
-        <button
-          onClick={onToggle}
-          className={`font-inter mt-4 flex items-center gap-1 text-xs font-medium transition-colors ${
-            plan.featured ? 'text-white/50 hover:text-white/70' : 'text-[#9CA3AF] hover:text-[#6B7280]'
-          }`}
-        >
-          {expanded ? 'Show less' : 'Read more'}
-          <ChevronDown size={13} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
-        </button>
-      ) : (
-        <div className="mt-4 h-[20px]" />
-      )}
-    </motion.div>
-  )
+function getGridMaxWidth(count: number): number {
+  if (count >= 4) return 1200
+  if (count === 3) return 880
+  if (count === 2) return 580
+  return 280
 }
 
 export function PricingSection() {
@@ -188,6 +105,9 @@ export function PricingSection() {
   const toggleExpand = (name: string) => {
     setExpandedCards((prev) => ({ ...prev, [name]: !prev[name] }))
   }
+
+  const accountingPlans = plans.filter(p => p.planType === 'accounting')
+  const invoicingPlans = plans.filter(p => p.planType === 'invoicing')
 
   return (
     <section id="pricing" className="bg-white py-24 sm:py-32">
@@ -269,40 +189,44 @@ export function PricingSection() {
             </div>
           ) : (
             <>
-              {plans.some(p => p.planType === 'accounting') && (
+              {accountingPlans.length > 0 && (
                 <div className="mb-12">
                   <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Accounting Solution</h3>
-                  <div ref={accountingRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {plans.filter(p => p.planType === 'accounting').map((plan, i) => (
-                      <SectionPlanCard
+                  <div ref={accountingRef} style={{ display: 'grid', gridTemplateColumns: getGridCols(accountingPlans.length), gap: 20, maxWidth: getGridMaxWidth(accountingPlans.length), margin: '0 auto', alignItems: 'start' }}>
+                    {accountingPlans.map((plan, i) => (
+                      <PricingCard
                         key={plan.name}
-                        plan={plan}
+                        {...plan}
+                        index={i}
                         billing={billing}
                         expanded={expandedCards[plan.name] ?? false}
-                        onToggle={() => toggleExpand(plan.name)}
+                        onToggleExpand={() => toggleExpand(plan.name)}
                         cardHeight={cardHeight}
+                        includedUsers={plan.includedUsers}
+                        activationFee={plan.activationFee}
                       />
                     ))}
                   </div>
                 </div>
               )}
 
-              {plans.some(p => p.planType === 'invoicing') && (
+              {invoicingPlans.length > 0 && (
                 <div>
                   <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Invoicing Plan</h3>
-                  <div ref={invoicingRef} className="flex justify-center">
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                      {plans.filter(p => p.planType === 'invoicing').map((plan, i) => (
-                        <SectionPlanCard
-                          key={plan.name}
-                          plan={plan}
-                          billing={billing}
-                          expanded={expandedCards[plan.name] ?? false}
-                          onToggle={() => toggleExpand(plan.name)}
-                          cardHeight={cardHeight}
-                        />
-                      ))}
-                    </div>
+                  <div ref={invoicingRef} style={{ display: 'grid', gridTemplateColumns: getGridCols(invoicingPlans.length), gap: 20, maxWidth: getGridMaxWidth(invoicingPlans.length), margin: '0 auto', alignItems: 'start' }}>
+                    {invoicingPlans.map((plan, i) => (
+                      <PricingCard
+                        key={plan.name}
+                        {...plan}
+                        index={i}
+                        billing={billing}
+                        expanded={expandedCards[plan.name] ?? false}
+                        onToggleExpand={() => toggleExpand(plan.name)}
+                        cardHeight={cardHeight}
+                        includedUsers={plan.includedUsers}
+                        activationFee={plan.activationFee}
+                      />
+                    ))}
                   </div>
                 </div>
               )}
