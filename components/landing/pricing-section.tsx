@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { PricingCard } from './pricing-card'
-import { openRegistration } from './registration-modal'
+
 
 type Billing = 'monthly' | 'yearly'
 
@@ -111,7 +111,7 @@ export function PricingSection() {
 
   return (
     <section id="pricing" className="bg-white py-24 sm:py-32">
-      <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
+      <div className="max-w-page mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
