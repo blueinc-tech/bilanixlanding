@@ -119,31 +119,21 @@ export default function SettingsPage() {
     if (def.key === 'mode') {
       const isTest = value === 'test'
       return (
-        <div key={def.key} className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Mode</label>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-                !isTest ? 'border-[#60B746] bg-[#E7F5E1] text-[#3F8F2E]' : 'border-input bg-background text-muted-foreground'
-              }`}
-              onClick={() => handleValueChange(group, 'mode', 'live')}
-            >
-              <div className="text-xs font-semibold uppercase tracking-wide">Live</div>
-              <div className="mt-0.5 text-[11px] opacity-70">Real transactions</div>
-            </button>
-            <button
-              type="button"
-              className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-                isTest ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-input bg-background text-muted-foreground'
-              }`}
-              onClick={() => handleValueChange(group, 'mode', 'test')}
-            >
-              <div className="text-xs font-semibold uppercase tracking-wide">Test</div>
-              <div className="mt-0.5 text-[11px] opacity-70">Sandbox transactions</div>
-            </button>
+        <div key={def.key} className="flex items-center justify-between rounded-lg border border-border p-4">
+          <div>
+            <p className="text-sm font-medium text-foreground">Mode</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {isTest ? 'Test — sandbox transactions' : 'Live — real transactions'}
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">Select which keys to use for payment processing</p>
+          <div className="flex items-center gap-3">
+            <span className={`text-xs font-medium ${!isTest ? 'text-foreground' : 'text-muted-foreground'}`}>Live</span>
+            <Switch
+              checked={isTest}
+              onCheckedChange={(checked) => handleValueChange(group, 'mode', checked ? 'test' : 'live')}
+            />
+            <span className={`text-xs font-medium ${isTest ? 'text-amber-600' : 'text-muted-foreground'}`}>Test</span>
+          </div>
         </div>
       )
     }
