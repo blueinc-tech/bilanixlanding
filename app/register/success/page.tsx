@@ -178,7 +178,7 @@ export default function RegisterSuccessPage() {
 
         {isSuccess && (
           <a
-            href={`${process.env.NEXT_PUBLIC_APP_URL || ''}/login`}
+            href={`${process.env.NEXT_PUBLIC_APP_URL || '#'}`}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
