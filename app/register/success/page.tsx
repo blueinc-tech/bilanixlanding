@@ -177,8 +177,8 @@ export default function RegisterSuccessPage() {
         )}
 
         {isSuccess && (
-          <Link
-            href="/login"
+          <a
+            href={`${process.env.NEXT_PUBLIC_APP_URL || ''}/login`}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -195,8 +195,8 @@ export default function RegisterSuccessPage() {
               transition: 'background 0.25s, transform 0.25s',
             }}
           >
-            Sign In
-          </Link>
+            Continue
+          </a>
         )}
       </div>
     </div>
