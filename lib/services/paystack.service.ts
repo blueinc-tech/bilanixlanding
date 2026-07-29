@@ -32,7 +32,8 @@ interface PaystackVerifyResponse {
 }
 
 async function getPaystackSecretKey(): Promise<string> {
-  const key = await SettingsService.get('paystack', 'secret_key') as string
+  const mode = await SettingsService.getGatewayMode('paystack')
+  const key = await SettingsService.get('paystack', mode === 'test' ? 'test_secret_key' : 'secret_key') as string
   if (!key) throw new Error('Paystack secret key not configured')
   return key
 }

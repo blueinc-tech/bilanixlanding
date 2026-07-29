@@ -26,15 +26,23 @@ const DEFAULT_SETTINGS: Record<SettingsGroup, SettingDefinition[]> = {
     { key: 'ses_enabled', label: 'SES Enabled', type: 'boolean', defaultValue: false },
   ],
   stripe: [
-    { key: 'publishable_key', label: 'Publishable Key', type: 'string', defaultValue: '' },
-    { key: 'secret_key', label: 'Secret Key', type: 'string', defaultValue: '' },
-    { key: 'webhook_secret', label: 'Webhook Secret', type: 'string', defaultValue: '' },
+    { key: 'mode', label: 'Mode', type: 'string', defaultValue: 'live' },
+    { key: 'publishable_key', label: 'Live Publishable Key', type: 'string', defaultValue: '' },
+    { key: 'secret_key', label: 'Live Secret Key', type: 'string', defaultValue: '' },
+    { key: 'webhook_secret', label: 'Live Webhook Secret', type: 'string', defaultValue: '' },
+    { key: 'test_publishable_key', label: 'Test Publishable Key', type: 'string', defaultValue: '' },
+    { key: 'test_secret_key', label: 'Test Secret Key', type: 'string', defaultValue: '' },
+    { key: 'test_webhook_secret', label: 'Test Webhook Secret', type: 'string', defaultValue: '' },
     { key: 'enabled', label: 'Enable Stripe', type: 'boolean', defaultValue: false },
   ],
   paystack: [
-    { key: 'public_key', label: 'Public Key', type: 'string', defaultValue: '' },
-    { key: 'secret_key', label: 'Secret Key', type: 'string', defaultValue: '' },
-    { key: 'webhook_secret', label: 'Webhook Secret', type: 'string', defaultValue: '' },
+    { key: 'mode', label: 'Mode', type: 'string', defaultValue: 'live' },
+    { key: 'public_key', label: 'Live Public Key', type: 'string', defaultValue: '' },
+    { key: 'secret_key', label: 'Live Secret Key', type: 'string', defaultValue: '' },
+    { key: 'webhook_secret', label: 'Live Webhook Secret', type: 'string', defaultValue: '' },
+    { key: 'test_public_key', label: 'Test Public Key', type: 'string', defaultValue: '' },
+    { key: 'test_secret_key', label: 'Test Secret Key', type: 'string', defaultValue: '' },
+    { key: 'test_webhook_secret', label: 'Test Webhook Secret', type: 'string', defaultValue: '' },
     { key: 'enabled', label: 'Enable Paystack', type: 'boolean', defaultValue: false },
   ],
   maintenance: [
@@ -132,6 +140,11 @@ export const SettingsService = {
   async isGatewayEnabled(gateway: 'stripe' | 'paystack'): Promise<boolean> {
     const enabled = await this.get(gateway, 'enabled')
     return enabled === true
+  },
+
+  async getGatewayMode(gateway: 'stripe' | 'paystack'): Promise<'live' | 'test'> {
+    const mode = await this.get(gateway, 'mode') as string
+    return mode === 'test' ? 'test' : 'live'
   },
 
   async getGatewayVisibility(): Promise<'stripe' | 'paystack' | 'both'> {

@@ -2,18 +2,29 @@ import Stripe from 'stripe'
 import { SettingsService } from './settings.service'
 
 let stripeInstance: Stripe | null = null
+let cachedMode: 'live' | 'test' | null = null
 
 async function getStripeSecretKey(): Promise<string> {
-  const key = await SettingsService.get('stripe', 'secret_key') as string
+  const mode = await SettingsService.getGatewayMode('stripe')
+  const key = await SettingsService.get('stripe', mode === 'test' ? 'test_secret_key' : 'secret_key') as string
   if (!key) throw new Error('Stripe secret key not configured')
   return key
 }
 
+async function getStripeWebhookSecret(): Promise<string> {
+  const mode = await SettingsService.getGatewayMode('stripe')
+  const secret = await SettingsService.get('stripe', mode === 'test' ? 'test_webhook_secret' : 'webhook_secret') as string
+  if (!secret) throw new Error('Stripe webhook secret not configured')
+  return secret
+}
+
 export const StripeService = {
   async getInstance(): Promise<Stripe> {
-    if (stripeInstance) return stripeInstance
+    const mode = await SettingsService.getGatewayMode('stripe')
+    if (stripeInstance && cachedMode === mode) return stripeInstance
     const secretKey = await getStripeSecretKey()
     stripeInstance = new Stripe(secretKey)
+    cachedMode = mode
     return stripeInstance
   },
 
