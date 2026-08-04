@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db'
 import { StripeService } from '@/lib/services/stripe.service'
 import { EmailService } from '@/lib/services/email.service'
 import { NotificationService } from '@/lib/services/notification.service'
+import { IntegrationService } from '@/lib/services/integration.service'
 import Stripe from 'stripe'
 
 export async function POST(req: NextRequest) {
@@ -203,6 +204,21 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   console.log(`[Stripe Webhook] Payment processed for user ${userId}, plan ${planSlug}`)
 
+  // Notify accounting app (non-blocking)
+  if (user) {
+    IntegrationService.notify({
+      event: IntegrationService.EVENTS.SUBSCRIPTION_ACTIVATED,
+      userId,
+      email: user.email,
+      planSlug,
+      planName: plan.name,
+      billing,
+      expiresAt: endDate,
+      amount,
+      currency: plan.currency,
+    })
+  }
+
   // System-wide notification for admins
   await NotificationService.create({
     title: 'New Payment Received',
@@ -237,6 +253,14 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       templateId: 'subscription_cancelled',
       data: { name: user.name, planName },
     }).catch(() => {})
+
+    IntegrationService.notify({
+      event: IntegrationService.EVENTS.SUBSCRIPTION_CANCELLED,
+      userId: metadata.userId,
+      email: user.email,
+      planSlug: metadata.planSlug || '',
+      planName,
+    })
 
     await NotificationService.create({
       title: 'Subscription Cancelled',

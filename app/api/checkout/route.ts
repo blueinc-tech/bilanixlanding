@@ -84,7 +84,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
     data: {
       userId,
       planSlug,
-      amount: totalAmount,
+      amount,
       currency: plan.currency,
       status: 'pending',
       type: 'subscription',

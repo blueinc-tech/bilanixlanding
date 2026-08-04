@@ -9,6 +9,7 @@ import { PaystackService } from '@/lib/services/paystack.service'
 import { EmailService } from '@/lib/services/email.service'
 import { NotificationService } from '@/lib/services/notification.service'
 import { StripeService } from '@/lib/services/stripe.service'
+import { IntegrationService } from '@/lib/services/integration.service'
 
 const verifySchema = z.object({
   reference: z.string().optional(),
@@ -71,7 +72,16 @@ async function handlePaystackVerification(reference: string) {
     return apiBadRequest('Missing payment metadata')
   }
 
-  return activateSubscription(userId, planSlug, billing, verification.amount, 'paystack', reference, verification.paidAt)
+  const plan = await prisma.subscriptionPlan.findUnique({ where: { slug: planSlug } })
+  if (!plan) {
+    return apiBadRequest('Plan not found')
+  }
+
+  const amount = billing === 'monthly'
+    ? (plan.monthlyAmount ?? plan.amount)
+    : (plan.yearlyAmount ?? plan.amount)
+
+  return activateSubscription(userId, planSlug, billing, amount, 'paystack', reference, verification.paidAt)
 }
 
 async function handleStripeVerification(sessionId: string) {
@@ -239,6 +249,18 @@ async function activateSubscription(
         nextBillingDate: endDate.toLocaleDateString(),
       },
     }).catch(() => {})
+
+    IntegrationService.notify({
+      event: IntegrationService.EVENTS.SUBSCRIPTION_ACTIVATED,
+      userId,
+      email: user.email,
+      planSlug,
+      planName: plan.name,
+      billing,
+      expiresAt: endDate,
+      amount,
+      currency: plan.currency,
+    })
   }
 
   await NotificationService.create({
