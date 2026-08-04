@@ -15,6 +15,7 @@ type Plan = {
   id: string
   slug: string
   name: string
+  planType: string
   audience: string
   price: Record<Billing, number>
   features: string[]
@@ -193,6 +194,13 @@ export function RegistrationModal() {
   const stripeGw = gateways?.stripe?.enabled ? gateways.stripe : null
   const paystackGw = gateways?.paystack?.enabled ? gateways.paystack : null
 
+  const sortedPlans = [...plans].sort((a, b) => {
+    const typeOrder = (t?: string) => (t === 'accounting' ? 0 : 1)
+    const diff = typeOrder(a.planType) - typeOrder(b.planType)
+    if (diff !== 0) return diff
+    return (a.price[billing] ?? 0) - (b.price[billing] ?? 0)
+  })
+
   if (!open) return null
 
   return (
@@ -338,7 +346,7 @@ export function RegistrationModal() {
               </div>
             )}
 
-            {plans.map((plan) => {
+            {sortedPlans.map((plan) => {
               const isSelected = selectedPlan?.id === plan.id
               const price = plan.price[billing] ?? 0
               return (
