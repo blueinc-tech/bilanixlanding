@@ -10,7 +10,7 @@ import { getClientInfo } from '@/lib/validation'
 import { ActivityService } from '@/lib/services/activity.service'
 import { AuditService } from '@/lib/services/audit.service'
 
-const GROUPS = ['general', 'email', 'stripe', 'paystack', 'maintenance', 'branding', 'features', 'integration'] as const
+const GROUPS = ['general', 'email', 'stripe', 'paystack', 'maintenance', 'branding', 'features'] as const
 
 export const GET = withErrorHandling(async (req: NextRequest) => {
   const auth = await authenticate(req)

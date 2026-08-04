@@ -63,12 +63,6 @@ const DEFAULT_SETTINGS: Record<SettingsGroup, SettingDefinition[]> = {
     { key: 'marketing_enabled', label: 'Marketing Module', type: 'boolean', defaultValue: true },
     { key: 'payments_enabled', label: 'Payments Module', type: 'boolean', defaultValue: true },
   ],
-  integration: [
-    { key: 'app_url', label: 'App URL', type: 'string', defaultValue: '', helpText: 'Base URL of the main accounting app (e.g. https://app.example.com)' },
-    { key: 'app_webhook_url', label: 'App Webhook URL', type: 'string', defaultValue: '', helpText: 'Endpoint on the accounting app that receives subscription events (e.g. https://app.example.com/api/billing/webhook)' },
-    { key: 'app_webhook_secret', label: 'App Webhook Secret', type: 'string', defaultValue: '', helpText: 'Shared secret used to sign webhooks sent to the accounting app' },
-    { key: 'api_key', label: 'API Key', type: 'string', defaultValue: '', helpText: 'API key the accounting app sends as x-api-key when verifying subscriptions' },
-  ],
 }
 
 export const SettingsService = {

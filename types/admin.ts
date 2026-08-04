@@ -297,7 +297,6 @@ export const SETTINGS_GROUPS = {
   MAINTENANCE: 'maintenance',
   BRANDING: 'branding',
   FEATURES: 'features',
-  INTEGRATION: 'integration',
 } as const
 
 export type SettingsGroup = (typeof SETTINGS_GROUPS)[keyof typeof SETTINGS_GROUPS]

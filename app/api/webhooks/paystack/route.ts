@@ -5,7 +5,6 @@ import { prisma } from '@/lib/db'
 import { PaystackService } from '@/lib/services/paystack.service'
 import { EmailService } from '@/lib/services/email.service'
 import { NotificationService } from '@/lib/services/notification.service'
-import { IntegrationService } from '@/lib/services/integration.service'
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -205,21 +204,6 @@ async function handleChargeSuccess(data: Record<string, unknown>) {
   }
 
   console.log(`[Paystack Webhook] Payment processed for user ${userId}, plan ${planSlug}`)
-
-  // Notify accounting app (non-blocking)
-  if (user) {
-    IntegrationService.notify({
-      event: IntegrationService.EVENTS.SUBSCRIPTION_ACTIVATED,
-      userId,
-      email: user.email,
-      planSlug,
-      planName: plan.name,
-      billing,
-      expiresAt: endDate,
-      amount,
-      currency: plan.currency,
-    })
-  }
 
   // System-wide notification for admins
   await NotificationService.create({

@@ -36,7 +36,6 @@ const GROUP_LABELS: Record<string, string> = {
   maintenance: 'Maintenance',
   branding: 'Branding',
   features: 'Features',
-  integration: 'Integration',
 }
 
 export default function SettingsPage() {
@@ -70,7 +69,7 @@ export default function SettingsPage() {
   useEffect(() => {
     async function loadAll() {
       setLoading(true)
-      const groupList = ['general', 'email', 'stripe', 'paystack', 'maintenance', 'branding', 'features', 'integration']
+      const groupList = ['general', 'email', 'stripe', 'paystack', 'maintenance', 'branding', 'features']
       await Promise.all(groupList.map(fetchGroup))
       setLoading(false)
     }
@@ -244,7 +243,6 @@ export default function SettingsPage() {
                     {group === 'maintenance' && 'Maintenance mode and messaging'}
                     {group === 'branding' && 'Logo, colors, and visual identity'}
                     {group === 'features' && 'Enable or disable features'}
-                    {group === 'integration' && 'Connect the main accounting app (subscription sync)'}
                   </p>
                 </div>
               </div>

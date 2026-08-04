@@ -9,7 +9,6 @@ import { PaystackService } from '@/lib/services/paystack.service'
 import { EmailService } from '@/lib/services/email.service'
 import { NotificationService } from '@/lib/services/notification.service'
 import { StripeService } from '@/lib/services/stripe.service'
-import { IntegrationService } from '@/lib/services/integration.service'
 
 const verifySchema = z.object({
   reference: z.string().optional(),
@@ -249,18 +248,6 @@ async function activateSubscription(
         nextBillingDate: endDate.toLocaleDateString(),
       },
     }).catch(() => {})
-
-    IntegrationService.notify({
-      event: IntegrationService.EVENTS.SUBSCRIPTION_ACTIVATED,
-      userId,
-      email: user.email,
-      planSlug,
-      planName: plan.name,
-      billing,
-      expiresAt: endDate,
-      amount,
-      currency: plan.currency,
-    })
   }
 
   await NotificationService.create({
