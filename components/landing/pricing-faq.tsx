@@ -16,7 +16,7 @@ const FAQS = [
   },
   {
     q: 'What is the AI invoicing feature?',
-    a: 'Our AI engine reads your uploaded invoices, extracts key details like supplier name, date, amounts, and VAT, then suggests the correct journal entry and ledger account — ready for your one-click review and posting.',
+    a: 'Our AI engine reads your uploaded invoices, extracts key details like supplier name, date, amounts, and VAT, then suggests the correct journal entry and ledger account, ready for your one-click review and posting.',
   },
   {
     q: 'How does Nigerian VAT compliance work?',
@@ -32,7 +32,7 @@ const FAQS = [
   },
   {
     q: "What does 'users' mean in each plan?",
-    a: 'Users are team members who have access to your Bilanix account. Each plan includes a set number of users — from 1 user on Basic to 10 users on Premium. Additional users can be added as add-ons.',
+    a: 'Users are team members who have access to your Bilanix account. Each plan includes a set number of users, from 1 user on Basic to 10 users on Premium. Additional users can be added as add-ons.',
   },
   {
     q: 'How is client data kept secure?',

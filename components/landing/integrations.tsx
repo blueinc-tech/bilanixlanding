@@ -25,7 +25,7 @@ export function Integrations() {
           <Reveal>
             <span className="section-label">Integrations</span>
             <h2 style={{ fontSize: '2.75rem', fontWeight: 800, letterSpacing: '-0.03em', color: '#0F0F0F', lineHeight: 1.1, marginBottom: 20 }}>Connects to everything<br />your business runs on.</h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 36 }}>Bilanix plugs into your existing stack—payment processors, banking APIs, HR tools, and productivity apps. Zero double-entry. One source of truth.</p>
+            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 36 }}>Bilanix plugs into your existing stack, payment processors, banking APIs, HR tools, and productivity apps. Zero double-entry. One source of truth.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 36 }}>
               {PILLS?.map?.((p) => (
                 <span key={p} style={{ fontSize: '0.8125rem', fontWeight: 500, background: '#fff', border: '1px solid rgba(0,0,0,0.08)', padding: '7px 14px', borderRadius: 100, color: '#333', display: 'inline-flex', alignItems: 'center', gap: 6 }}>

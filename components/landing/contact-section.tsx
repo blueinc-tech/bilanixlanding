@@ -107,7 +107,7 @@ export function ContactSection() {
                   lineHeight: 1.7,
                   color: '#737373',
                 }}>
-                  Bilanix is purpose-built for accounting firms and consultants managing multiple clients. Request early access, schedule a product walkthrough, or send us a message — our team will respond within one business day.
+                  Bilanix is purpose-built for accounting firms and consultants managing multiple clients. Request early access, schedule a product walkthrough, or send us a message, and our team will respond within one business day.
                 </p>
               </div>
             </Reveal>

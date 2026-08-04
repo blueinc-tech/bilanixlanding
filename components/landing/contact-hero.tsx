@@ -47,7 +47,7 @@ export function ContactHero() {
             lineHeight: 1.7,
             color: 'rgba(255,255,255,0.55)',
           }}>
-            Whether you&apos;re an accounting firm, consultant, or finance team ready to manage multiple clients more efficiently — we&apos;d love to hear from you.
+            Whether you&apos;re an accounting firm, consultant, or finance team ready to manage multiple clients more efficiently, we&apos;d love to hear from you.
           </p>
         </Reveal>
       </div>

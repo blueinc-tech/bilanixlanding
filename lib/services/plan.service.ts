@@ -7,7 +7,7 @@ export const PlanService = {
   async list(includeInactive = false) {
     return prisma.subscriptionPlan.findMany({
       where: includeInactive ? {} : { isActive: true },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ planType: 'asc' }, { sortOrder: 'asc' }],
       include: {
         _count: {
           select: { paymentLogs: { where: { status: 'paid' } } },
@@ -19,7 +19,7 @@ export const PlanService = {
   async listPublic() {
     return prisma.subscriptionPlan.findMany({
       where: { isActive: true },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ planType: 'asc' }, { sortOrder: 'asc' }],
       select: {
         id: true,
         name: true,

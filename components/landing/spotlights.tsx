@@ -23,7 +23,7 @@ export function SpotlightAI() {
           <Reveal>
             <span className="section-label">AI Invoice Processing</span>
             <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#fff', lineHeight: 1.15, marginBottom: 20 }}>Upload invoices. AI does the rest.</h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>Bilanix AI extracts supplier information, identifies invoice dates, detects transaction amounts, calculates VAT automatically, and suggests the right ledger accounts—before you review and approve.</p>
+            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>Bilanix AI extracts supplier information, identifies invoice dates, detects transaction amounts, calculates VAT automatically, and suggests the right ledger accounts, before you review and approve.</p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               <CheckItem dark>OCR-powered data extraction from any invoice</CheckItem>
               <CheckItem dark>Auto-suggested general ledger account mappings</CheckItem>
@@ -43,7 +43,7 @@ export function SpotlightAI() {
                 <div style={{ fontSize: '0.75rem', color: '#60B746', fontWeight: 600, marginBottom: 8 }}>AI Extraction Complete</div>
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>Supplier: <strong style={{ color: '#fff' }}>Zenith Office Supplies</strong> • Amount: ₦840,000 • VAT: <strong style={{ color: '#60B746' }}>₦63,000</strong> • Suggested account: Office Expenses (5100)</p>
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginBottom: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Recent journal entries — Auto-generated</div>
+              <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginBottom: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Recent journal entries · Auto-generated</div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <TxnRow iconBg="rgba(96,183,70,0.1)" iconColor="#60B746" arrow="fa-arrow-down" title="Dr: Office Expenses (5100)" sub="Client: Ade & Co • Today" amount="₦840,000" amountColor="#60B746" tagClass="mini-tag-green" tag="AI Posted" />
                 <TxnRow iconBg="rgba(245,158,11,0.1)" iconColor="#F59E0B" arrow="fa-arrow-up" title="Cr: Accounts Payable (2100)" sub="Client: Ade & Co • Today" amount="₦840,000" amountColor="rgba(255,255,255,0.7)" tagClass="mini-tag-yellow" tag="Balanced" />
@@ -103,11 +103,11 @@ export function SpotlightExpense() {
         <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 80, alignItems: 'center' }}>
           <Reveal>
             <div style={{ background: '#fff', borderRadius: 20, border: '1px solid rgba(0,0,0,0.07)', overflow: 'hidden', padding: 28, boxShadow: '0 8px 48px rgba(0,0,0,0.06)' }}>
-              <div className="font-heading" style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F0F0F', marginBottom: 16 }}>Client Reports — Ready to Export</div>
+              <div className="font-heading" style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F0F0F', marginBottom: 16 }}>Client Reports · Ready to Export</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <ApprovalRow initials="TC" avatarBg="#60B746" title="Trial Balance — TechCorp Ltd" sub="Q2 2026 • Generated 1h ago" amount="Balanced" />
-                <ApprovalRow initials="AK" avatarBg="#3B82F6" title="Profit & Loss — AK Trading" sub="June 2026 • Generated 3h ago" amount="₦4.2M" />
-                <ApprovalRow initials="MG" avatarBg="#F59E0B" title="Balance Sheet — MG Holdings" sub="H1 2026 • Generated today" amount="₦18.9M" />
+                <ApprovalRow initials="TC" avatarBg="#60B746" title="Trial Balance · TechCorp Ltd" sub="Q2 2026 • Generated 1h ago" amount="Balanced" />
+                <ApprovalRow initials="AK" avatarBg="#3B82F6" title="Profit & Loss · AK Trading" sub="June 2026 • Generated 3h ago" amount="₦4.2M" />
+                <ApprovalRow initials="MG" avatarBg="#F59E0B" title="Balance Sheet · MG Holdings" sub="H1 2026 • Generated today" amount="₦18.9M" />
               </div>
               <div style={{ background: 'rgba(96,183,70,0.06)', border: '1px solid rgba(96,183,70,0.15)', borderRadius: 12, padding: '14px 16px', marginTop: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
                 <span style={{ fontSize: '0.8125rem', color: '#0F0F0F', fontWeight: 500 }}>3 reports • All validated</span>
@@ -119,7 +119,7 @@ export function SpotlightExpense() {
           <Reveal delay={2}>
             <span className="section-label">Financial Reporting</span>
             <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#0F0F0F', lineHeight: 1.15, marginBottom: 20 }}>Statements generated. <span style={{ color: '#60B746' }}>Compliance handled.</span></h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 32 }}>Generate trial balances, profit & loss statements, and balance sheets for each client—monthly, quarterly, or yearly. Export to PDF and CSV in one click.</p>
+            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 32 }}>Generate trial balances, profit & loss statements, and balance sheets for each client, monthly, quarterly, or yearly. Export to PDF and CSV in one click.</p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               <CheckItem>Trial balance generation with validation checks</CheckItem>
               <CheckItem>Client-specific P&L and balance sheet reports</CheckItem>
@@ -176,12 +176,12 @@ export function SpotlightPayroll() {
           <Reveal delay={2}>
             <div style={{ background: '#161616', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', padding: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <div className="font-heading" style={{ fontSize: '0.875rem', fontWeight: 700, color: '#fff' }}>Journal Batch — July 2026</div>
+                <div className="font-heading" style={{ fontSize: '0.875rem', fontWeight: 700, color: '#fff' }}>Journal Batch · July 2026</div>
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, background: 'rgba(96,183,70,0.1)', color: '#60B746', padding: '4px 12px', borderRadius: 100 }}>Posted</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
                 <PayrollRow initials="JE" avatarBg="#60B746" name="JE-2026-0412" role="Revenue Recognition" gross="Dr ₦2,400,000" net="Cr ₦2,400,000" />
-                <PayrollRow initials="JE" avatarBg="#8B5CF6" name="JE-2026-0413" role="Depreciation — Assets" gross="Dr ₦180,000" net="Cr ₦180,000" />
+                <PayrollRow initials="JE" avatarBg="#8B5CF6" name="JE-2026-0413" role="Depreciation · Assets" gross="Dr ₦180,000" net="Cr ₦180,000" />
                 <PayrollRow initials="JE" avatarBg="#F59E0B" name="JE-2026-0414" role="VAT Adjustment" gross="Dr ₦95,000" net="Cr ₦95,000" />
               </div>
               <div style={{ background: 'rgba(96,183,70,0.08)', border: '1px solid rgba(96,183,70,0.15)', borderRadius: 12, padding: '14px 16px' }}>
@@ -259,7 +259,7 @@ export function SpotlightCashflow() {
           <Reveal delay={2}>
             <span className="section-label">VAT & Asset Management</span>
             <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#0F0F0F', lineHeight: 1.15, marginBottom: 20 }}>Tax compliance<br /><span style={{ color: '#60B746' }}>built into every workflow.</span></h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 32 }}>Configurable VAT rates, automated calculations, and period management. Plus a full fixed asset register with straight-line and reducing balance depreciation—all auto-posted to the ledger.</p>
+            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 32 }}>Configurable VAT rates, automated calculations, and period management. Plus a full fixed asset register with straight-line and reducing balance depreciation, all auto-posted to the ledger.</p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               <CheckItem>Automated VAT tracking, calculation, and reporting</CheckItem>
               <CheckItem>Fixed asset depreciation with auto journal postings</CheckItem>

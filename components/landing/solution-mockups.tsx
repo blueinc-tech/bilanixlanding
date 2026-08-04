@@ -24,7 +24,7 @@ export function JournalEntryMockup() {
           </div>
           <div style={{ display: 'flex', gap: 40, fontSize: '0.8125rem' }}>
             <span style={{ fontWeight: 600, color: '#60B746' }}>₦240,000</span>
-            <span style={{ color: 'rgba(255,255,255,0.2)' }}>—</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -33,7 +33,7 @@ export function JournalEntryMockup() {
             <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.75)' }}>Sales Revenue</span>
           </div>
           <div style={{ display: 'flex', gap: 40, fontSize: '0.8125rem' }}>
-            <span style={{ color: 'rgba(255,255,255,0.2)' }}>—</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
             <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>₦240,000</span>
           </div>
         </div>

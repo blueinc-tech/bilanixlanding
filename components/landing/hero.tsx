@@ -9,16 +9,16 @@ export function Hero() {
   return (
     <header className="hero-bg relative" style={{ paddingTop: 100, paddingBottom: 0 }}>
       <div className="max-w-page relative" style={{ zIndex: 10 }}>
-        <div className="text-center" style={{ maxWidth: 720, margin: '0 auto' }}>
+        <div className="text-center" style={{ maxWidth: 900, margin: '0 auto' }}>
           <Reveal delay={1}>
             <h1 className="hero-title">
-              Manage every client. <span className="green">Automate every entry.</span> Scale with confidence.
+              Manage every client. <span className="green">Automate every entry.</span><br />Scale with confidence.
             </h1>
           </Reveal>
 
           <Reveal delay={2}>
-            <p className="hero-sub" style={{ margin: '28px auto 40px', maxWidth: 560 }}>
-              The AI-powered multi-client accounting platform built for accounting firms, consultants, and finance teams managing multiple businesses.
+            <p className="hero-sub" style={{ margin: '28px auto 40px', maxWidth: 640 }}>
+              The AI-powered multi-client accounting platform built for accounting firms,<br />consultants, and finance teams managing multiple businesses.
             </p>
           </Reveal>
 

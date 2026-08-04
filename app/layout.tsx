@@ -20,15 +20,15 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
-  title: 'Bilanix — AI-Powered Finance for Nigerian Businesses',
+  title: 'Bilanix: AI-Powered Finance for Nigerian Businesses',
   description:
-    'AI-powered accounting, payroll, invoices, and cash flow management—built for how Nigerian businesses actually work. Control every naira and run your business with confidence.',
+    'AI-powered accounting, payroll, invoices, and cash flow management, built for how Nigerian businesses actually work. Control every naira and run your business with confidence.',
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
   },
   openGraph: {
-    title: 'Bilanix — AI-Powered Finance for Nigerian Businesses',
+    title: 'Bilanix: AI-Powered Finance for Nigerian Businesses',
     description:
       'Control every naira. Run your business with confidence. AI-powered accounting for Nigerian businesses.',
     images: ['/og-image.png'],
