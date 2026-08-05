@@ -24,19 +24,19 @@ export function Hero() {
 
           <Reveal delay={3} className="flex items-center justify-center gap-4 flex-wrap">
             <button className="btn-primary" style={{ padding: '0 22px' }} onClick={openRegistration}>
-              Start for free
+              Get Started
               <ArrowRight size={15} />
             </button>
             <a href="/contact" className="btn-ghost" style={{ padding: '0 22px', textDecoration: 'none' }}>
               <Calendar size={15} />
-              Book a demo
+              Book a Meeting
             </a>
           </Reveal>
 
           <Reveal delay={4} className="trust-badge justify-center" style={{ marginTop: 24 }}>
             <span className="stars">★★★★★</span>
             <span>
-              Trusted by <strong style={{ color: 'rgba(255,255,255,0.75)' }}>accounting firms</strong> across Nigeria
+              Trusted by <strong style={{ color: 'rgba(255,255,255,0.75)' }}>accounting firms and business</strong> across Nigeria
             </span>
           </Reveal>
         </div>

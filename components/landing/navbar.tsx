@@ -72,12 +72,12 @@ export function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              <a href="#" className="nav-signin" style={{ textDecoration: 'none' }}>Sign in</a>
-              <button className="nav-cta-primary" onClick={openRegistration}>Start free</button>
+              <a href="https://app.bilanix.com/login" className="nav-signin" style={{ textDecoration: 'none' }}>Sign in</a>
+              <button className="nav-cta-primary" onClick={openRegistration}>Sign Up</button>
             </div>
 
             <div className="flex md:hidden items-center gap-3">
-              <button className="nav-cta-primary" onClick={openRegistration}>Start free</button>
+              <button className="nav-cta-primary" onClick={openRegistration}>Sign Up</button>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
                 className="flex items-center justify-center"
@@ -145,7 +145,7 @@ export function Navbar() {
                 <div className="flex flex-col" style={{ gap: 12 }}>
                   <button
                     className="mobile-menu-btn-secondary"
-                    onClick={() => { setMenuOpen(false); window.location.href = '#' }}
+                    onClick={() => { setMenuOpen(false); window.location.href = 'https://app.bilanix.com/login' }}
                   >
                     Sign in
                   </button>
@@ -153,7 +153,7 @@ export function Navbar() {
                     className="mobile-menu-btn-primary"
                     onClick={() => { setMenuOpen(false); openRegistration() }}
                   >
-                    Start free
+                    Sign Up
                   </button>
                 </div>
 

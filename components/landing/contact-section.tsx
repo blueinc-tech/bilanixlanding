@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react'
 import { Reveal } from './reveal'
 
-const INQUIRY_TYPES = ['Request a Demo', 'Support', 'Partnership']
+const INQUIRY_TYPES = ['Request for a Meeting', 'Support', 'Partnership']
 
 const INFO_CARDS = [
   {
@@ -38,7 +38,7 @@ const INFO_CARDS = [
 ]
 
 export function ContactSection() {
-  const [inquiryType, setInquiryType] = useState('Request a Demo')
+  const [inquiryType, setInquiryType] = useState('Request for a Meeting')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -99,7 +99,7 @@ export function ContactSection() {
                   color: '#0F0F0F',
                   marginTop: 16,
                 }}>
-                  Start your journey towards <span style={{ fontWeight: 600 }}>efficient multi-client accounting</span>
+                  Start your journey towards <span style={{ fontWeight: 600 }}>efficient multi-client accounting and Invoicing</span>
                 </h2>
                 <p style={{
                   marginTop: 16,

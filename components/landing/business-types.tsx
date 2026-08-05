@@ -103,9 +103,9 @@ export function BusinessTypes() {
         <Reveal className="text-center" style={{ marginBottom: 64 }}>
           <span className="section-label">Solutions</span>
           <h2 className="font-heading text-[2.5rem] font-semibold leading-[1.15] tracking-tight text-white">
-            Built for accounting<br />professionals at every scale.
+            Built for accounting professionals and businesses<br />at every scale.
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-base" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="mx-auto mt-4 max-w-md text-base md:max-w-none md:whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.4)' }}>
             Whether you manage 5 clients or 100+, Bilanix scales with your practice.
           </p>
         </Reveal>

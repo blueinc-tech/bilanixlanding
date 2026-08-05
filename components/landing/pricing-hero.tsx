@@ -16,8 +16,8 @@ export function PricingHero({ billing, onBillingChange }: PricingHeroProps) {
           <p className="section-label">Pricing</p>
         </Reveal>
         <Reveal delay={1}>
-          <h1 className="font-heading" style={{ margin: '20px auto 0', maxWidth: 640, fontSize: 60, fontWeight: 300, lineHeight: 1.1, letterSpacing: '-0.02em', color: '#0F0F0F' }}>
-            Simple, transparent pricing{' '}
+          <h1 className="font-heading" style={{ margin: '20px auto 0', maxWidth: 920, fontSize: 'clamp(2.25rem, 6vw, 3.75rem)', fontWeight: 300, lineHeight: 1.1, letterSpacing: '-0.02em', color: '#0F0F0F' }}>
+            Simple, transparent pricing<br />
             <span style={{ fontWeight: 600, color: '#60B746' }}>for every practice</span>
           </h1>
         </Reveal>

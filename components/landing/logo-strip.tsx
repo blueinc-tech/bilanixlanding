@@ -11,7 +11,7 @@ export function LogoStrip() {
     <section className="logos-section" style={{ padding: '48px 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <div className="max-w-page" style={{ marginBottom: 24, textAlign: 'center' }}>
         <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.3)', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-          Built for professionals like
+          Built for professionals
         </p>
       </div>
       <div className="logo-ticker-wrap">

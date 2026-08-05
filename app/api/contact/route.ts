@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const company = String(body?.company ?? '').trim()
     const phone = String(body?.phone ?? '').trim()
     const message = String(body?.message ?? '').trim()
-    const inquiryType = String(body?.inquiryType ?? 'Request a Demo').trim()
+    const inquiryType = String(body?.inquiryType ?? 'Request for a Meeting').trim()
 
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!firstName || !lastName || !email || !emailRe.test(email) || !company || !phone || !message) {
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         company: company || null,
         phone: phone || null,
         message: message || null,
-        inquiryType: inquiryType || 'Request a Demo',
+        inquiryType: inquiryType || 'Request for a Meeting',
       },
     })
 

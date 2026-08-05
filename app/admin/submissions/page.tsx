@@ -54,7 +54,7 @@ const STATUS_OPTIONS = [
 ]
 
 const INQUIRY_OPTIONS = [
-  { value: 'Request a Demo', label: 'Request a Demo' },
+  { value: 'Request for a Meeting', label: 'Request for a Meeting' },
   { value: 'Support', label: 'Support' },
   { value: 'Partnership', label: 'Partnership' },
 ]
@@ -167,7 +167,7 @@ export default function SubmissionsPage() {
 
   const inquiryBadgeColor = (type: string) => {
     switch (type) {
-      case 'Request a Demo': return 'default'
+      case 'Request for a Meeting': return 'default'
       case 'Support': return 'secondary'
       case 'Partnership': return 'outline'
       default: return 'outline'
