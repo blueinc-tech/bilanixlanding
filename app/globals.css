@@ -425,7 +425,7 @@
 /* Canonical page-hero heading — used for the intro h1 on Pricing, Solution, and Contact */
 .page-hero-title {
   font-family: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
+  font-size: clamp(2.25rem, 4vw, 3.25rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
 }
 
 /* Canonical light-weight section heading — used for editorial-style intros (comparison table, FAQ) */

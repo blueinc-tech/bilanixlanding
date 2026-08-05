@@ -23,13 +23,13 @@ export default function SolutionPage() {
       <Navbar />
       <main>
         {/* Hero — Green gradient */}
-        <section className="relative w-full flex items-center overflow-hidden" style={{ background: 'linear-gradient(to bottom right, #0a1c08, #112a0e, #1c3f19)' }}>
+        <section className="relative w-full flex items-center overflow-hidden" style={{ background: 'linear-gradient(to bottom right, #0a1c08, #112a0e, #1c3f19)', paddingTop: 96, paddingBottom: 96 }}>
           {/* Grid overlay */}
           <div className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
           {/* Glow blob */}
           <div className="absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full blur-[100px]" style={{ background: 'rgba(96,183,70,0.1)' }} />
           {/* Content */}
-          <div className="relative z-10 mx-auto w-full max-w-page px-6 py-24 text-center sm:px-10 sm:py-32">
+          <div className="relative z-10 mx-auto w-full max-w-page text-center">
             <Reveal>
               <h1 className="page-hero-title" style={{ color: '#fff', lineHeight: 1.05 }}>
                 Every feature your firm <span className="text-[#60B746]">needs to grow</span>

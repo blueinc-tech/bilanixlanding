@@ -9,9 +9,9 @@ export function Hero() {
   return (
     <header className="hero-bg relative" style={{ paddingTop: 100, paddingBottom: 0 }}>
       <div className="max-w-page relative" style={{ zIndex: 10 }}>
-        <div className="text-center" style={{ maxWidth: 900, margin: '0 auto' }}>
+        <div className="text-center" style={{ maxWidth: 1120, margin: '0 auto' }}>
           <Reveal delay={1}>
-            <h1 className="hero-title">
+            <h1 className="hero-title" style={{ fontSize: 'clamp(2.25rem, 4vw, 3.25rem)', fontWeight: 600 }}>
               Manage every client. <span className="green">Automate every entry.</span><br />Scale with confidence.
             </h1>
           </Reveal>
