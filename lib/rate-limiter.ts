@@ -28,6 +28,7 @@ export const RATE_LIMITS = {
   passwordReset: { windowMs: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
   passwordResetConfirm: { windowMs: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
   general: { windowMs: 60 * 1000, maxRequests: 60 },         // 60 per minute
+  publicApi: { windowMs: 60 * 1000, maxRequests: 120 },      // 120 per minute, per API key
 } as const
 
 export function checkRateLimit(

@@ -13,6 +13,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs'
 import { useAdminAuth } from '@/components/admin/auth-provider'
+import { ApiKeysPanel } from '@/components/admin/api-keys-panel'
 
 interface SettingDefinition {
   key: string
@@ -36,6 +37,7 @@ const GROUP_LABELS: Record<string, string> = {
   maintenance: 'Maintenance',
   branding: 'Branding',
   features: 'Features',
+  'api-keys': 'API Access',
 }
 
 export default function SettingsPage() {
@@ -231,6 +233,9 @@ export default function SettingsPage() {
 
         {Object.entries(GROUP_LABELS).map(([group, label]) => (
           <TabsContent key={group} value={group}>
+            {group === 'api-keys' ? (
+              <ApiKeysPanel />
+            ) : (
             <div className="rounded-lg border border-border bg-card p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -271,6 +276,7 @@ export default function SettingsPage() {
                 )}
               </div>
             </div>
+            )}
           </TabsContent>
         ))}
       </Tabs>

@@ -1,0 +1,136 @@
+{
+  "info": {
+    "_postman_id": "a3e1c9d4-6f2b-4b3a-9d7e-1c8f2a5b6e0d",
+    "name": "Bilanix Subscriber API",
+    "description": "# Bilanix Subscriber API\n\nUsed by app.bilanix.com to check subscription status by email and provision, keep active, or suspend access accordingly.\n\n## Auth\n\nEvery request needs two headers:\n\n| Header | Description |\n|---|---|\n| `X-API-Key` | Public key ID, generated in the landing site's Admin > Settings > API Access tab |\n| `X-API-Secret` | Private secret, shown only once at generation time |\n\nSet `apiKey` and `apiSecret` in this collection's variables (or in a Postman Environment) before sending requests — do not commit real secrets into this file.\n\nRate limit: 120 requests/minute per API key. A `429` response includes a `Retry-After` header.\n\n## Subscriber status\n\nStatus is computed live from the subscription's `endDate` vs. the current time — nothing flips a stored flag when a subscription lapses, so poll the bulk endpoint periodically (e.g. hourly) rather than relying solely on login-time checks, or you'll miss suspending users who don't log back in after expiry.\n\n| Status | Meaning | Action |\n|---|---|---|\n| `pending` | Registered, payment not completed | Do not provision |\n| `active` | Paid, `endDate` is in the future | Provision / keep running |\n| `expired` | Paid, but `endDate` has passed | Suspend |\n| `cancelled` | Subscription explicitly cancelled | Suspend |",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://bilanixlanding.com", "type": "string" },
+    { "key": "apiKey", "value": "", "type": "string" },
+    { "key": "apiSecret", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "List Subscribers (Bulk Roster)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "X-API-Key", "value": "{{apiKey}}" },
+          { "key": "X-API-Secret", "value": "{{apiSecret}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/subscribers?limit=100",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "subscribers"],
+          "query": [
+            { "key": "limit", "value": "100", "description": "Max items per page. Default 100, max 500." },
+            { "key": "cursor", "value": "", "description": "Pass the previous response's `nextCursor` to fetch the next page. Omit for the first page.", "disabled": true }
+          ]
+        },
+        "description": "Full roster of every client that has completed checkout at least once, each with a computed status. Paginate by repeating the request with `cursor` set to the previous response's `nextCursor` until it comes back `null`.\n\nRun this on a schedule (recommended: hourly) to catch time-based expirations — not just on login."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              { "key": "X-API-Key", "value": "{{apiKey}}" },
+              { "key": "X-API-Secret", "value": "{{apiSecret}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscribers?limit=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscribers"],
+              "query": [{ "key": "limit", "value": "100" }]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"subscribers\": [\n      {\n        \"email\": \"jane@example.com\",\n        \"name\": \"Jane Doe\",\n        \"company\": \"Acme Ltd\",\n        \"status\": \"active\",\n        \"plan\": { \"slug\": \"basic-accounting\", \"name\": \"Basic\" },\n        \"subscription\": {\n          \"startDate\": \"2026-08-04T21:43:18.926Z\",\n          \"endDate\": \"2026-09-04T21:43:18.926Z\",\n          \"cancelledAt\": null,\n          \"amount\": 15000,\n          \"currency\": \"NGN\"\n        },\n        \"updatedAt\": \"2026-08-04T21:43:18.997Z\"\n      }\n    ],\n    \"nextCursor\": null\n  }\n}"
+        },
+        {
+          "name": "401 Unauthorized",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscribers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscribers"]
+            }
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "_postman_previewlanguage": "json",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": false,\n  \"error\": { \"code\": \"UNAUTHORIZED\", \"message\": \"Missing X-API-Key / X-API-Secret headers\" }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Subscriber by Email",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "X-API-Key", "value": "{{apiKey}}" },
+          { "key": "X-API-Secret", "value": "{{apiSecret}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/subscribers/:email",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "subscribers", ":email"],
+          "variable": [
+            { "key": "email", "value": "jane@example.com", "description": "URL-encode if the email contains special characters" }
+          ]
+        },
+        "description": "Real-time single-client lookup — use this at login time on app.bilanix.com to gate access. Returns `404` if no account exists for that email at all (never registered)."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              { "key": "X-API-Key", "value": "{{apiKey}}" },
+              { "key": "X-API-Secret", "value": "{{apiSecret}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscribers/jane@example.com",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscribers", "jane@example.com"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"email\": \"jane@example.com\",\n    \"name\": \"Jane Doe\",\n    \"company\": \"Acme Ltd\",\n    \"status\": \"active\",\n    \"plan\": { \"slug\": \"basic-accounting\", \"name\": \"Basic\" },\n    \"subscription\": {\n      \"startDate\": \"2026-08-04T21:43:18.926Z\",\n      \"endDate\": \"2026-09-04T21:43:18.926Z\",\n      \"cancelledAt\": null,\n      \"amount\": 15000,\n      \"currency\": \"NGN\"\n    },\n    \"updatedAt\": \"2026-08-04T21:43:18.997Z\"\n  }\n}"
+        },
+        {
+          "name": "404 Not Found",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              { "key": "X-API-Key", "value": "{{apiKey}}" },
+              { "key": "X-API-Secret", "value": "{{apiSecret}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscribers/nobody@example.com",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "subscribers", "nobody@example.com"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"success\": false,\n  \"error\": { \"code\": \"NOT_FOUND\", \"message\": \"Subscriber not found\" }\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -78,6 +78,7 @@ model Admin {
   resetTokens   PasswordResetToken[]
   impersonationLogs ImpersonationLog[]
   campaigns         Campaign[]
+  apiKeys           ApiKey[]
 
   @@index([email])
   @@index([roleId])
@@ -454,6 +455,25 @@ model CampaignRecipient {
   @@index([status])
   @@index([createdAt])
   @@map("campaign_recipients")
+}
+
+// ─── External API Access (app.bilanix.com integration) ────────────
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  name        String
+  keyId       String    @unique @map("key_id")
+  secretHash  String    @map("secret_hash")
+  lastUsedAt  DateTime? @map("last_used_at")
+  revokedAt   DateTime? @map("revoked_at")
+  createdBy   String?   @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  admin Admin? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([keyId])
+  @@index([revokedAt])
+  @@map("api_keys")
 }
 
 // ─── System Settings ───────────────────────────────────────────────
