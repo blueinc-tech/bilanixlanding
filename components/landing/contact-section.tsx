@@ -91,23 +91,11 @@ export function ContactSection() {
             <Reveal>
               <div>
                 <p className="section-label">Contact Bilanix</p>
-                <h2 className="font-heading" style={{
-                  fontSize: 'clamp(1.75rem, 3vw, 2.25rem)',
-                  fontWeight: 300,
-                  lineHeight: 1.12,
-                  letterSpacing: '-0.015em',
-                  color: '#0F0F0F',
-                  marginTop: 16,
-                }}>
-                  Start your journey towards <span style={{ fontWeight: 600 }}>efficient multi-client accounting and Invoicing</span>
+                <h2 className="section-heading-light" style={{ color: '#0F0F0F', marginTop: 16 }}>
+                  Start your journey towards efficient<br /><span style={{ fontWeight: 600 }}> multi-client accounting and Invoicing</span>
                 </h2>
-                <p style={{
-                  marginTop: 16,
-                  fontSize: '0.9375rem',
-                  lineHeight: 1.7,
-                  color: '#737373',
-                }}>
-                  Bilanix is purpose-built for accounting firms and consultants managing multiple clients. Request early access, schedule a product walkthrough, or send us a message, and our team will respond within one business day.
+                <p className="section-desc" style={{ marginTop: 16, color: '#737373' }}>
+                  Bilanix is purpose-built for accounting firms managing multiple clients. Send a message and we&apos;ll respond within one business day.
                 </p>
               </div>
             </Reveal>

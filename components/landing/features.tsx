@@ -21,10 +21,10 @@ export function Features() {
       <div className="max-w-page">
         <Reveal className="text-center" style={{ marginBottom: 72, maxWidth: 800, marginLeft: 'auto', marginRight: 'auto' }}>
           <span className="section-label">Platform</span>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#0F0F0F', lineHeight: 1.15 }}>
+          <h2 className="section-heading" style={{ color: '#0F0F0F' }}>
             One platform.<br /><span style={{ color: '#60B746' }}>Every accounting tool</span> your firm needs.
           </h2>
-          <p style={{ fontSize: '1rem', color: '#737373', marginTop: 20, lineHeight: 1.65 }}>
+          <p className="section-desc" style={{ color: '#737373', marginTop: 20 }}>
             From double-entry bookkeeping to AI invoice processing to Nigerian tax compliance, Bilanix replaces spreadsheets with one centralized platform.
           </p>
         </Reveal>

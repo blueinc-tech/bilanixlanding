@@ -6,22 +6,21 @@ import { openRegistration } from './registration-modal'
 
 export function PricingCTA() {
   return (
-    <section id="contact-pricing" className="cta-section py-16 sm:py-20 lg:py-24">
+    <section id="contact-pricing" className="cta-section section-pad">
       <div className="max-w-page mx-auto text-center">
         <Reveal>
           <p className="section-label">Get started today</p>
         </Reveal>
         <Reveal delay={1}>
-          <h2 className="cta-big" style={{ maxWidth: 700, margin: '20px auto 0' }}>
-            Ready to transform{' '}
+          <h2 className="cta-big" style={{ margin: '20px auto 0' }}>
+            Ready to transform<br />
             <span style={{ color: '#60B746' }}>your accounting practice?</span>
           </h2>
         </Reveal>
         <Reveal delay={2}>
           <p
+            className="section-desc"
             style={{
-              fontSize: '1rem',
-              lineHeight: 1.7,
               color: 'rgba(255,255,255,0.5)',
               maxWidth: 520,
               margin: '20px auto 0',

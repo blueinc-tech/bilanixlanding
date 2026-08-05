@@ -91,12 +91,12 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export function PricingFAQ() {
   return (
-    <section style={{ background: '#fff', padding: '80px 0' }}>
+    <section className="section-pad" style={{ background: '#fff' }}>
       <div className="max-w-page" style={{ padding: '0 20px' }}>
         <Reveal>
           <div style={{ marginBottom: 48, textAlign: 'center' }}>
             <p className="section-label">FAQ</p>
-            <h2 className="font-heading" style={{ marginTop: 20, fontSize: 46, fontWeight: 300, lineHeight: 1.1, letterSpacing: '-0.015em', color: '#0F0F0F' }}>
+            <h2 className="section-heading-light" style={{ marginTop: 20, color: '#0F0F0F' }}>
               Questions before{' '}
               <span style={{ fontWeight: 600, color: '#60B746' }}>you sign up</span>
             </h2>

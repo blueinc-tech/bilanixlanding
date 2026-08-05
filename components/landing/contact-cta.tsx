@@ -12,16 +12,14 @@ export function ContactCta() {
           <p className="section-label" style={{ textAlign: 'center' }}>Get started today</p>
         </Reveal>
         <Reveal>
-          <h2 className="cta-big font-heading" style={{ maxWidth: 680, margin: '20px auto 0' }}>
-            Ready to transform <span style={{ color: '#60B746' }}>your accounting practice?</span>
+          <h2 className="cta-big" style={{ margin: '20px auto 0' }}>
+            Ready to transform<br /><span style={{ color: '#60B746' }}>your accounting practice?</span>
           </h2>
         </Reveal>
         <Reveal>
-          <p style={{
+          <p className="section-desc" style={{
             maxWidth: 480,
             margin: '20px auto 0',
-            fontSize: '0.9375rem',
-            lineHeight: 1.7,
             color: 'rgba(255,255,255,0.5)',
           }}>
             Join accounting firms across Nigeria using Bilanix to manage multi-client portfolios with AI-powered automation.

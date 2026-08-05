@@ -29,22 +29,14 @@ export function ContactHero() {
       }} />
       <div className="max-w-page" style={{ position: 'relative', paddingTop: 140, paddingBottom: 110, textAlign: 'center' }}>
         <Reveal>
-          <h1 className="font-heading" style={{
-            fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
-            fontWeight: 600,
-            lineHeight: 1.05,
-            letterSpacing: '-0.02em',
-            color: '#fff',
-          }}>
+          <h1 className="page-hero-title" style={{ color: '#fff' }}>
             Contact Us
           </h1>
         </Reveal>
         <Reveal>
-          <p style={{
+          <p className="section-desc" style={{
             maxWidth: 560,
             margin: '20px auto 0',
-            fontSize: '1rem',
-            lineHeight: 1.7,
             color: 'rgba(255,255,255,0.55)',
           }}>
             Whether you&apos;re an accounting firm, consultant, or finance team ready to manage multiple clients more efficiently, we&apos;d love to hear from you.

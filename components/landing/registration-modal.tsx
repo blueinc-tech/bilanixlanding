@@ -229,7 +229,6 @@ export function RegistrationModal() {
               style={{
                 fontSize: '0.75rem',
                 color: 'rgba(255,255,255,0.4)',
-                fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
                 marginBottom: 4,
               }}
             >
@@ -309,7 +308,6 @@ export function RegistrationModal() {
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
-                        fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
                       }}
                     >
                       {active && (
@@ -365,20 +363,20 @@ export function RegistrationModal() {
                   <div className="flex items-start justify-between">
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <p style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                        <p style={{ fontSize: '1rem', fontWeight: 700, color: '#fff' }}>
                           {plan.name}
                         </p>
                         {isSelected && <Check size={16} color="#60B746" />}
                       </div>
-                      <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', marginTop: 2, fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                      <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>
                         {plan.audience}
                       </p>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <p style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                      <p style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff' }}>
                         ₦{fmt(price)}
                       </p>
-                      <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                      <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>
                         /{billing === 'monthly' ? 'mo' : 'yr'}
                       </p>
                     </div>
@@ -394,7 +392,6 @@ export function RegistrationModal() {
                             gap: 8,
                             fontSize: '0.8125rem',
                             color: 'rgba(255,255,255,0.6)',
-                            fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
                           }}
                         >
                           <Check size={14} style={{ marginTop: 2, flexShrink: 0, color: '#60B746' }} />
@@ -440,22 +437,22 @@ export function RegistrationModal() {
                 padding: 20,
               }}
             >
-              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, marginBottom: 12, fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, marginBottom: 12 }}>
                 Order Summary
               </p>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: '0.9375rem', color: '#fff', fontWeight: 600, fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                <span style={{ fontSize: '0.9375rem', color: '#fff', fontWeight: 600 }}>
                   {selectedPlan?.name} Plan
                 </span>
-                <span style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif', textTransform: 'capitalize' }}>
+                <span style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.5)', textTransform: 'capitalize' }}>
                   {billing}
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '1.25rem', color: '#fff', fontWeight: 800, fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                <span style={{ fontSize: '1.25rem', color: '#fff', fontWeight: 800 }}>
                   ₦{fmt(selectedPlan?.price[billing] ?? 0)}
                 </span>
-                <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.35)' }}>
                   /{billing === 'monthly' ? 'month' : 'year'}
                 </span>
               </div>
@@ -463,7 +460,7 @@ export function RegistrationModal() {
 
             <div className="flex flex-col" style={{ gap: 12 }}>
               {!stripeGw && !paystackGw && (
-                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '16px 0', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '16px 0' }}>
                   No payment gateways available. Please contact support.
                 </p>
               )}
@@ -472,7 +469,6 @@ export function RegistrationModal() {
                   onClick={() => handlePayment('stripe')}
                   disabled={loading}
                   style={{
-                    fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -499,7 +495,6 @@ export function RegistrationModal() {
                   onClick={() => handlePayment('paystack')}
                   disabled={loading}
                   style={{
-                    fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -543,10 +538,10 @@ export function RegistrationModal() {
               className="animate-spin"
               style={{ color: '#60B746', margin: '0 auto 20px' }}
             />
-            <p style={{ fontSize: '1rem', color: '#fff', fontWeight: 600, marginBottom: 8, fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+            <p style={{ fontSize: '1rem', color: '#fff', fontWeight: 600, marginBottom: 8 }}>
               Processing your payment...
             </p>
-            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif' }}>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
               Please do not close this window.
             </p>
           </div>
@@ -562,7 +557,6 @@ const labelStyle: React.CSSProperties = {
   fontWeight: 500,
   color: 'rgba(255,255,255,0.7)',
   marginBottom: 6,
-  fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
 }
 
 function Field({

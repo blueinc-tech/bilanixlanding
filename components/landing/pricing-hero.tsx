@@ -22,7 +22,7 @@ export function PricingHero({ billing, onBillingChange }: PricingHeroProps) {
           </h1>
         </Reveal>
         <Reveal delay={2}>
-          <p style={{ margin: '20px auto 0', maxWidth: 480, fontSize: 15, lineHeight: 1.7, color: '#737373' }}>
+          <p className="section-desc" style={{ margin: '20px auto 0', maxWidth: 480, color: '#737373' }}>
             Choose the plan that fits your firm. Scale your client portfolio without scaling your overhead.
           </p>
         </Reveal>

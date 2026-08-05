@@ -31,12 +31,12 @@ export default function SolutionPage() {
           {/* Content */}
           <div className="relative z-10 mx-auto w-full max-w-page px-6 py-24 text-center sm:px-10 sm:py-32">
             <Reveal>
-              <h1 className="font-display text-[48px] font-semibold leading-[1.05] tracking-[-0.02em] text-white sm:text-[64px] lg:text-[72px]">
+              <h1 className="page-hero-title" style={{ color: '#fff', lineHeight: 1.05 }}>
                 Every feature your firm <span className="text-[#60B746]">needs to grow</span>
               </h1>
             </Reveal>
             <Reveal delay={1}>
-              <p className="mx-auto mt-5 max-w-lg text-[16px] leading-[1.7] text-white/55">
+              <p className="mx-auto mt-5 max-w-3xl text-[16px] leading-[1.7] text-white/55">
                 Bilanix combines AI-powered automation, true double-entry accounting, and Nigerian tax compliance into one platform, purpose-built for firms managing multiple clients.
               </p>
             </Reveal>
@@ -58,7 +58,7 @@ export default function SolutionPage() {
           id="core-accounting"
           label="Core accounting engine"
           title={<>True double-entry accounting, <span style={{ color: '#60B746' }}>built for precision</span></>}
-          description="Every transaction is validated against a true double-entry core, so debit always equals credit. Bilanix eliminates manual errors with automated balancing, journal batching, and immutable audit logs."
+          description="Every transaction is validated against a true double-entry core, so debit always equals credit — no manual errors, ever."
           bullets={[
             'Automated debit/credit validation on every journal entry',
             'Customizable chart of accounts for Nigerian standards',
@@ -76,7 +76,7 @@ export default function SolutionPage() {
           id="ai-automation"
           label="AI-powered automation"
           title={<>Process invoices <span style={{ color: '#60B746' }}>10x faster with AI</span></>}
-          description="Upload an invoice and Bilanix AI extracts supplier details, dates, and amounts, calculates VAT, suggests the correct ledger account, and drafts the journal entry, ready for your one-click review."
+          description="Upload an invoice and Bilanix AI extracts the details, calculates VAT, and drafts the entry for your one-click review."
           bullets={[
             'Automatic supplier and customer detail extraction',
             'VAT detection and separation at 7.5% Nigerian rate',
@@ -95,7 +95,7 @@ export default function SolutionPage() {
           id="tax-vat"
           label="Tax & VAT compliance"
           title={<>Nigerian VAT compliance, <span style={{ color: '#60B746' }}>fully automated</span></>}
-          description="A configurable VAT engine handles detection, separation, and automated calculation across every client engagement, with period tracking and FIRS-ready reporting built into every workflow."
+          description="A configurable VAT engine automates detection, separation, and calculation across every client engagement."
           bullets={[
             'Automated 7.5% VAT calculation on every transaction',
             'Input and output VAT tracking per client and period',
@@ -113,7 +113,7 @@ export default function SolutionPage() {
           id="multi-client"
           label="Multi-client management"
           title={<>Manage your entire <span style={{ color: '#60B746' }}>client portfolio in one place</span></>}
-          description="Onboard clients with unique client codes, segment companies by industry or size, and manage your entire practice from one centralized workspace, purpose-built for firms running many clients simultaneously."
+          description="Onboard clients with unique codes, segment by industry or size, and run your entire practice from one workspace."
           bullets={[
             'Unlimited clients with unique client codes',
             'Centralized portfolio dashboard with instant switching',
@@ -132,7 +132,7 @@ export default function SolutionPage() {
           id="reports-analytics"
           label="Reports & analytics"
           title={<>Financial intelligence <span style={{ color: '#60B746' }}>at your fingertips</span></>}
-          description="Profit & loss, balance sheet, trial balance, and cash flow statements, available instantly for any client, any period. Export in multiple formats for board presentations or statutory filings."
+          description="Profit & loss, balance sheet, trial balance, and cash flow — instantly, for any client, any period."
           bullets={[
             'P&L, balance sheet, and trial balance on demand',
             'Cash flow statement with direct and indirect methods',
@@ -150,7 +150,7 @@ export default function SolutionPage() {
           id="security-access"
           label="Security & access control"
           title={<>Role-based access <span style={{ color: '#60B746' }}>that protects every client</span></>}
-          description="Admin, Accountant, Viewer, and Auditor roles control exactly who sees what, across every client in your portfolio. Secure authentication, system monitoring, and regular audits protect your entire practice."
+          description="Admin, Accountant, Viewer, and Auditor roles control exactly who sees what, across every client in your portfolio."
           bullets={[
             'Four distinct roles with granular permission control',
             'Per-client access isolation, no cross-contamination',
@@ -168,7 +168,7 @@ export default function SolutionPage() {
         <FeatureSection
           label="Mobile experience"
           title={<>Your practice, <span style={{ color: '#60B746' }}>anywhere you are</span></>}
-          description="Review dashboards, approve journal entries, monitor client portfolios, and receive real-time alerts, all from your mobile device. Bilanix gives your team full visibility without being tied to a desk."
+          description="Review dashboards, approve journal entries, and monitor client portfolios, all from your mobile device."
           bullets={[
             'Full dashboard access on any mobile device',
             'Approve and post journal entries from anywhere',
@@ -193,12 +193,12 @@ export default function SolutionPage() {
               <span className="section-label">Get started today</span>
             </Reveal>
             <Reveal delay={1}>
-              <h2 className="cta-big" style={{ maxWidth: 700, margin: '20px auto 0' }}>
-                Ready to transform <span style={{ color: '#60B746' }}>your accounting practice?</span>
+              <h2 className="cta-big" style={{ margin: '20px auto 0' }}>
+                Ready to transform<br /><span style={{ color: '#60B746' }}>your accounting practice?</span>
               </h2>
             </Reveal>
             <Reveal delay={2}>
-              <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '20px auto 0' }}>
+              <p className="section-desc" style={{ color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '20px auto 0' }}>
                 Join accounting firms across Nigeria using Bilanix to manage multi-client portfolios with AI-powered automation.
               </p>
             </Reveal>

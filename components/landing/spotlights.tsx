@@ -22,8 +22,8 @@ export function SpotlightAI() {
         <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 80, alignItems: 'center' }}>
           <Reveal>
             <span className="section-label">AI Invoice Processing</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#fff', lineHeight: 1.15, marginBottom: 20 }}>Upload invoices. AI does the rest.</h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>Bilanix AI extracts supplier information, identifies invoice dates, detects transaction amounts, calculates VAT automatically, and suggests the right ledger accounts, before you review and approve.</p>
+            <h2 className="section-heading" style={{ color: '#fff', marginBottom: 20 }}>Upload invoices. AI does the rest.</h2>
+            <p className="section-desc" style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>Bilanix AI extracts invoice details, calculates VAT, and suggests the right ledger account for your review.</p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               <CheckItem dark>OCR-powered data extraction from any invoice</CheckItem>
               <CheckItem dark>Auto-suggested general ledger account mappings</CheckItem>
@@ -118,8 +118,8 @@ export function SpotlightExpense() {
 
           <Reveal delay={2}>
             <span className="section-label">Financial Reporting</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#0F0F0F', lineHeight: 1.15, marginBottom: 20 }}>Statements generated. <span style={{ color: '#60B746' }}>Compliance handled.</span></h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 32 }}>Generate trial balances, profit & loss statements, and balance sheets for each client, monthly, quarterly, or yearly. Export to PDF and CSV in one click.</p>
+            <h2 className="section-heading" style={{ color: '#0F0F0F', marginBottom: 20 }}>Statements generated. <span style={{ color: '#60B746' }}>Compliance handled.</span></h2>
+            <p className="section-desc" style={{ color: '#737373', marginBottom: 32 }}>Generate trial balances, P&L statements, and balance sheets for each client — monthly, quarterly, or yearly.</p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               <CheckItem>Trial balance generation with validation checks</CheckItem>
               <CheckItem>Client-specific P&L and balance sheet reports</CheckItem>
@@ -158,8 +158,8 @@ export function SpotlightPayroll() {
         <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 80, alignItems: 'center' }}>
           <Reveal>
             <span className="section-label">General Ledger</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#fff', lineHeight: 1.15, marginBottom: 20 }}>Every transaction recorded.<br />Every entry traceable.</h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>The general ledger is the foundation of Bilanix. Create, batch, and post journal entries with full reversal tracking, immutable audit logs, and multi-currency architecture.</p>
+            <h2 className="section-heading" style={{ color: '#fff', marginBottom: 20 }}>Every transaction recorded.<br />Every entry traceable.</h2>
+            <p className="section-desc" style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>The general ledger is the foundation of Bilanix — batch and post journal entries with full reversal tracking and audit logs.</p>
             <div className="grid grid-cols-2" style={{ gap: 16, marginBottom: 36 }}>
               <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: 20 }}>
                 <div className="font-heading" style={{ fontSize: '1.75rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>100%</div>
@@ -258,8 +258,8 @@ export function SpotlightCashflow() {
 
           <Reveal delay={2}>
             <span className="section-label">VAT & Asset Management</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#0F0F0F', lineHeight: 1.15, marginBottom: 20 }}>Tax compliance<br /><span style={{ color: '#60B746' }}>built into every workflow.</span></h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#737373', marginBottom: 32 }}>Configurable VAT rates, automated calculations, and period management. Plus a full fixed asset register with straight-line and reducing balance depreciation, all auto-posted to the ledger.</p>
+            <h2 className="section-heading" style={{ color: '#0F0F0F', marginBottom: 20 }}>Tax compliance<br /><span style={{ color: '#60B746' }}>built into every workflow.</span></h2>
+            <p className="section-desc" style={{ color: '#737373', marginBottom: 32 }}>Configurable VAT rates and automated calculations, plus a full fixed asset register with depreciation auto-posted to the ledger.</p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               <CheckItem>Automated VAT tracking, calculation, and reporting</CheckItem>
               <CheckItem>Fixed asset depreciation with auto journal postings</CheckItem>

@@ -74,12 +74,12 @@ export function ComparisonTable() {
   const planNames = ['Basic', 'Professional', 'Enterprise', 'Premium']
 
   return (
-    <section style={{ background: '#F7F8F8', padding: '80px 0' }}>
+    <section className="section-pad" style={{ background: '#F7F8F8' }}>
       <div className="max-w-page" style={{ padding: '0 20px' }}>
         <Reveal>
           <div style={{ marginBottom: 48, textAlign: 'center' }}>
             <p className="section-label">Compare plans</p>
-            <h2 className="font-heading" style={{ margin: '20px auto 0', maxWidth: 560, fontSize: 46, fontWeight: 300, lineHeight: 1.1, letterSpacing: '-0.015em', color: '#0F0F0F' }}>
+            <h2 className="section-heading-light" style={{ margin: '20px auto 0', color: '#0F0F0F' }}>
               Everything you get,{' '}
               <span style={{ fontWeight: 600, color: '#60B746' }}>side by side</span>
             </h2>

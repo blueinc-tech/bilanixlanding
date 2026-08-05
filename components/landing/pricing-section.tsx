@@ -110,7 +110,7 @@ export function PricingSection() {
   const invoicingPlans = plans.filter(p => p.planType === 'invoicing')
 
   return (
-    <section id="pricing" className="bg-white py-24 sm:py-32">
+    <section id="pricing" className="bg-white section-pad">
       <div className="max-w-page mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -122,7 +122,7 @@ export function PricingSection() {
           <p className="font-jakarta text-xs font-semibold uppercase tracking-[0.18em] text-[#60B746]">
             Pricing Built for Practices
           </p>
-          <h2 className="font-jakarta mx-auto mt-4 max-w-3xl text-[1.75rem] sm:text-[2.5rem] font-semibold leading-[1.15] tracking-[-0.03em] text-[#0F0F0F]">
+          <h2 className="section-heading mx-auto mt-4 max-w-3xl" style={{ color: '#0F0F0F' }}>
             Pricing that scales{' '}
             <span className="font-bold">with your client portfolio</span>
           </h2>
@@ -212,7 +212,7 @@ export function PricingSection() {
 
               {invoicingPlans.length > 0 && (
                 <div>
-                  <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Invoicing Plan</h3>
+                  <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Invoicing Solution</h3>
                   <div ref={invoicingRef} style={{ display: 'grid', gridTemplateColumns: getGridCols(invoicingPlans.length), gap: 20, maxWidth: getGridMaxWidth(invoicingPlans.length), margin: '0 auto', alignItems: 'start' }}>
                     {invoicingPlans.map((plan, i) => (
                       <PricingCard

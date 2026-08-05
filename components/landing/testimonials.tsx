@@ -240,13 +240,9 @@ export function Testimonials() {
           <Reveal>
             <span className="section-label">What firms are saying</span>
             <h2
-              className="font-heading"
+              className="section-heading"
               style={{
-                fontSize: '2.5rem',
-                fontWeight: 600,
-                letterSpacing: '-0.03em',
                 color: '#fff',
-                lineHeight: 1.15,
                 marginTop: 8,
               }}
             >

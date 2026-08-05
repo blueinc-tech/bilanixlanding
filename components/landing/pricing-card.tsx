@@ -78,11 +78,11 @@ export function PricingCard({
         )}
       </div>
 
-      <h3 style={{ fontFamily: 'var(--font-jakarta)', fontSize: 16, fontWeight: 600 }}>{name}</h3>
+      <h3 style={{ fontSize: 16, fontWeight: 600 }}>{name}</h3>
       <p style={{ marginTop: 2, fontSize: 12, color: mutedColor }}>{audience}</p>
 
       <div style={{ marginTop: 20 }}>
-        <div style={{ fontFamily: 'var(--font-jakarta)', fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em' }}>
+        <div className="font-heading" style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em' }}>
           {price[billing]}
         </div>
         <p style={{ marginTop: 2, fontSize: 11, color: mutedColor }}>

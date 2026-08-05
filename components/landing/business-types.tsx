@@ -102,7 +102,7 @@ export function BusinessTypes() {
       <div className="max-w-page">
         <Reveal className="text-center" style={{ marginBottom: 64 }}>
           <span className="section-label">Solutions</span>
-          <h2 className="font-heading text-[2.5rem] font-semibold leading-[1.15] tracking-tight text-white">
+          <h2 className="section-heading" style={{ color: '#fff' }}>
             Built for accounting professionals and businesses<br />at every scale.
           </h2>
           <p className="mx-auto mt-4 max-w-md text-base md:max-w-none md:whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.4)' }}>

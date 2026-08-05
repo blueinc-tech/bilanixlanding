@@ -33,10 +33,10 @@ export function FeatureSection({ id, label, title, description, bullets, reverse
 
           <Reveal>
             <span className="section-label">{label}</span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: textColor, lineHeight: 1.15, marginBottom: 20 }}>
+            <h2 className="section-heading" style={{ color: textColor, marginBottom: 20 }}>
               {title}
             </h2>
-            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: mutedColor, marginBottom: 32 }}>
+            <p className="section-desc" style={{ color: mutedColor, marginBottom: 32 }}>
               {description}
             </p>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: cta ? 36 : 0 }}>

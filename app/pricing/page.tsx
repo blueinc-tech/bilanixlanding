@@ -173,7 +173,7 @@ export default function PricingPage() {
 
                 {invoicingPlans.length > 0 && (
                   <div>
-                    <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Invoicing Plan</h3>
+                    <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Invoicing Solution</h3>
                     <div ref={invoicingGridRef} style={{
                       display: 'grid',
                       gridTemplateColumns: getGridCols(invoicingPlans.length),

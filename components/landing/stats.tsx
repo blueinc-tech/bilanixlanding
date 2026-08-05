@@ -51,7 +51,7 @@ export function Stats() {
       <div className="max-w-page">
         <div className="text-center" style={{ marginBottom: 56 }}>
           <span className="section-label">Platform at a glance</span>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, letterSpacing: '-0.03em', color: '#fff', lineHeight: 1.15 }}>Built for scale.<br />Designed for accuracy.</h2>
+          <h2 className="section-heading" style={{ color: '#fff' }}>Built for scale.<br />Designed for accuracy.</h2>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4" style={{ position: 'relative', rowGap: 48, columnGap: 16 }}>
