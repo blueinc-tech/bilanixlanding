@@ -3,13 +3,16 @@
 import { useEffect, useState, useCallback } from 'react'
 import { X, Loader2, ChevronRight, ChevronLeft, Check, CreditCard } from 'lucide-react'
 
-export function openRegistration() {
+type Billing = 'monthly' | 'yearly'
+
+// Pass a plan when the click originated from a specific plan's CTA (a pricing
+// card), so the modal can pre-select that plan + billing cycle on Step 2.
+// Omit it for generic "sign up" buttons that shouldn't pin a plan.
+export function openRegistration(plan?: { planSlug: string; billing: Billing }) {
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('bilanix:open-registration'))
+    window.dispatchEvent(new CustomEvent('bilanix:open-registration', { detail: plan }))
   }
 }
-
-type Billing = 'monthly' | 'yearly'
 
 type Plan = {
   id: string
@@ -44,19 +47,40 @@ export function RegistrationModal() {
   const [plans, setPlans] = useState<Plan[]>([])
   const [billing, setBilling] = useState<Billing>('monthly')
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null)
+  // Slug of the plan to pre-select on Step 2, kept separately from `selectedPlan`
+  // because plans aren't fetched until Step 2 — this survives close/reopen of the
+  // modal (the component stays mounted) and is only ever overwritten, never reset
+  // on open, so the last plan clicked (from a card, or manually on Step 2) sticks.
+  const [pendingPlanSlug, setPendingPlanSlug] = useState<string | null>(null)
   const [gateways, setGateways] = useState<Gateways | null>(null)
 
   useEffect(() => {
-    const handler = () => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ planSlug: string; billing: Billing } | undefined>).detail
       setStep(1)
       setError('')
       setLoading(false)
-      setSelectedPlan(null)
+      if (detail?.planSlug) {
+        setPendingPlanSlug(detail.planSlug)
+        setBilling(detail.billing)
+      }
       setOpen(true)
     }
     window.addEventListener('bilanix:open-registration', handler)
     return () => window.removeEventListener('bilanix:open-registration', handler)
   }, [])
+
+  // Resolve the pending slug into an actual plan object once plans are loaded.
+  useEffect(() => {
+    if (!pendingPlanSlug) return
+    const match = plans.find((p) => p.slug === pendingPlanSlug)
+    if (match) setSelectedPlan(match)
+  }, [plans, pendingPlanSlug])
+
+  const selectPlan = (plan: Plan) => {
+    setSelectedPlan(plan)
+    setPendingPlanSlug(plan.slug)
+  }
 
   useEffect(() => {
     if (open) {
@@ -211,19 +235,19 @@ export function RegistrationModal() {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="scrollbar-none"
         style={{
           background: '#111111',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 20,
           maxWidth: 560,
           width: '100%',
-          padding: 32,
           maxHeight: '90vh',
-          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}
       >
-        <div className="flex items-start justify-between" style={{ marginBottom: 20 }}>
+        <div className="flex items-start justify-between" style={{ padding: '32px 32px 20px', flexShrink: 0 }}>
           <div style={{ flex: 1 }}>
             <p
               style={{
@@ -264,6 +288,7 @@ export function RegistrationModal() {
           </button>
         </div>
 
+        <div className="scrollbar-none" style={{ flex: 1, overflowY: 'auto', padding: '4px 32px 20px' }}>
         {step === 1 && (
           <div className="flex flex-col" style={{ gap: 14 }}>
             <Field label="Full Name *" value={form.name} onChange={(v) => update('name', v)} placeholder="Jane Adeyemi" />
@@ -272,11 +297,6 @@ export function RegistrationModal() {
             <Field label="Company *" value={form.company} onChange={(v) => update('company', v)} placeholder="Your business name" />
             <Field label="Country" value={form.country} onChange={(v) => update('country', v)} placeholder="Nigeria" />
             <Field label="Industry" value={form.industry} onChange={(v) => update('industry', v)} placeholder="Accounting, Finance..." />
-            {error && <p style={{ fontSize: '0.8125rem', color: '#EF4444' }}>{error}</p>}
-            <button className="btn-primary" style={{ justifyContent: 'center', marginTop: 4 }} onClick={goNext}>
-              Continue
-              <ChevronRight size={16} />
-            </button>
           </div>
         )}
 
@@ -350,7 +370,7 @@ export function RegistrationModal() {
               return (
                 <div
                   key={plan.id}
-                  onClick={() => setSelectedPlan(plan)}
+                  onClick={() => selectPlan(plan)}
                   style={{
                     border: isSelected ? '2px solid #60B746' : '1px solid rgba(255,255,255,0.1)',
                     borderRadius: 16,
@@ -403,27 +423,6 @@ export function RegistrationModal() {
                 </div>
               )
             })}
-
-            {error && <p style={{ fontSize: '0.8125rem', color: '#EF4444' }}>{error}</p>}
-
-            <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-              <button
-                className="btn-ghost"
-                style={{ justifyContent: 'center', flex: 1 }}
-                onClick={goBack}
-              >
-                <ChevronLeft size={16} />
-                Back
-              </button>
-              <button
-                className="btn-primary"
-                style={{ justifyContent: 'center', flex: 1 }}
-                onClick={goNext}
-              >
-                Continue
-                <ChevronRight size={16} />
-              </button>
-            </div>
           </div>
         )}
 
@@ -457,77 +456,6 @@ export function RegistrationModal() {
                 </span>
               </div>
             </div>
-
-            <div className="flex flex-col" style={{ gap: 12 }}>
-              {!stripeGw && !paystackGw && (
-                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '16px 0' }}>
-                  No payment gateways available. Please contact support.
-                </p>
-              )}
-              {stripeGw && (
-                <button
-                  onClick={() => handlePayment('stripe')}
-                  disabled={loading}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                    width: '100%',
-                    minHeight: 48,
-                    borderRadius: 12,
-                    border: 'none',
-                    background: '#635BFF',
-                    color: '#fff',
-                    fontSize: '0.9375rem',
-                    fontWeight: 600,
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.6 : 1,
-                    transition: 'opacity 0.2s',
-                  }}
-                >
-                  <CreditCard size={18} />
-                  Pay with Stripe
-                </button>
-              )}
-              {paystackGw && (
-                <button
-                  onClick={() => handlePayment('paystack')}
-                  disabled={loading}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                    width: '100%',
-                    minHeight: 48,
-                    borderRadius: 12,
-                    border: 'none',
-                    background: '#008751',
-                    color: '#fff',
-                    fontSize: '0.9375rem',
-                    fontWeight: 600,
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.6 : 1,
-                    transition: 'opacity 0.2s',
-                  }}
-                >
-                  <CreditCard size={18} />
-                  Pay with Paystack
-                </button>
-              )}
-            </div>
-
-            {error && <p style={{ fontSize: '0.8125rem', color: '#EF4444' }}>{error}</p>}
-
-            <button
-              className="btn-ghost"
-              style={{ justifyContent: 'center', marginTop: 4 }}
-              onClick={goBack}
-            >
-              <ChevronLeft size={16} />
-              Back
-            </button>
           </div>
         )}
 
@@ -544,6 +472,111 @@ export function RegistrationModal() {
             <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
               Please do not close this window.
             </p>
+          </div>
+        )}
+        </div>
+
+        {step !== 4 && (
+          <div style={{ flexShrink: 0, padding: '20px 32px 32px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            {error && <p style={{ fontSize: '0.8125rem', color: '#EF4444', marginBottom: 12 }}>{error}</p>}
+
+            {step === 1 && (
+              <button className="btn-primary" style={{ justifyContent: 'center', width: '100%' }} onClick={goNext}>
+                Continue
+                <ChevronRight size={16} />
+              </button>
+            )}
+
+            {step === 2 && (
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button
+                  className="btn-ghost"
+                  style={{ justifyContent: 'center', flex: 1 }}
+                  onClick={goBack}
+                >
+                  <ChevronLeft size={16} />
+                  Back
+                </button>
+                <button
+                  className="btn-primary"
+                  style={{ justifyContent: 'center', flex: 1 }}
+                  onClick={goNext}
+                >
+                  Continue
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="flex flex-col" style={{ gap: 12 }}>
+                {!stripeGw && !paystackGw && (
+                  <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '16px 0' }}>
+                    No payment gateways available. Please contact support.
+                  </p>
+                )}
+                {stripeGw && (
+                  <button
+                    onClick={() => handlePayment('stripe')}
+                    disabled={loading}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10,
+                      width: '100%',
+                      minHeight: 48,
+                      borderRadius: 12,
+                      border: 'none',
+                      background: '#635BFF',
+                      color: '#fff',
+                      fontSize: '0.9375rem',
+                      fontWeight: 600,
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      opacity: loading ? 0.6 : 1,
+                      transition: 'opacity 0.2s',
+                    }}
+                  >
+                    <CreditCard size={18} />
+                    Pay with Stripe
+                  </button>
+                )}
+                {paystackGw && (
+                  <button
+                    onClick={() => handlePayment('paystack')}
+                    disabled={loading}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10,
+                      width: '100%',
+                      minHeight: 48,
+                      borderRadius: 12,
+                      border: 'none',
+                      background: '#008751',
+                      color: '#fff',
+                      fontSize: '0.9375rem',
+                      fontWeight: 600,
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      opacity: loading ? 0.6 : 1,
+                      transition: 'opacity 0.2s',
+                    }}
+                  >
+                    <CreditCard size={18} />
+                    Pay with Paystack
+                  </button>
+                )}
+                <button
+                  className="btn-ghost"
+                  style={{ justifyContent: 'center', marginTop: 4 }}
+                  onClick={goBack}
+                >
+                  <ChevronLeft size={16} />
+                  Back
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

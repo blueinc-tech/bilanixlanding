@@ -39,7 +39,7 @@ export function PricingCTA() {
               marginTop: 32,
             }}
           >
-            <button className="btn-primary" onClick={openRegistration}>
+            <button className="btn-primary" onClick={() => openRegistration()}>
               Start Now <ArrowRight size={15} />
             </button>
             <a href="#pricing" className="btn-ghost">

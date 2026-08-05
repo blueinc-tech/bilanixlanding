@@ -31,7 +31,7 @@ export function FinalCta() {
             Join accounting firms across Nigeria using Bilanix to manage multi-client portfolios with AI-powered automation.
           </p>
           <div className="flex items-center justify-center flex-wrap" style={{ gap: 16 }}>
-            <button className="btn-primary" style={{ fontSize: '1rem', padding: '0 20px', minHeight: 48 }} onClick={openRegistration}>Get Onboarded Now</button>
+            <button className="btn-primary" style={{ fontSize: '1rem', padding: '0 20px', minHeight: 48 }} onClick={() => openRegistration()}>Get Onboarded Now</button>
             <button className="btn-ghost" style={{ fontSize: '1rem', padding: '0 20px', minHeight: 48 }} onClick={() => window.location.href = '/contact'}>Talk with the Team</button>
           </div>
           <div className="proof-grid">

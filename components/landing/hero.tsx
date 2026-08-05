@@ -23,7 +23,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={3} className="flex items-center justify-center gap-4 flex-wrap">
-            <button className="btn-primary" style={{ padding: '0 22px' }} onClick={openRegistration}>
+            <button className="btn-primary" style={{ padding: '0 22px' }} onClick={() => openRegistration()}>
               Get Started
               <ArrowRight size={15} />
             </button>

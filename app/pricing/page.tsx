@@ -14,6 +14,7 @@ import { Reveal } from '@/components/landing/reveal'
 type Billing = 'monthly' | 'yearly'
 
 type Plan = {
+  slug: string
   name: string
   planType: string
   audience: string
@@ -49,6 +50,7 @@ export default function PricingPage() {
         const list = Array.isArray(json) ? json : json?.data
         if (!Array.isArray(list)) throw new Error('Invalid data')
         const transformed: Plan[] = list.map((p: any) => ({
+          slug: p.slug,
           name: p.name,
           planType: p.planType || 'accounting',
           audience: p.audience,

@@ -73,11 +73,11 @@ export function Navbar() {
 
             <div className="hidden md:flex items-center gap-4">
               <a href="https://app.bilanix.com/login" className="nav-signin" style={{ textDecoration: 'none' }}>Sign in</a>
-              <button className="nav-cta-primary" onClick={openRegistration}>Sign Up</button>
+              <button className="nav-cta-primary" onClick={() => openRegistration()}>Sign Up</button>
             </div>
 
             <div className="flex md:hidden items-center gap-3">
-              <button className="nav-cta-primary" onClick={openRegistration}>Sign Up</button>
+              <button className="nav-cta-primary" onClick={() => openRegistration()}>Sign Up</button>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
                 className="flex items-center justify-center"

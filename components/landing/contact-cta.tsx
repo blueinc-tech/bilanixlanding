@@ -27,7 +27,7 @@ export function ContactCta() {
         </Reveal>
         <Reveal>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 12, marginTop: 32 }}>
-            <button className="btn-primary" onClick={openRegistration} style={{ fontSize: '0.9375rem', padding: '0 24px', minHeight: 48 }}>
+            <button className="btn-primary" onClick={() => openRegistration()} style={{ fontSize: '0.9375rem', padding: '0 24px', minHeight: 48 }}>
               Start Now
               <ArrowRight size={15} />
             </button>

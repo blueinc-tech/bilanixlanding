@@ -7,6 +7,7 @@ import { openRegistration } from './registration-modal'
 type Billing = 'monthly' | 'yearly'
 
 interface PricingCardProps {
+  slug: string
   name: string
   audience: string
   price: Record<Billing, string>
@@ -25,6 +26,7 @@ interface PricingCardProps {
 }
 
 export function PricingCard({
+  slug,
   name,
   audience,
   price,
@@ -99,7 +101,7 @@ export function PricingCard({
       )}
 
       <button
-        onClick={openRegistration}
+        onClick={() => openRegistration({ planSlug: slug, billing })}
         style={{
           marginTop: 20,
           cursor: 'pointer',

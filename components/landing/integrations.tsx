@@ -34,7 +34,7 @@ export function Integrations() {
               ))}
               <span style={{ fontSize: '0.8125rem', fontWeight: 500, background: '#fff', border: '1px solid rgba(0,0,0,0.08)', padding: '7px 14px', borderRadius: 100, color: '#333' }}>+40 more</span>
             </div>
-            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={openRegistration}>Browse all integrations <ArrowRight size={15} /></button>
+            <button className="btn-primary" style={{ background: '#0F0F0F', color: '#fff' }} onClick={() => openRegistration()}>Browse all integrations <ArrowRight size={15} /></button>
           </Reveal>
 
           <Reveal delay={2} className="hidden md:block">
