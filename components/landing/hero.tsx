@@ -72,21 +72,12 @@ export function Hero() {
           <div className="dashboard-frame" style={{ position: 'relative' }}>
             <Image
               src="/hero-dashboard.png"
-              alt="Bilanix financial dashboard showing revenue, invoices and cash flow"
-              width={1600}
-              height={1000}
+              alt="Bilanix finance overview dashboard showing net worth, balance overview, and journal activity"
+              width={1672}
+              height={941}
               priority
               style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 20 }}
             />
-            <div style={{ position: 'absolute', top: 14, left: 18, zIndex: 5 }}>
-              <Image
-                src="/bilanix-logo.png"
-                alt="Bilanix"
-                width={100}
-                height={28}
-                style={{ height: 18, width: 'auto', opacity: 0.95 }}
-              />
-            </div>
           </div>
 
           <div className="hero-dashboard-glow" />
