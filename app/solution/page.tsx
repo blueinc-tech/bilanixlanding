@@ -122,7 +122,8 @@ export default function SolutionPage() {
             'Withholding tax and other Nigerian tax calculations',
             'Real-time VAT liability dashboard across all clients',
           ]}
-          dark={false}
+          reverse
+          dark
         >
           <VATEngineMockup />
         </FeatureSection>
@@ -140,8 +141,7 @@ export default function SolutionPage() {
             'Client segmentation by industry and engagement type',
             'Bulk reporting across the entire client portfolio',
           ]}
-          reverse
-          dark
+          dark={false}
         >
           <ClientPortfolioMockup />
         </FeatureSection>
@@ -159,7 +159,8 @@ export default function SolutionPage() {
             'Export to PDF, Excel, and regulatory formats',
             'Custom report builder for client-specific needs',
           ]}
-          dark={false}
+          reverse
+          dark
         >
           <RevenueChartMockup />
         </FeatureSection>
@@ -177,8 +178,7 @@ export default function SolutionPage() {
             'System activity monitoring and alerting',
             'SOC2-aligned security practices and regular audits',
           ]}
-          reverse
-          dark
+          dark={false}
         >
           <AccessControlMockup />
         </FeatureSection>
@@ -195,7 +195,8 @@ export default function SolutionPage() {
             'Secure mobile authentication with biometrics',
             'Optimized for both iOS and Android',
           ]}
-          dark={false}
+          reverse
+          dark
           cta={
             <button className="btn-primary" onClick={() => openRegistration()}>
               Start Now <ArrowRight size={15} />
