@@ -156,12 +156,6 @@ export function Navbar() {
                     Sign Up
                   </button>
                 </div>
-
-                <div className="flex items-center justify-center gap-6" style={{ marginTop: 24 }}>
-                  {['Privacy', 'Terms', 'Contact'].map((t) => (
-                    <a key={t} href="#" style={{ fontSize: '0.75rem', color: '#9CA3AF', textDecoration: 'none' }}>{t}</a>
-                  ))}
-                </div>
               </div>
             </motion.div>
           </>
