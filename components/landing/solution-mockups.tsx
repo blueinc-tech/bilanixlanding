@@ -114,6 +114,46 @@ export function InvoiceAIMockup() {
   )
 }
 
+export function EInvoicingMockup() {
+  return (
+    <MockupPanel>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <span className="font-heading" style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#fff' }}>Invoice #INV-2026-0512</span>
+        <span style={{ background: 'rgba(96,183,70,0.15)', color: '#60B746', borderRadius: 100, padding: '4px 12px', fontSize: '0.6875rem', fontWeight: 700 }}>FIRS e-Invoice</span>
+      </div>
+      <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: 16, marginBottom: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', marginBottom: 8 }}>
+          <span style={{ color: 'rgba(255,255,255,0.5)' }}>Bill to</span>
+          <span style={{ fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>Okafor &amp; Sons Ltd</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', marginBottom: 8 }}>
+          <span style={{ color: 'rgba(255,255,255,0.5)' }}>Consulting services</span>
+          <span style={{ fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>₦420,000</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem' }}>
+          <span style={{ color: 'rgba(255,255,255,0.5)' }}>VAT (7.5%)</span>
+          <span style={{ fontWeight: 600, color: '#60B746' }}>₦31,500</span>
+        </div>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: 10, paddingTop: 10, display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}>Total due</span>
+          <span style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#fff' }}>₦451,500</span>
+        </div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(96,183,70,0.06)', border: '1px solid rgba(96,183,70,0.12)', borderRadius: 10, padding: '10px 14px', marginBottom: 12 }}>
+        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>Recurring · Monthly retainer</span>
+        <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#60B746' }}>Auto-sends Aug 1</span>
+      </div>
+      <div style={{
+        display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', gap: 8,
+        background: '#60B746', borderRadius: 10, padding: '10px 0',
+        fontSize: '0.8125rem', fontWeight: 600, color: '#fff', cursor: 'pointer',
+      }}>
+        Send Invoice
+      </div>
+    </MockupPanel>
+  )
+}
+
 export function VATEngineMockup() {
   return (
     <MockupPanel>

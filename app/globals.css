@@ -164,6 +164,7 @@
   background: #090909;
   color: #fff;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 .bilanix * { box-sizing: border-box; }
 
@@ -444,6 +445,11 @@
 .section-pad { padding: 120px 0; }
 @media (max-width: 767px) { .section-pad { padding: 80px 0 !important; } }
 
+/* Canonical responsive grid — collapses any multi-column grid (e.g. pricing
+   cards) to a single column below the mobile breakpoint, regardless of how
+   many columns were set inline for desktop. */
+@media (max-width: 767px) { .responsive-grid { grid-template-columns: 1fr !important; } }
+
 /* FOOTER */
 .footer-section { background: #090909; }
 .footer-divider { border-top: 1px solid rgba(255,255,255,0.06); }
@@ -522,6 +528,7 @@
   /* Hero */
   .hero-bg { padding-top: 80px !important; }
   .hero-title { font-size: clamp(1.75rem, 7vw, 2.25rem); }
+  .hero-title-break { display: none; }
   .hero-sub { font-size: 1rem; margin: 20px auto 32px !important; }
   .hero-dashboard-wrap { margin-top: 48px; }
   .float-stat { display: none; }

@@ -12,7 +12,7 @@ export function Hero() {
         <div className="text-center" style={{ maxWidth: 1120, margin: '0 auto' }}>
           <Reveal delay={1}>
             <h1 className="hero-title" style={{ fontSize: 'clamp(2.25rem, 4vw, 3.25rem)', fontWeight: 600 }}>
-              Manage every client. <span className="green">Automate every entry.</span><br />Scale with confidence.
+              Manage every client. <span className="green">Automate every entry.</span><br className="hero-title-break" /> Scale with confidence.
             </h1>
           </Reveal>
 

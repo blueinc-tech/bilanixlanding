@@ -121,7 +121,7 @@ export default function PricingPage() {
         <section style={{ background: '#fff', padding: '64px 0 80px' }}>
           <div className="max-w-page" style={{ padding: '0 20px' }}>
             {loading ? (
-              <div ref={gridRef} style={{
+              <div ref={gridRef} className="responsive-grid" style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(4, 1fr)',
                 gap: 20,
@@ -147,7 +147,7 @@ export default function PricingPage() {
                 {accountingPlans.length > 0 && (
                   <div style={{ marginBottom: 48 }}>
                     <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Accounting Solution</h3>
-                    <div ref={gridRef} style={{
+                    <div ref={gridRef} className="responsive-grid" style={{
                       display: 'grid',
                       gridTemplateColumns: getGridCols(accountingPlans.length),
                       gap: 20,
@@ -176,7 +176,7 @@ export default function PricingPage() {
                 {invoicingPlans.length > 0 && (
                   <div>
                     <h3 style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, color: '#0F0F0F', marginBottom: 24 }}>Invoicing Solution</h3>
-                    <div ref={invoicingGridRef} style={{
+                    <div ref={invoicingGridRef} className="responsive-grid" style={{
                       display: 'grid',
                       gridTemplateColumns: getGridCols(invoicingPlans.length),
                       gap: 20,

@@ -266,11 +266,15 @@ export function ContactSection() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 1024px) {
-          .max-w-page > div { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @media (max-width: 1024px) {
+              .max-w-page > div { grid-template-columns: 1fr !important; }
+            }
+          `,
+        }}
+      />
     </section>
   )
 }

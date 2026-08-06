@@ -14,13 +14,17 @@ const PROOF = [
 export function FinalCta() {
   return (
     <section className="cta-section" style={{ padding: '140px 0' }}>
-      <style>{`
-        .proof-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 640px; margin: 48px auto 0; }
-        @media (min-width: 768px) { .proof-grid { grid-template-columns: repeat(4, 1fr); max-width: 800px; } }
-        .proof-label { white-space: nowrap; font-size: clamp(0.625rem, 2.7vw, 0.8125rem); }
-        .cta-heading, .cta-sub { white-space: normal; }
-        @media (min-width: 768px) { .cta-heading, .cta-sub { white-space: nowrap; } }
-      `}</style>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .proof-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 640px; margin: 48px auto 0; }
+            @media (min-width: 768px) { .proof-grid { grid-template-columns: repeat(4, 1fr); max-width: 800px; } }
+            .proof-label { white-space: nowrap; font-size: clamp(0.5rem, 2.7vw, 0.8125rem); }
+            .cta-heading, .cta-sub { white-space: normal; }
+            @media (min-width: 768px) { .cta-heading, .cta-sub { white-space: nowrap; } }
+          `,
+        }}
+      />
       <div className="max-w-page text-center">
         <Reveal>
           <span className="section-label">Get started</span>

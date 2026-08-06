@@ -6,6 +6,7 @@ import { FeatureSection } from '@/components/landing/feature-section'
 import {
   JournalEntryMockup,
   InvoiceAIMockup,
+  EInvoicingMockup,
   VATEngineMockup,
   ClientPortfolioMockup,
   RevenueChartMockup,
@@ -88,6 +89,24 @@ export default function SolutionPage() {
           dark
         >
           <InvoiceAIMockup />
+        </FeatureSection>
+
+        {/* Invoicing Solutions */}
+        <FeatureSection
+          id="invoicing"
+          label="Invoicing Solutions"
+          title={<>Create and send invoices, <span style={{ color: '#60B746' }}>get paid faster</span></>}
+          description="Generate e-invoices fast, track payment status in real time, and keep every client's billing organized in one place."
+          bullets={[
+            'Automated e-invoicing for every transaction',
+            'Automatic 7.5% VAT calculation on every invoice line',
+            'Recurring and scheduled invoices for retainer clients',
+            'Branded, client-specific invoice templates with one-click send',
+            'Real-time payment status tracking across the client portfolio',
+          ]}
+          dark={false}
+        >
+          <EInvoicingMockup />
         </FeatureSection>
 
         {/* Tax & VAT Compliance */}

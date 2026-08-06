@@ -194,7 +194,7 @@ export function PricingSection() {
               {accountingPlans.length > 0 && (
                 <div className="mb-12">
                   <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Accounting Solution</h3>
-                  <div ref={accountingRef} style={{ display: 'grid', gridTemplateColumns: getGridCols(accountingPlans.length), gap: 20, maxWidth: getGridMaxWidth(accountingPlans.length), margin: '0 auto', alignItems: 'start' }}>
+                  <div ref={accountingRef} className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: getGridCols(accountingPlans.length), gap: 20, maxWidth: getGridMaxWidth(accountingPlans.length), margin: '0 auto', alignItems: 'start' }}>
                     {accountingPlans.map((plan, i) => (
                       <PricingCard
                         key={plan.name}
@@ -215,7 +215,7 @@ export function PricingSection() {
               {invoicingPlans.length > 0 && (
                 <div>
                   <h3 className="font-jakarta text-center text-lg font-semibold text-[#0F0F0F] mb-6">Invoicing Solution</h3>
-                  <div ref={invoicingRef} style={{ display: 'grid', gridTemplateColumns: getGridCols(invoicingPlans.length), gap: 20, maxWidth: getGridMaxWidth(invoicingPlans.length), margin: '0 auto', alignItems: 'start' }}>
+                  <div ref={invoicingRef} className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: getGridCols(invoicingPlans.length), gap: 20, maxWidth: getGridMaxWidth(invoicingPlans.length), margin: '0 auto', alignItems: 'start' }}>
                     {invoicingPlans.map((plan, i) => (
                       <PricingCard
                         key={plan.name}
